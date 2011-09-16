@@ -1,0 +1,151 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
+
+namespace PolygonCollision.Util
+{
+    public class DrawUtil
+    {
+
+        public static Texture2D lineTexture;
+
+        /// <summary>
+        /// Gets a 1x1 texture with a clear transparent pixel in it.
+        /// </summary>
+        /// <param name="batch">The batch to create the texture from.</param>
+        /// <returns>The texture</returns>
+        public static Texture2D GetClearTexture2D(SpriteBatch batch)
+        {
+            Texture2D lineTexture = new Texture2D(batch.GraphicsDevice, 1, 1);
+            int[] intColor = { (int)Color.White.PackedValue };
+            lineTexture.SetData(intColor);
+            return lineTexture;
+        }
+
+        /// <summary>
+        /// Draws a line!
+        /// </summary>
+        /// <param name="batch">The batch to draw on.</param>
+        /// <param name="start">Startpoint</param>
+        /// <param name="end">Endpoint</param>
+        /// <param name="c">The color of the line</param>
+        public static void DrawLine(SpriteBatch batch, Point start, Point end, Color c, int width, float z)
+        {
+            if (c.A == 0) return;
+            if (end.X < start.X)
+            {
+                // Swap
+                Point temp = start;
+                start = end;
+                end = temp;
+            }
+            double hypoteneuse = Util.GetHypoteneuseLength(start, end);
+            float angle = Util.GetHypoteneuseAngleRad(start, end);
+            batch.Draw(lineTexture, new Rectangle(start.X, start.Y, (int)Math.Round(hypoteneuse), width), null, c, angle,
+                new Vector2(0, 0), SpriteEffects.None, z);
+        }
+
+        /// <summary>
+        /// Draws a line!
+        /// </summary>
+        /// <param name="batch">The batch to draw on.</param>
+        /// <param name="start">Startpoint</param>
+        /// <param name="end">Endpoint</param>
+        /// <param name="c">The color of the line</param>
+        public static void DrawLine(SpriteBatch batch, Vector2 start, Vector2 end, Color c, int width, float z)
+        {
+            DrawUtil.DrawLine(batch, new Point((int)start.X, (int)start.Y), new Point((int)end.X, (int)end.Y),
+                c, width, z);
+        }
+
+        /// <summary>
+        /// Draws a cross.
+        /// </summary>
+        /// <param name="batch">The SpriteBatch to draw on.</param>
+        /// <param name="rect">The rectangle to draw on.</param>
+        /// <param name="width">The width of the border.</param>
+        /// <param name="c">The Color</param>
+        public static void DrawCross(SpriteBatch batch, Rectangle rect, int width, Color c, float z)
+        {
+            // Top left to bottom left
+            DrawLine(batch,
+                new Point(rect.Left, rect.Top),
+                new Point(rect.Left, rect.Bottom),
+                c,
+                width, z);
+            // Top left to top right
+            DrawLine(batch,
+                new Point(rect.Left, rect.Top),
+                new Point(rect.Right, rect.Top),
+                c,
+                width, z);
+            // Top right to bottom right
+            DrawLine(batch,
+                new Point(rect.Right, rect.Top),
+                new Point(rect.Right, rect.Bottom),
+                c,
+                width, z);
+            // Bottom right to bottom left
+            DrawLine(batch,
+                new Point(rect.Right, rect.Bottom),
+                new Point(rect.Left, rect.Bottom),
+                c,
+                width, z);
+        }
+
+        public static void DrawClearRectangle(SpriteBatch batch, Rectangle rect, int width, Color c, float z)
+        {
+            DrawUtil.DrawLine(batch,
+                new Point(rect.Left, rect.Top),
+                new Point(rect.Left, rect.Bottom),
+                c,
+                width, z);
+            // Top left to top right
+            DrawUtil.DrawLine(batch,
+                new Point(rect.Left, rect.Top),
+                new Point(rect.Right, rect.Top),
+                c,
+                width, z);
+            // Top right to bottom right
+            DrawUtil.DrawLine(batch,
+                new Point(rect.Right, rect.Top),
+                new Point(rect.Right, rect.Bottom - 1),
+                c,
+                width, z);
+            // Bottom right to bottom left
+            DrawUtil.DrawLine(batch,
+                new Point(rect.Right, rect.Bottom - 1),
+                new Point(rect.Left, rect.Bottom - 1),
+                c,
+                width, z);
+        }
+
+        public static Color[] TextureToArray(Texture2D texture)
+        {
+            Color[] colors1D = new Color[texture.Width * texture.Height];
+            texture.GetData(colors1D);
+
+            return colors1D;
+        }
+
+        public static Color[,] TextureTo2DArray(Texture2D texture)
+        {
+            Color[] colors1D = new Color[texture.Width * texture.Height];
+            texture.GetData(colors1D);
+
+            Color[,] colors2D = new Color[texture.Width, texture.Height];
+            for (int x = 0; x < texture.Width; x++)
+            {
+                for (int y = 0; y < texture.Height; y++)
+                {
+                    colors2D[x, y] = colors1D[x + y * texture.Width];
+                }
+            }
+
+            return colors2D;
+        }
+    }
+}
