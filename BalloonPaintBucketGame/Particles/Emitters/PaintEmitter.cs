@@ -5,35 +5,77 @@ using System.Text;
 using ParticleEngine.Emitter;
 using BalloonPaintBucketGame.Balloons;
 using ParticleEngine.Particles;
+using BalloonPaintBucketGame.Particles.Particles;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 
 namespace BalloonPaintBucketGame.Particles.Emitters
 {
     public class PaintEmitter : ParticleEmitter
     {
+        public static Texture2D BLUE_PAINT_TEXTURE { get; set; }
+        public static Texture2D PINK_PAINT_TEXTURE { get; set; }
+        public static Texture2D YELLOW_PAINT_TEXTURE { get; set; }
+
+        public Balloon balloon { get; set; }
+
+        static PaintEmitter()
+        {
+            BLUE_PAINT_TEXTURE = BalloonPaintBucketMainGame.GetInstance().game.Content.Load<Texture2D>("Particles/Paint/druppel");
+            PINK_PAINT_TEXTURE = BalloonPaintBucketMainGame.GetInstance().game.Content.Load<Texture2D>("Particles/Paint/hartje");
+            YELLOW_PAINT_TEXTURE = BalloonPaintBucketMainGame.GetInstance().game.Content.Load<Texture2D>("Particles/Paint/smiley");
+        }
+
         public PaintEmitter(Balloon balloon)
-            : base(balloon.GetCenter().X, balloon.GetCenter().Y, balloon.z - 0.001f)
+            : base(balloon.GetCenter().X - 25, balloon.GetCenter().Y - 25, 0.99f)
         {
             this.particleRandomX = 30;
 
             this.particleSpeedX = -0.3f;
             this.particleRandomSpeedX = 0.66f;
 
-            this.particleSpeedY = 5f;
-            this.particleRandomSpeedY = 2f;
+            this.particleSpeedY = 3f;
+            this.particleRandomSpeedY = 1f;
+
+            this.particleRandomX = 50;
+            this.particleRandomY = 50;
 
             this.lifespanMS = 10000;
-
-            this.lifespanMS = 900;
             this.particlesPerTick = 60;
 
-            this.ticksPerSecond = 1;
+            this.ticksPerSecond = 0.1f;
 
-            this.particleColor = balloon.GetColor();
+            this.balloon = balloon;
+
+            this.blendState = BlendState.AlphaBlend;
+
+            // this.particleColor = balloon.GetColor();
         }
 
         protected override void CreateParticle()
         {
-            new Particle(this);
+            Particle part = new PaintParticle(this);
+            Color color = this.balloon.GetColor();
+            if (color == Color.DeepPink)
+            {
+                part.texture = PINK_PAINT_TEXTURE;
+                part.scale = 0.1f;
+            }
+            else if (color == Color.Blue)
+            {
+                part.texture = BLUE_PAINT_TEXTURE;
+                part.scale = 0.1f;
+            }
+            else if (color == Color.Yellow)
+            {
+                part.texture = YELLOW_PAINT_TEXTURE;
+                part.scale = 0.1f;
+            }
+            else if (color == Color.DarkGray)
+            {
+                this.particleColor = balloon.GetColor();
+                // nothing
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using CustomLists.Lists;
 using BalloonPaintBucketGame.Balloons;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 namespace BalloonPaintBucketGame.Managers
 {
@@ -27,6 +28,8 @@ namespace BalloonPaintBucketGame.Managers
         public int msBetweenBalloons = 5000;
 
         public double lastBalloonSpawnMS { get; set; }
+
+        public int maxBlackBalloons = 2;
 
         public void DrawBalloons(SpriteBatch sb)
         {
@@ -57,29 +60,34 @@ namespace BalloonPaintBucketGame.Managers
         /// </summary>
         public void SpawnNewBalloon()
         {
-            // 0 = Pink, 1 = Blue, 2 = Yellow, 3 = Black
-            Boolean[] activeColors = new Boolean[4];
-            for (int i = 0; i < this.balloons.Count(); i++)
-            {
-                activeColors[(int)this.balloons.ElementAt(i).color] = true;
-            }
-
             Random random = new Random();
 
-            if (random.Next(5) == 1)
+            // One in 5 chance a black balloon will spawn
+            if (random.Next(5) == 0 && this.balloons.Count() < this.maxBlackBalloons)
             {
                 new Balloon(Balloon.BalloonColor.Black);
                 return;
             }
 
-            for (int i = 0; i < activeColors.Length; i++)
+            LinkedList<Balloon.BalloonColor> nonActiveBalloons = new LinkedList<Balloon.BalloonColor>();
+            nonActiveBalloons.AddLast(Balloon.BalloonColor.Pink);
+            nonActiveBalloons.AddLast(Balloon.BalloonColor.Blue);
+            nonActiveBalloons.AddLast(Balloon.BalloonColor.Yellow);
+
+            for (int i = 0; i < this.balloons.Count(); i++)
             {
-                if (!activeColors[i] && i != 3 && !BalloonPaintBucketMainGame.GetInstance().paintBuckets[i].IsFilled())
-                {
-                    new Balloon((Balloon.BalloonColor)i);
-                    return;
-                }
+                // Make a new node, to prevent index-based removal of the list items.
+                nonActiveBalloons.Remove(this.balloons.ElementAt(i).color);
             }
+
+            // Don't spawn if all colors are active
+            if (nonActiveBalloons.Count == 0) return;
+
+            // Random balloon of the colors we don't have
+            int r = random.Next(nonActiveBalloons.Count);
+
+            // Random color
+            new Balloon(nonActiveBalloons.ElementAt(r));
         }
     }
 }

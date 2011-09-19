@@ -211,12 +211,15 @@ namespace BalloonPaintBucketGame.Balloons
             {
                 case BalloonColor.Pink:
                     return Color.DeepPink;
+
                 case BalloonColor.Blue:
                     return Color.Blue;
+
                 case BalloonColor.Yellow:
                     return Color.Yellow;
+
                 case BalloonColor.Black:
-                    return Color.Black;
+                    return Color.DarkGray;
             }
             return Color.Red;
         }

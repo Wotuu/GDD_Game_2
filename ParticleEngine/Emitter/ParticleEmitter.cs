@@ -36,7 +36,7 @@ namespace ParticleEngine.Emitter
         public float particleRadianRotationSpeed { get; set; }
         public float particleRadianRotationSpeedRandom { get; set; }
 
-        public int ticksPerSecond { get; set; }
+        public float ticksPerSecond { get; set; }
         public double lastTick { get; set; }
         public int particlesPerTick { get; set; }
         public int maxParticles { get; set; }
@@ -135,7 +135,7 @@ namespace ParticleEngine.Emitter
         public virtual void Draw(GraphicsDevice device)
         {
             if (sb == null) sb = new SpriteBatch(device);
-            sb.Begin(SpriteSortMode.FrontToBack, this.blendState);
+            sb.Begin(SpriteSortMode.BackToFront, this.blendState);
             for (int i = 0; i < this.particles.Count(); i++)
             {
                 this.particles.ElementAt(i).Draw(sb);
