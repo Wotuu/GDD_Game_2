@@ -43,6 +43,7 @@ namespace ParticleEngine.Particles
         public Boolean inverseScale { get; set; }
 
         public static Random RANDOM { get; set; }
+        public Rectangle lastDrawRectangle { get; set; }
 
         static Particle()
         {
@@ -105,7 +106,8 @@ namespace ParticleEngine.Particles
         {
             if (!alive) return alive;
             // Check if we should die
-            if( this.ShouldDie() ) {
+            if (this.ShouldDie())
+            {
                 // Yes
                 this.alive = false;
             }
@@ -137,27 +139,38 @@ namespace ParticleEngine.Particles
             if (fadeAccordingToLifespan)
             {
                 int percentageOfLifespan = this.GetPercentageOfLifespan();
-                if( inverseFade )
+                if (inverseFade)
                     drawColor = new Color(this.color.R, this.color.G, this.color.B, (int)(percentageOfLifespan * 2.55f));
                 else
                     drawColor = new Color(this.color.R, this.color.G, this.color.B, 255 - (int)(percentageOfLifespan * 2.55f));
             }
+
+            sb.Draw(this.texture, (this.lastDrawRectangle = this.CalculateDrawRectangle()), null, drawColor,
+                this.radianRotation, Vector2.Zero /*this.drawOffset*/, SpriteEffects.None, this.z);
+        }
+
+        /// <summary>
+        /// Calculates the current draw rectangle, and updates the current offset (to make sure the particle
+        /// stays in the middle when the scale has changed).
+        /// </summary>
+        /// <returns>The rectangle.</returns>
+        public Rectangle CalculateDrawRectangle()
+        {
             float newScale = this.scale;
             if (scaleAccordingToLifespan)
             {
                 int percentageOfLifespan = this.GetPercentageOfLifespan();
-                if( inverseScale )
+                if (inverseScale)
                     newScale = this.scale * (1f - (percentageOfLifespan / 100f));
                 else
                     newScale = this.scale * (percentageOfLifespan / 100f);
             }
 
-            drawOffset = new Vector2(((this.texture.Width * newScale) / 2f),
+            this.drawOffset = new Vector2(((this.texture.Width * newScale) / 2f),
                 ((this.texture.Height * newScale) / 2f));
 
-            sb.Draw(this.texture, new Rectangle((int)(this.x - this.drawOffset.X), (int)(this.y - this.drawOffset.Y),
-                (int)(texture.Width * newScale), (int)(texture.Height * newScale)), null, drawColor,
-                this.radianRotation, Vector2.Zero /*this.drawOffset*/, SpriteEffects.None, this.z);
+            return new Rectangle((int)(this.x - this.drawOffset.X), (int)(this.y - this.drawOffset.Y),
+                (int)(texture.Width * newScale), (int)(texture.Height * newScale));
         }
 
         /// <summary>

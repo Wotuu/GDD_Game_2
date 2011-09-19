@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using BalloonPaintBucketGame.Particles;
+using BalloonPaintBucketGame.Particles.Particles;
 
 namespace BalloonPaintBucketGame.PaintBuckets
 {
-    public class PaintBucket
+    public class PaintBucket : RectangleCollideable
     {
         public static Texture2D PINK_PAINTBUCKET;
         public static Texture2D YELLOW_PAINTBUCKET;
@@ -115,6 +117,32 @@ namespace BalloonPaintBucketGame.PaintBuckets
         public Boolean IsFilled()
         {
             return this.currentValue >= this.maxValue;
+        }
+
+        public Rectangle GetCollisionRectangle()
+        {
+            return this.GetDrawRectangle();
+        }
+
+        public bool CheckCollision(RectangleCollideable collideable)
+        {
+            return collideable.GetCollisionRectangle().Intersects(this.GetCollisionRectangle());
+        }
+
+        public void OnCollision(RectangleCollideable collidedWith)
+        {
+            if (collidedWith is PaintParticle)
+            {
+                PaintParticle particle = (PaintParticle)collidedWith;
+                if (particle.color == this.GetColor())
+                {
+                    this.currentValue++;
+                }
+                else
+                {
+
+                }
+            }
         }
     }
 }

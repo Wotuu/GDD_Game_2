@@ -10,6 +10,11 @@ using ParticleEngine;
 using BalloonPaintBucketGame.Balloons;
 using BalloonPaintBucketGame.Players;
 using BalloonPaintBucketGame.PaintBuckets;
+using ParticleEngine.Emitter;
+using ParticleEngine.Particles;
+using BalloonPaintBucketGame.Particles.Particles;
+using BalloonPaintBucketGame.Particles;
+using PolygonCollision.Managers;
 
 namespace BalloonPaintBucketGame
 {
@@ -30,6 +35,9 @@ namespace BalloonPaintBucketGame
         public Game game { get; set; }
         public Player player { get; set; }
         public PaintBucket[] paintBuckets { get; set; }
+
+        public int collisionCheckMS = 25;
+        public Double lastCollisionCheckMS { get; set; }
 
         public void Initialize(Game game)
         {
@@ -74,6 +82,12 @@ namespace BalloonPaintBucketGame
             BalloonManager.GetInstance().UpdateBalloons();
             ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
 
+            if ( GameTimeManager.GetInstance().currentUpdateStartMS - this.lastCollisionCheckMS > this.collisionCheckMS)
+            {
+                this.CheckCollision();
+                this.lastCollisionCheckMS = GameTimeManager.GetInstance().currentUpdateStartMS;
+            }
+
             this.player.Update();
         }
 
@@ -86,6 +100,7 @@ namespace BalloonPaintBucketGame
             GameTimeManager.GetInstance().OnStartDraw();
             BalloonManager.GetInstance().DrawBalloons(sb);
             ParticleManager.GetInstance().Draw(sb.GraphicsDevice);
+            // PolygonManager.GetInstance().DrawPolygons(sb);
 
             foreach (PaintBucket bucket in this.paintBuckets)
             {
@@ -93,6 +108,35 @@ namespace BalloonPaintBucketGame
             }
 
             this.player.Draw(sb);
+        }
+
+        /// <summary>
+        /// Checks collision of the particles with the buckets.
+        /// </summary>
+        public void CheckCollision()
+        {
+            for (int i = 0; i < ParticleManager.GetInstance().emitterList.Count(); i++)
+            {
+                ParticleEmitter emitter = ParticleManager.GetInstance().emitterList.ElementAt(i);
+
+                for (int j = 0; j < emitter.particles.Count(); j++)
+                {
+                    Particle particle = emitter.particles.ElementAt(j);
+
+                    if (particle is RectangleCollideable)
+                    {
+                        foreach (PaintBucket bucket in this.paintBuckets)
+                        {
+                            RectangleCollideable collideable = ((RectangleCollideable)particle);
+                            if (collideable.CheckCollision(bucket))
+                            {
+                                collideable.OnCollision(bucket);
+                                bucket.OnCollision(collideable);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

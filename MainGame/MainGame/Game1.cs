@@ -79,7 +79,7 @@ namespace MainGame
             XNAPanel parent = new XNAPanel(null, new Rectangle(0, 0, 1024, 768));
             parent.backgroundColor = Color.Transparent;
             parent.border = null;
-            //graphics.SynchronizeWithVerticalRetrace = false;
+            graphics.SynchronizeWithVerticalRetrace = false;
             graphics.ApplyChanges();
             this.displayLbl = new XNALabel(parent, new Rectangle(5, 5, 200, 20), "");
             this.displayLbl.backgroundColor = Color.Transparent;

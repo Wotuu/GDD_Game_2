@@ -363,5 +363,44 @@ namespace CustomLists.Lists
             }
             return -1;
         }
+
+        /// <summary>
+        /// Adds an item at a certain index.
+        /// </summary>
+        /// <param name="item">The item to add.</param>
+        /// <param name="index">The index at which the item should be added.</param>
+        /// <param name="retainOrder">Whether to retain the order of the list or not.</param>
+        public void AddAt(T item, int index, Boolean retainOrder)
+        {
+            if (retainOrder)
+            {
+                this.EnsureCapacity(this.Count() + 1);
+                for (int i = currentIndex; i >= index; i--)
+                {
+                    this.elements[i] = this.ElementAt(i - 1);
+                }
+            }
+            else
+            {
+                this.AddLast(this.ElementAt(index));
+            }
+            this.elements[index] = item;
+        }
+
+        /// <summary>
+        /// Reverses this list.
+        /// </summary>
+        /// <returns>The reversed list.</returns>
+        public CustomArrayList<T> Reverse()
+        {
+            CustomArrayList<T> newList = new CustomArrayList<T>();
+
+
+            for (int i = currentIndex - 1; i >= 0; i--)
+            {
+                newList.AddLast(this.ElementAt(i));
+            }
+            return newList;
+        }
     }
 }

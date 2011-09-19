@@ -5,12 +5,13 @@ using System.Text;
 using ParticleEngine.Particles;
 using ParticleEngine.Emitter;
 using BalloonPaintBucketGame.Managers;
+using Microsoft.Xna.Framework;
 
 namespace BalloonPaintBucketGame.Particles.Particles
 {
-    public class PaintParticle : Particle
+    public class PaintParticle : Particle, RectangleCollideable
     {
-        public float gravity = 0.4f;
+        public float gravity = 0.2f;
 
         public PaintParticle(ParticleEmitter emitter)
             : base(emitter)
@@ -21,6 +22,21 @@ namespace BalloonPaintBucketGame.Particles.Particles
         {
             this.speedY += (float)(gravity * GameTimeManager.GetInstance().time_step);
             return base.Update(time_step);
+        }
+
+        public Rectangle GetCollisionRectangle()
+        {
+            return this.lastDrawRectangle;
+        }
+
+        public bool CheckCollision(RectangleCollideable collideable)
+        {
+            return collideable.GetCollisionRectangle().Intersects(this.GetCollisionRectangle());
+        }
+
+        public void OnCollision(RectangleCollideable collidedWith)
+        {
+            this.alive = false;
         }
     }
 }
