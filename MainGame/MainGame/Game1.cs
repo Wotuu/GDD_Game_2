@@ -22,6 +22,7 @@ using MainGame.Managers;
 using BalloonPaintBucketGame;
 using BalloonPaintBucketGame.Balloons;
 using BalloonPaintBucketGame.Players;
+using SquatBugsGame;
 
 namespace MainGame
 {
@@ -54,6 +55,8 @@ namespace MainGame
             this.graphics.PreferredBackBufferWidth = 1024;
             this.graphics.PreferredBackBufferHeight = 768;
 
+            this.graphics.SynchronizeWithVerticalRetrace = false;
+            
             this.graphics.ApplyChanges();
             this.InactiveSleepTime = new System.TimeSpan(0);
 
@@ -81,6 +84,7 @@ namespace MainGame
             this.displayLbl = new XNALabel(parent, new Rectangle(5, 5, 200, 20), "");
             this.displayLbl.backgroundColor = Color.Transparent;
             BalloonPaintBucketMainGame.GetInstance().Initialize(this);
+            SquatBugsMainGame.GetInstance().Initialize(this);
         }
 
         /// <summary>
@@ -124,8 +128,8 @@ namespace MainGame
 
             // TODO: Add your update logic here
 
-            BalloonPaintBucketMainGame.GetInstance().Update();
-
+            //BalloonPaintBucketMainGame.GetInstance().Update();
+            SquatBugsMainGame.GetInstance().Update();
             base.Update(gameTime);
         }
 
@@ -145,8 +149,8 @@ namespace MainGame
             // PolygonManager.GetInstance().DrawPolygons(spriteBatch);
             // TODO: Add your drawing code here
 
-            BalloonPaintBucketMainGame.GetInstance().Draw(spriteBatch);
-
+            //BalloonPaintBucketMainGame.GetInstance().Draw(spriteBatch);
+            SquatBugsMainGame.GetInstance().Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
