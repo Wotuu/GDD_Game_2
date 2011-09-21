@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using BalloonPaintBucketGame.Particles;
 using BalloonPaintBucketGame.Particles.Particles;
+using BalloonPaintBucketGame.Particles.Emitters;
 
 namespace BalloonPaintBucketGame.PaintBuckets
 {
@@ -18,12 +19,24 @@ namespace BalloonPaintBucketGame.PaintBuckets
         public PaintBucketColor color { get; set; }
         public Vector2 location { get; set; }
         public Texture2D texture { get; set; }
+        public VerticalHealthBar progressBar { get; set; }
 
         public Vector2 scale { get; set; }
         public float z { get; set; }
 
-        public int currentValue { get; set; }
-        public int maxValue { get; set; }
+        private float _currentValue { get; set; }
+        public float currentValue
+        {
+            get
+            {
+                return _currentValue;
+            }
+            set
+            {
+                this._currentValue = MathHelper.Clamp(value, 0, maxValue);
+            }
+        }
+        public float maxValue { get; set; }
 
 
         static PaintBucket()
@@ -59,6 +72,10 @@ namespace BalloonPaintBucketGame.PaintBuckets
             this.color = color;
 
             this.maxValue = 100;
+
+            this.progressBar = new VerticalHealthBar(this);
+
+            this.z = 0.95f;
         }
 
         public void Update()
@@ -70,6 +87,8 @@ namespace BalloonPaintBucketGame.PaintBuckets
         {
             sb.Draw(this.texture, this.GetDrawRectangle(), null, Color.White,
                 0f, Vector2.Zero, SpriteEffects.None, z);
+
+            progressBar.Draw(sb);
         }
 
         /// <summary>
@@ -134,14 +153,13 @@ namespace BalloonPaintBucketGame.PaintBuckets
             if (collidedWith is PaintParticle)
             {
                 PaintParticle particle = (PaintParticle)collidedWith;
-                if (particle.color == this.GetColor())
+                Color balloonColor = ((PaintEmitter)particle.emitter).balloon.GetColor();
+                if (balloonColor == this.GetColor())
                 {
                     this.currentValue++;
                 }
-                else
-                {
-
-                }
+                else if( balloonColor != Color.DarkGray ) this.currentValue--; 
+                else this.currentValue = 0;
             }
         }
     }

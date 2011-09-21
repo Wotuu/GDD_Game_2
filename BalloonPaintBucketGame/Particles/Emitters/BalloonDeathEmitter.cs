@@ -13,7 +13,7 @@ namespace BalloonPaintBucketGame.Particles.Emitters
         public Balloon balloon { get; set; }
 
         public BalloonDeathEmitter(Balloon balloon)
-            : base(balloon.GetCenter().X, balloon.GetCenter().Y, balloon.z - 0.001f)
+            : base(balloon.GetCenter().X, balloon.GetCenter().Y, balloon.z - 0.1f)
         {
             this.particleScale = 2f;
             this.particlesPerTick = 50;

@@ -6,16 +6,18 @@ using ParticleEngine.Particles;
 using ParticleEngine.Emitter;
 using BalloonPaintBucketGame.Managers;
 using Microsoft.Xna.Framework;
+using BalloonPaintBucketGame.Particles.Emitters;
 
 namespace BalloonPaintBucketGame.Particles.Particles
 {
     public class PaintParticle : Particle, RectangleCollideable
     {
-        public float gravity = 0.2f;
+        public float gravity = 0.15f;
 
-        public PaintParticle(ParticleEmitter emitter)
+        public PaintParticle(PaintEmitter emitter)
             : base(emitter)
         {
+
         }
 
         public override bool Update(float time_step)

@@ -39,11 +39,15 @@ namespace BalloonPaintBucketGame
         public int collisionCheckMS = 25;
         public Double lastCollisionCheckMS { get; set; }
 
+        public Texture2D background { get; set; }
+
         public void Initialize(Game game)
         {
             this.game = game;
 
             ParticleManager.DEFAULT_TEXTURE = this.game.Content.Load<Texture2D>("Particles/default");
+
+            this.background = this.game.Content.Load<Texture2D>("Backgrounds/balloonpaintbucket");
 
 
 
@@ -79,16 +83,41 @@ namespace BalloonPaintBucketGame
         public void Update()
         {
             GameTimeManager.GetInstance().OnStartUpdate();
-            BalloonManager.GetInstance().UpdateBalloons();
-            ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
 
-            if ( GameTimeManager.GetInstance().currentUpdateStartMS - this.lastCollisionCheckMS > this.collisionCheckMS)
+            switch (StateManager.GetInstance().GetState())
             {
-                this.CheckCollision();
-                this.lastCollisionCheckMS = GameTimeManager.GetInstance().currentUpdateStartMS;
-            }
+                case StateManager.State.Running:
+                    {
+                        BalloonManager.GetInstance().UpdateBalloons();
+                        ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
 
-            this.player.Update();
+                        if (GameTimeManager.GetInstance().currentUpdateStartMS - this.lastCollisionCheckMS > 
+                            this.collisionCheckMS)
+                        {
+                            this.CheckCollision();
+                            this.lastCollisionCheckMS = GameTimeManager.GetInstance().currentUpdateStartMS;
+                        }
+
+                        this.player.Update();
+                        break;
+                    }
+                case StateManager.State.Paused:
+                    {
+
+                        break;
+                    }
+                case StateManager.State.Loss:
+                    {
+
+                        break;
+                    }
+                case StateManager.State.Victory:
+                    {
+
+                        break;
+                    }
+
+            }
         }
 
         /// <summary>
@@ -98,8 +127,11 @@ namespace BalloonPaintBucketGame
         public void Draw(SpriteBatch sb)
         {
             GameTimeManager.GetInstance().OnStartDraw();
+            sb.Draw(this.background, new Rectangle(0, 0, this.game.GraphicsDevice.Viewport.Width,
+            this.game.GraphicsDevice.Viewport.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
+
             BalloonManager.GetInstance().DrawBalloons(sb);
-            ParticleManager.GetInstance().Draw(sb.GraphicsDevice);
+            ParticleManager.GetInstance().Draw(sb);
             // PolygonManager.GetInstance().DrawPolygons(sb);
 
             foreach (PaintBucket bucket in this.paintBuckets)
@@ -107,6 +139,7 @@ namespace BalloonPaintBucketGame
                 bucket.Draw(sb);
             }
 
+            // Draw the background
             this.player.Draw(sb);
         }
 
@@ -137,6 +170,14 @@ namespace BalloonPaintBucketGame
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks if the current user has won.
+        /// </summary>
+        public void WinCheck()
+        {
+
         }
     }
 }

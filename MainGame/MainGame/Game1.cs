@@ -128,8 +128,8 @@ namespace MainGame
 
             // TODO: Add your update logic here
 
-            //BalloonPaintBucketMainGame.GetInstance().Update();
-            SquatBugsMainGame.GetInstance().Update();
+            BalloonPaintBucketMainGame.GetInstance().Update();
+            // SquatBugsMainGame.GetInstance().Update();
             base.Update(gameTime);
         }
 
@@ -149,8 +149,8 @@ namespace MainGame
             // PolygonManager.GetInstance().DrawPolygons(spriteBatch);
             // TODO: Add your drawing code here
 
-            //BalloonPaintBucketMainGame.GetInstance().Draw(spriteBatch);
-            SquatBugsMainGame.GetInstance().Draw(spriteBatch);
+            BalloonPaintBucketMainGame.GetInstance().Draw(spriteBatch);
+            // SquatBugsMainGame.GetInstance().Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

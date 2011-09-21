@@ -122,7 +122,7 @@ namespace BalloonPaintBucketGame.Balloons
             this.targetY = 25 + random.Next(50);
             this.descending = true;
 
-            this.scale = new Vector2(0.35f, 0.35f);
+            this.scale = new Vector2(0.25f, 0.25f);
             BalloonManager.GetInstance().balloons.AddLast(this);
 
             this.z = 0.9f - (BalloonManager.GetInstance().balloons.Count() * 0.001f);
@@ -142,6 +142,9 @@ namespace BalloonPaintBucketGame.Balloons
                 {
                     this.location = new Vector2(this.location.X, this.targetY);
                     this.descending = false;
+
+                    float random = ((new Random().Next(2) == 0) ? -1 : 1);
+                    this.speed = new Vector2(this.speed.X * random, this.speed.Y);
                 }
             }
             else

@@ -11,7 +11,7 @@ namespace BalloonPaintBucketGame.PaintBuckets
     public class VerticalHealthBar
     {
         public static Color EMPTY_COLOR = Color.Red;
-        public static Color FILL_COLOR = Color.Green;
+        public static Color FILL_COLOR = Color.Blue;
         public static Texture2D DRAW_TEXTURE { get; set; }
 
         public int width { get; set; }
@@ -23,8 +23,8 @@ namespace BalloonPaintBucketGame.PaintBuckets
         {
             this.bucket = bucket;
 
-            width = 40;
-            height = 200;
+            width = 30;
+            height = bucket.GetDrawRectangle().Height - 10;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace BalloonPaintBucketGame.PaintBuckets
         /// <returns>The percentage.</returns>
         public float GetPercentageFull()
         {
-            return (float)((bucket.currentValue / bucket.maxValue) * 100.0);
+            return (bucket.currentValue / bucket.maxValue) * 100f;
         }
 
         /// <summary>
@@ -49,14 +49,19 @@ namespace BalloonPaintBucketGame.PaintBuckets
 
         public void Draw(SpriteBatch sb)
         {
-            if( DRAW_TEXTURE == null )
-               DRAW_TEXTURE = DrawUtil.GetClearTexture2D(sb);
+            if (DRAW_TEXTURE == null)
+                DRAW_TEXTURE = DrawUtil.GetClearTexture2D(sb);
 
-            sb.Draw(DRAW_TEXTURE, this.GetDrawRectangle(), null, EMPTY_COLOR, 0f,
+            Rectangle drawRect = this.GetDrawRectangle();
+            sb.Draw(DRAW_TEXTURE, drawRect, null, EMPTY_COLOR, 0f,
                 Vector2.Zero, SpriteEffects.None, bucket.z - 0.001f);
 
-            sb.Draw(DRAW_TEXTURE, this.GetDrawRectangle(), null, FILL_COLOR, 0f,
-                Vector2.Zero, SpriteEffects.None, bucket.z - 0.001f);
+            float offset = (float)Math.Ceiling((this.GetPercentageFull() / 100f) * drawRect.Height);
+
+            drawRect = new Rectangle(drawRect.X, (int)(drawRect.Y + (drawRect.Height - offset)),
+                drawRect.Width, (int)(offset));
+            sb.Draw(DRAW_TEXTURE, drawRect, null, FILL_COLOR, 0f,
+                Vector2.Zero, SpriteEffects.None, bucket.z - 0.002f);
 
         }
     }

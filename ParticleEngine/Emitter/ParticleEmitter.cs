@@ -132,9 +132,8 @@ namespace ParticleEngine.Emitter
             else if (this.particles.Count() == 0) ParticleManager.GetInstance().emitterList.Remove(this);
         }
 
-        public virtual void Draw(GraphicsDevice device)
+        public virtual void Draw(SpriteBatch sb)
         {
-            if (sb == null) sb = new SpriteBatch(device);
             sb.Begin(SpriteSortMode.BackToFront, this.blendState);
             for (int i = 0; i < this.particles.Count(); i++)
             {

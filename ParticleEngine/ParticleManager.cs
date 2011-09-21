@@ -74,13 +74,16 @@ namespace ParticleEngine
             }
         }
 
-        public void Draw(GraphicsDevice device)
+        public void Draw(SpriteBatch sb)
         {
+            sb.End();
             GameTimeManager.GetInstance().OnStartDraw();
             for (int i = 0; i < this.emitterList.Count(); i++)
             {
-                this.emitterList.ElementAt(i).Draw(device);
+                this.emitterList.ElementAt(i).Draw(sb);
             }
+
+            sb.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
         }
 
         /// <summary>

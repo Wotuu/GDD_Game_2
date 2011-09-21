@@ -25,11 +25,11 @@ namespace BalloonPaintBucketGame.Managers
         #endregion
 
         public CustomArrayList<Balloon> balloons = new CustomArrayList<Balloon>();
-        public int msBetweenBalloons = 5000;
+        public int msBetweenBalloons = 3000;
 
         public double lastBalloonSpawnMS { get; set; }
 
-        public int maxBlackBalloons = 2;
+        public int maxBlackBalloons = 4;
 
         public void DrawBalloons(SpriteBatch sb)
         {
@@ -62,8 +62,8 @@ namespace BalloonPaintBucketGame.Managers
         {
             Random random = new Random();
 
-            // One in 5 chance a black balloon will spawn
-            if (random.Next(5) == 0 && this.balloons.Count() < this.maxBlackBalloons)
+            // One in 4 chance a black balloon will spawn
+            if (random.Next(4) == 0 && this.balloons.Count() < this.maxBlackBalloons)
             {
                 new Balloon(Balloon.BalloonColor.Black);
                 return;
@@ -71,7 +71,10 @@ namespace BalloonPaintBucketGame.Managers
 
             LinkedList<Balloon.BalloonColor> nonActiveBalloons = new LinkedList<Balloon.BalloonColor>();
             nonActiveBalloons.AddLast(Balloon.BalloonColor.Pink);
+            nonActiveBalloons.AddLast(Balloon.BalloonColor.Pink);
             nonActiveBalloons.AddLast(Balloon.BalloonColor.Blue);
+            nonActiveBalloons.AddLast(Balloon.BalloonColor.Blue);
+            nonActiveBalloons.AddLast(Balloon.BalloonColor.Yellow);
             nonActiveBalloons.AddLast(Balloon.BalloonColor.Yellow);
 
             for (int i = 0; i < this.balloons.Count(); i++)
