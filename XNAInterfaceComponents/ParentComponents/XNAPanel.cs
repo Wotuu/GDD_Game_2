@@ -13,6 +13,13 @@ namespace XNAInterfaceComponents.Components
 {
     public class XNAPanel : ParentComponent
     {
+        public XNAPanel(ParentComponent parent, Rectangle bounds, Texture2D backgroundTexture)
+            : base(parent, bounds)
+        {
+            this.backgroundTexture = backgroundTexture;
+            this.backgroundColor = Color.White;
+        }
+
         public XNAPanel(ParentComponent parent, Rectangle bounds)
             : base(parent, bounds)
         {
@@ -22,23 +29,27 @@ namespace XNAInterfaceComponents.Components
         public override void Draw(SpriteBatch sb)
         {
             if (!this.visible) return;
-            if (this.clearTexture == null) clearTexture = ComponentUtil.GetClearTexture2D(sb);
-            // Console.Out.WriteLine("Drawing panel!");
 
             Color drawColor = new Color();
             //if (this.isMouseOver) drawColor = this.mouseOverColor;
             //else 
             drawColor = this.backgroundColor;
 
-            sb.Draw(clearTexture, this.GetScreenBounds(), null, drawColor, 0f, new Vector2(0, 0), SpriteEffects.None, this.z);
+            if (this.backgroundTexture == null)
+            {
+                if (this.clearTexture == null) clearTexture = ComponentUtil.GetClearTexture2D(sb);
+                // Console.Out.WriteLine("Drawing panel!");
 
+                sb.Draw(clearTexture, this.GetScreenBounds(), null, drawColor, 0f, new Vector2(0, 0), SpriteEffects.None, this.z);
 
-
-
-
-
-            // sb.Draw(clearTexture, this.GetScreenBounds(), drawColor);
-            if (this.border != null) this.border.Draw(sb);
+                // sb.Draw(clearTexture, this.GetScreenBounds(), drawColor);
+                if (this.border != null) this.border.Draw(sb);
+            }
+            else
+            {
+                sb.Draw(this.backgroundTexture, this.GetScreenBounds(), null, drawColor, 0f, new Vector2(0, 0),
+                    SpriteEffects.None, this.z);
+            }
 
             for (int i = 0; i < this.children.Count; i++)
             {

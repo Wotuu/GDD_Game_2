@@ -17,6 +17,17 @@ namespace XNAInterfaceComponents.AbstractComponents
     {
         public OnButtonClick onClickListeners { get; set; }
 
+        public XNAButton(ParentComponent parent, Rectangle bounds, Texture2D backgroundTexture, String text)
+            : base(parent, bounds)
+        {
+            this.backgroundTexture = backgroundTexture;
+            this.text = text;
+            MouseManager.GetInstance().mouseClickedListeners += OnMouseClick;
+            MouseManager.GetInstance().mouseReleasedListeners += OnMouseRelease;
+
+            this.backgroundColor = Color.White;
+        }
+
         public XNAButton(ParentComponent parent, Rectangle bounds, String text)
             : base(parent, bounds)
         {
@@ -47,9 +58,17 @@ namespace XNAInterfaceComponents.AbstractComponents
             Rectangle drawRect = this.GetScreenBounds();
             // if (this.parent is XNADialog) Console.Out.WriteLine(z);
             // Draw the button
-            sb.Draw(clearTexture, drawRect, null, drawColor, 0, new Vector2(0, 0), SpriteEffects.None, this.z - 0.001f);
-            // Draw the border
-            if (this.border != null) border.Draw(sb);
+            if (this.backgroundTexture == null)
+            {
+                sb.Draw(clearTexture, drawRect, null, drawColor, 0, new Vector2(0, 0), SpriteEffects.None, this.z - 0.001f);
+                // Draw the border
+                if (this.border != null) border.Draw(sb);
+            }
+            else
+            {
+                sb.Draw(this.backgroundTexture, drawRect, null, drawColor, 0, new Vector2(0, 0), SpriteEffects.None, 
+                    this.z - 0.001f);
+            }
             // Draw the text on the button
             if (this.text != null)
             {

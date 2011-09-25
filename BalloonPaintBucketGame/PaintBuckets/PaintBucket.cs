@@ -55,16 +55,20 @@ namespace BalloonPaintBucketGame.PaintBuckets
 
         public PaintBucket(PaintBucketColor color)
         {
+            Color healthBarFillColor = Color.White;
             switch (color)
             {
                 case PaintBucketColor.Pink:
                     this.texture = PINK_PAINTBUCKET;
+                    healthBarFillColor = new Color(252, 161, 255);
                     break;
                 case PaintBucketColor.Blue:
                     this.texture = BLUE_PAINTBUCKET;
+                    healthBarFillColor = new Color(132, 184, 239);
                     break;
                 case PaintBucketColor.Yellow:
                     this.texture = YELLOW_PAINTBUCKET;
+                    healthBarFillColor = new Color(242, 221, 95);
                     break;
             }
 
@@ -73,7 +77,7 @@ namespace BalloonPaintBucketGame.PaintBuckets
 
             this.maxValue = 100;
 
-            this.progressBar = new VerticalHealthBar(this);
+            this.progressBar = new VerticalHealthBar(this, healthBarFillColor);
 
             this.z = 0.95f;
         }
@@ -156,7 +160,7 @@ namespace BalloonPaintBucketGame.PaintBuckets
                 Color balloonColor = ((PaintEmitter)particle.emitter).balloon.GetColor();
                 if (balloonColor == this.GetColor())
                 {
-                    this.currentValue++;
+                    this.currentValue += 1;
                 }
                 else if( balloonColor != Color.DarkGray ) this.currentValue--; 
                 else this.currentValue = 0;

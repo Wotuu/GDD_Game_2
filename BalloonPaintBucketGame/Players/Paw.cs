@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using CustomLists.Lists;
 using BalloonPaintBucketGame.Managers;
 using BalloonPaintBucketGame.Balloons;
+using Microsoft.Xna.Framework.Input;
 
 namespace BalloonPaintBucketGame.Players
 {
@@ -19,6 +20,10 @@ namespace BalloonPaintBucketGame.Players
         public Vector2 scale { get; set; }
 
         public MoveState state { get; set; }
+        public float moveSpeed { get; set; }
+        public float yRestLocation { get; set; }
+
+        public Point clickedLocation { get; set; }
 
         public enum MoveState
         {
@@ -40,28 +45,68 @@ namespace BalloonPaintBucketGame.Players
             this.player = player;
             this.location = new Vector3(2000, 2000, player.z);
 
-            this.scale = new Vector2(0.4f, 0.4f);
+            this.scale = new Vector2(0.7f, 0.7f);
 
+            this.yRestLocation = BalloonPaintBucketMainGame.GetInstance().game.GraphicsDevice.Viewport.Height -
+                (this.GetDrawRectangle().Height / 2);
             this.state = MoveState.Still;
+
+            this.moveSpeed = 20f;
+        }
+
+        /// <summary>
+        /// Moves the paw to the correct location, given the mouse location.
+        /// </summary>
+        /// <param name="mouseLocation">The mouse location.</param>
+        private void MovePaw(Point mouseLocation)
+        {
+            if (StateManager.GetInstance().GetState() == StateManager.State.Running && this.state == MoveState.Still)
+            {
+                Rectangle drawRect = this.GetDrawRectangle();
+                this.location = new Vector3(mouseLocation.X - drawRect.Width, this.yRestLocation, this.location.Z);
+            }
         }
 
         public void OnMouseMotion(MouseEvent e)
         {
-            Rectangle drawRect = this.GetDrawRectangle();
-            this.location = new Vector3(e.location.X - drawRect.Width,
-                BalloonPaintBucketMainGame.GetInstance().game.GraphicsDevice.Viewport.Height -
-            (drawRect.Height / 2),
-                this.location.Z);
+            this.MovePaw(e.location);
         }
 
         public void OnMouseDrag(MouseEvent e)
         {
-
+            this.MovePaw(e.location);
         }
 
+        /// <summary>
+        /// Updates the paw.
+        /// </summary>
         public void Update()
         {
+            switch (this.state)
+            {
+                case MoveState.MovingToBalloon:
+                    this.location = new Vector3(this.location.X, this.location.Y -
+                        (float)(moveSpeed * GameTimeManager.GetInstance().time_step), this.location.Z);
 
+                    if (this.location.Y < this.clickedLocation.Y)
+                    {
+                        this.PerformSting(this.clickedLocation);
+                        this.state = MoveState.MovingFromBalloon;
+                    }
+                    break;
+
+                case MoveState.MovingFromBalloon:
+                    this.location = new Vector3(this.location.X, this.location.Y +
+                        (float)(moveSpeed * GameTimeManager.GetInstance().time_step), this.location.Z);
+
+                    if (this.location.Y > this.yRestLocation)
+                    {
+                        this.state = MoveState.Still;
+                        this.location = new Vector3(this.location.X, this.yRestLocation, this.location.Z);
+                        this.MovePaw(new Point(Mouse.GetState().X, Mouse.GetState().Y));
+                    }
+                    break;
+            }
         }
 
         public void Draw(SpriteBatch sb)
@@ -73,7 +118,10 @@ namespace BalloonPaintBucketGame.Players
         public void OnMouseClick(MouseEvent m_event)
         {
             if (this.state == MoveState.Still)
+            {
                 this.state = MoveState.MovingToBalloon;
+                this.clickedLocation = m_event.location;
+            }
         }
 
         public void OnMouseRelease(MouseEvent m_event)
@@ -85,7 +133,7 @@ namespace BalloonPaintBucketGame.Players
         /// Performs a sting on the given location, popping balloons or not.
         /// </summary>
         /// <param name="location">The location to sting at.</param>
-        public void PerformSting(Vector2 location)
+        public void PerformSting(Point location)
         {
             CustomArrayList<Balloon> clickedBalloons = new CustomArrayList<Balloon>();
             for (int i = 0; i < BalloonManager.GetInstance().balloons.Count(); i++)

@@ -15,6 +15,8 @@ using ParticleEngine.Particles;
 using BalloonPaintBucketGame.Particles.Particles;
 using BalloonPaintBucketGame.Particles;
 using PolygonCollision.Managers;
+using BalloonPaintBucketGame.Util;
+using XNAInterfaceComponents.ParentComponents;
 
 namespace BalloonPaintBucketGame
 {
@@ -72,6 +74,8 @@ namespace BalloonPaintBucketGame
                 (viewPort.Width / 6) * 5 - this.paintBuckets[2].GetDrawRectangle().Width / 2,
                 viewPort.Height - this.paintBuckets[2].GetDrawRectangle().Height);
 
+            XNAMessageDialog.CLIENT_WINDOW_WIDTH = game.GraphicsDevice.Viewport.Width;
+            XNAMessageDialog.CLIENT_WINDOW_HEIGHT = game.GraphicsDevice.Viewport.Height;
             /*
             this.game.Content.Load<Texture2D>("Balloons/balon1");
             this.game.Content.Load<Texture2D>("Balloons/balon2");
@@ -91,7 +95,7 @@ namespace BalloonPaintBucketGame
                         BalloonManager.GetInstance().UpdateBalloons();
                         ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
 
-                        if (GameTimeManager.GetInstance().currentUpdateStartMS - this.lastCollisionCheckMS > 
+                        if (GameTimeManager.GetInstance().currentUpdateStartMS - this.lastCollisionCheckMS >
                             this.collisionCheckMS)
                         {
                             this.CheckCollision();
@@ -99,6 +103,7 @@ namespace BalloonPaintBucketGame
                         }
 
                         this.player.Update();
+                        this.WinCheck();
                         break;
                     }
                 case StateManager.State.Paused:
@@ -116,7 +121,6 @@ namespace BalloonPaintBucketGame
 
                         break;
                     }
-
             }
         }
 
@@ -126,6 +130,8 @@ namespace BalloonPaintBucketGame
         /// <param name="sb">The spritebatch to draw on.</param>
         public void Draw(SpriteBatch sb)
         {
+            if (DrawUtil.lineTexture == null)
+                DrawUtil.lineTexture = DrawUtil.GetClearTexture2D(sb);
             GameTimeManager.GetInstance().OnStartDraw();
             sb.Draw(this.background, new Rectangle(0, 0, this.game.GraphicsDevice.Viewport.Width,
             this.game.GraphicsDevice.Viewport.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
@@ -177,7 +183,12 @@ namespace BalloonPaintBucketGame
         /// </summary>
         public void WinCheck()
         {
-
+            foreach (PaintBucket bucket in this.paintBuckets)
+            {
+                if (bucket.currentValue != bucket.maxValue) return;
+            }
+            StateManager.GetInstance().SetState(StateManager.State.Victory);
+            XNAMessageDialog.CreateDialog("Congratulations, you've won!", XNAMessageDialog.DialogType.OK);
         }
     }
 }

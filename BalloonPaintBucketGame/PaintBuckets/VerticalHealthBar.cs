@@ -10,21 +10,20 @@ namespace BalloonPaintBucketGame.PaintBuckets
 {
     public class VerticalHealthBar
     {
-        public static Color EMPTY_COLOR = Color.Red;
-        public static Color FILL_COLOR = Color.Blue;
-        public static Texture2D DRAW_TEXTURE { get; set; }
-
-        public int width { get; set; }
-        public int height { get; set; }
+        public static Texture2D VIAL_TEXTURE { get; set; }
 
         public PaintBucket bucket { get; set; }
+        public Color fillColor { get; set; }
 
-        public VerticalHealthBar(PaintBucket bucket)
+        static VerticalHealthBar()
+        {
+            VIAL_TEXTURE = BalloonPaintBucketMainGame.GetInstance().game.Content.Load<Texture2D>("UI/meter");
+        }
+
+        public VerticalHealthBar(PaintBucket bucket, Color fillColor)
         {
             this.bucket = bucket;
-
-            width = 30;
-            height = bucket.GetDrawRectangle().Height - 10;
+            this.fillColor = fillColor;
         }
 
         /// <summary>
@@ -44,25 +43,23 @@ namespace BalloonPaintBucketGame.PaintBuckets
         {
 
             Rectangle drawRect = bucket.GetDrawRectangle();
-            return new Rectangle(drawRect.Right + 10, drawRect.Top, this.width, this.height);
+            return new Rectangle(drawRect.Right + 10, drawRect.Top, 30, bucket.GetDrawRectangle().Height - 10);
         }
 
         public void Draw(SpriteBatch sb)
         {
-            if (DRAW_TEXTURE == null)
-                DRAW_TEXTURE = DrawUtil.GetClearTexture2D(sb);
-
             Rectangle drawRect = this.GetDrawRectangle();
-            sb.Draw(DRAW_TEXTURE, drawRect, null, EMPTY_COLOR, 0f,
+            sb.Draw(VIAL_TEXTURE, drawRect, null, Color.White, 0f,
                 Vector2.Zero, SpriteEffects.None, bucket.z - 0.001f);
 
-            float offset = (float)Math.Ceiling((this.GetPercentageFull() / 100f) * drawRect.Height);
+            Point vialOffset = new Point(6, 1);
 
-            drawRect = new Rectangle(drawRect.X, (int)(drawRect.Y + (drawRect.Height - offset)),
-                drawRect.Width, (int)(offset));
-            sb.Draw(DRAW_TEXTURE, drawRect, null, FILL_COLOR, 0f,
+            float offset = (float)Math.Ceiling((this.GetPercentageFull() / 100f) * (drawRect.Height - (vialOffset.Y * 2)));
+
+            drawRect = new Rectangle(drawRect.X + vialOffset.X, (int)(drawRect.Y + (drawRect.Height - offset)) - vialOffset.Y,
+                drawRect.Width - (vialOffset.X * 2), (int)(offset) - vialOffset.Y);
+            sb.Draw(DrawUtil.lineTexture, drawRect, null, this.fillColor, 0f,
                 Vector2.Zero, SpriteEffects.None, bucket.z - 0.002f);
-
         }
     }
 }

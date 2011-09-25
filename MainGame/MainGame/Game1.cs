@@ -29,7 +29,7 @@ namespace MainGame
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game, MouseMotionListener
+    public class Game1 : Microsoft.Xna.Framework.Game, MouseMotionListener, KeyboardListener
     {
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
@@ -56,7 +56,7 @@ namespace MainGame
             this.graphics.PreferredBackBufferHeight = 768;
 
             this.graphics.SynchronizeWithVerticalRetrace = false;
-            
+
             this.graphics.ApplyChanges();
             this.InactiveSleepTime = new System.TimeSpan(0);
 
@@ -81,10 +81,14 @@ namespace MainGame
             parent.border = null;
             graphics.SynchronizeWithVerticalRetrace = false;
             graphics.ApplyChanges();
-            this.displayLbl = new XNALabel(parent, new Rectangle(5, 5, 200, 20), "");
-            this.displayLbl.backgroundColor = Color.Transparent;
+            //this.displayLbl = new XNALabel(parent, new Rectangle(5, 5, 200, 20), "");
+            //this.displayLbl.backgroundColor = Color.Transparent;
             BalloonPaintBucketMainGame.GetInstance().Initialize(this);
             SquatBugsMainGame.GetInstance().Initialize(this);
+
+            MenuManager.GetInstance().ShowMenu(MenuManager.Menu.MainMenu);
+            StateManager.GetInstance().SetState(StateManager.State.Idle);
+            KeyboardManager.GetInstance().keyPressedListeners += this.OnKeyPressed;
         }
 
         /// <summary>
@@ -128,7 +132,44 @@ namespace MainGame
 
             // TODO: Add your update logic here
 
-            BalloonPaintBucketMainGame.GetInstance().Update();
+            StateManager sm = StateManager.GetInstance();
+            switch (sm.GetState())
+            {
+                case StateManager.State.Idle:
+                    {
+
+                        break;
+                    }
+                case StateManager.State.Running:
+                    {
+                        switch (StateManager.GetInstance().GetRunningGame())
+                        {
+                            case StateManager.RunningGame.BalloonPaintBucketGame:
+                                BalloonPaintBucketMainGame.GetInstance().Update();
+                                break;
+                            case StateManager.RunningGame.SquatBugsGame:
+                                SquatBugsMainGame.GetInstance().Update();
+                                break;
+
+                        }
+                        break;
+                    }
+                case StateManager.State.Paused:
+                    {
+
+                        break;
+                    }
+                case StateManager.State.Loss:
+                    {
+
+                        break;
+                    }
+                case StateManager.State.Victory:
+                    {
+
+                        break;
+                    }
+            }
             // SquatBugsMainGame.GetInstance().Update();
             base.Update(gameTime);
         }
@@ -149,21 +190,61 @@ namespace MainGame
             // PolygonManager.GetInstance().DrawPolygons(spriteBatch);
             // TODO: Add your drawing code here
 
-            BalloonPaintBucketMainGame.GetInstance().Draw(spriteBatch);
+            switch (StateManager.GetInstance().GetRunningGame())
+            {
+                case StateManager.RunningGame.BalloonPaintBucketGame:
+                    BalloonPaintBucketMainGame.GetInstance().Draw(spriteBatch);
+                    break;
+                case StateManager.RunningGame.SquatBugsGame:
+                    SquatBugsMainGame.GetInstance().Draw(spriteBatch);
+                    break;
+
+            }
             // SquatBugsMainGame.GetInstance().Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
 
+
+
         public void OnMouseMotion(MouseEvent e)
         {
+            /*
             if (PolygonManager.GetInstance().polygons.Count() > 0)
                 this.displayLbl.text = "Inside: " + PolygonManager.GetInstance().polygons.GetFirst().IsInside(
-                new Vector2(e.location.X, e.location.Y));
+                new Vector2(e.location.X, e.location.Y));*/
         }
 
         public void OnMouseDrag(MouseEvent e)
+        {
+
+        }
+
+        public void OnKeyPressed(KeyEvent e)
+        {
+            StateManager sm = StateManager.GetInstance();
+            if (sm.GetRunningGame() != StateManager.RunningGame.None && e.key == Keys.Escape)
+            {
+                if (sm.GetState() != StateManager.State.Paused)
+                {
+                    MenuManager.GetInstance().ShowMenu(MenuManager.Menu.IngameMenu);
+                    StateManager.GetInstance().SetState(StateManager.State.Paused);
+                }
+                else
+                {
+                    MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
+                    StateManager.GetInstance().SetState(StateManager.State.Running);
+                }
+            }
+        }
+
+        public void OnKeyTyped(KeyEvent e)
+        {
+
+        }
+
+        public void OnKeyReleased(KeyEvent e)
         {
 
         }
