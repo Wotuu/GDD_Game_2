@@ -22,10 +22,12 @@ namespace SquatBugsGame.Managers
         private BugManager() { }
         #endregion
 
+        
+
         public List<Bug> BugList = new List<Bug>();
-        private int MaximumBugs = 20;
-        private int MaximumEvilBugs = 10;
-        private int MaximumFriendlyBugs = 10;
+        private int MaximumBugs = 30;
+        private int MaximumEvilBugs = 8;
+        private int MaximumFriendlyBugs = 22;
         private Random random = new Random();
         private Viewport viewport = SquatBugsMainGame.GetInstance().game.GraphicsDevice.Viewport;
         public void DrawBugs(SpriteBatch sb)
@@ -33,7 +35,9 @@ namespace SquatBugsGame.Managers
             for (int i = 0; i < this.BugList.Count(); i++)
             {
                 BugList[i].Draw(sb);
-                BugList[i].DrawDebug(sb, i);
+                //BugList[i].DrawDebug(sb, i);
+                Util.DrawClearRectangle(sb, BugList[i].drawRectangle, 1, Color.Red, 1);
+                Util.DrawClearRectangle(sb, BugList[i].locendrect, 1, Color.Red, 1);
             }
         }
 
@@ -45,12 +49,18 @@ namespace SquatBugsGame.Managers
             }
             for (int i = 0; i < this.BugList.Count(); i++)
             {
-                if (BugList[i].IsDead)
+                if (BugList[i].IsDead && BugList[i].FadeTimer <= 0)
                 {
                     BugList.Remove(BugList[i]);
-                    i--;
+                    
                 }
-                BugList[i].Update(random);
+                try
+                {
+                    BugList[i].Update(random);
+                }
+                catch (Exception)
+                { 
+                }
             }
 
         }
@@ -75,19 +85,54 @@ namespace SquatBugsGame.Managers
                     FriendlyBugsCount++;
                 }
             }
-
-
-
             //Spawnen
             for (int i = 0; i < MaximumEvilBugs - EvilBugsCount; i++)
             {
-                BugList.Add(new EnemyBug(new Vector2(random.Next(-2,2),random.Next(-2,2)),12,random.Next(1000,20000),new Vector2(random.Next(0,viewport.Width),random.Next(0,viewport.Height))));
+                BugList.Add(new EnemyBug(GetRandomSpeed(), 12, GetRandomTime(), GetRandomLocation(true)));
             }
 
             for (int i = 0; i < MaximumFriendlyBugs - FriendlyBugsCount; i++)
             {
-                BugList.Add(new FriendlyBug(new Vector2(random.Next(-2, 2) , random.Next(-2, 2) ), 12, random.Next(1000, 20000), new Vector2(random.Next(0, viewport.Width), random.Next(0, viewport.Height))));
+                BugList.Add(new FriendlyBug(GetRandomSpeed(), 12, GetRandomTime(), GetRandomLocation(true),(FriendlyBug.BugColor)random.Next(3)));
             }
+        }
+
+        public Vector2 GetRandomLocation(bool newbug = false)
+        {
+            if (!newbug)
+            {
+                return new Vector2(random.Next(200, viewport.Width - 200), random.Next(200, viewport.Height - 200));
+            }
+            else
+            {
+                int perc = random.Next(100);
+                if (perc <= 25)
+                {
+                    return new Vector2(random.Next(-viewport.Width, 0), random.Next(-viewport.Height, 0));
+                }
+                else if(perc <= 50)
+                {
+                    return new Vector2(random.Next(viewport.Width, viewport.Width * 2), random.Next(viewport.Height, viewport.Height *2 ));
+                }
+                else if (perc <= 75)
+                {
+                    return new Vector2(random.Next(-viewport.Width, 0), random.Next(viewport.Height, viewport.Height * 2));
+                }
+                else
+                {
+                    return new Vector2(random.Next(viewport.Width, viewport.Width * 2), random.Next(-viewport.Height, 0));
+                }
+            }
+        }
+
+        public double GetRandomTime()
+        {
+            return random.Next(1000, 20000);
+        }
+
+        public Vector2 GetRandomSpeed()
+        {
+            return new Vector2(random.Next(-4, 4), random.Next(-4, 4));
         }
     }
 }

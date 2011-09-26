@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SquatBugsGame.Managers;
 using SquatBugsGame.Players;
+using ParticleEngine;
 
 namespace SquatBugsGame
 {
@@ -27,12 +28,16 @@ namespace SquatBugsGame
         public Game game { get; set; }
         public SpriteFont font;
         public Player player;
+        public Texture2D background { get; set; }
+       
 
         public void Initialize(Game game)
         {
             this.game = game;
             font = game.Content.Load<SpriteFont>("Fonts/Arial");
-            player = new Player();
+            this.background = this.game.Content.Load<Texture2D>("Backgrounds/squatbugs");
+            ParticleManager.DEFAULT_TEXTURE = this.game.Content.Load<Texture2D>("Particles/default");
+            this.player = new Player();
         }
 
         /// <summary>
@@ -41,7 +46,9 @@ namespace SquatBugsGame
         public void Update()
         {
             GameTimeManager.GetInstance().OnStartUpdate();
-            BugManager.GetInstance().UpdateBugs(); 
+            BugManager.GetInstance().UpdateBugs();
+            ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
+            this.player.Update();
         }
 
         /// <summary>
@@ -50,8 +57,16 @@ namespace SquatBugsGame
         /// <param name="sb">The spritebatch to draw on.</param>
         public void Draw(SpriteBatch sb)
         {
+            if (Util.lineTexture == null)
+            {
+                Util.lineTexture = Util.GetClearTexture2D(sb);
+            }
+            sb.Draw(this.background, new Rectangle(0, 0, this.game.GraphicsDevice.Viewport.Width,
+            this.game.GraphicsDevice.Viewport.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
             GameTimeManager.GetInstance().OnStartDraw();
-            BugManager.GetInstance().DrawBugs(sb); 
+            ParticleManager.GetInstance().Draw(sb);
+            BugManager.GetInstance().DrawBugs(sb);
+            this.player.Draw(sb);
         }
     }
 }
