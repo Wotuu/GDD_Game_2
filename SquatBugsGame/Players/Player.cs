@@ -16,6 +16,9 @@ namespace SquatBugsGame.Players
 
         public Paw paw { get; set; }
 
+        public int FriendlyBugsLeftKill = 3;
+        public int EnemieBugsLeftKill = 20;
+
         public Player()
         {
             MouseManager.GetInstance().mouseClickedListeners += this.OnMouseClick;

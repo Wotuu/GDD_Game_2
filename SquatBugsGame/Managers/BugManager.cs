@@ -36,8 +36,8 @@ namespace SquatBugsGame.Managers
             {
                 BugList[i].Draw(sb);
                 //BugList[i].DrawDebug(sb, i);
-                Util.DrawClearRectangle(sb, BugList[i].drawRectangle, 1, Color.Red, 1);
-                Util.DrawClearRectangle(sb, BugList[i].locendrect, 1, Color.Red, 1);
+                //Util.DrawClearRectangle(sb, BugList[i].drawRectangle, 1, Color.Red, 1);
+                //Util.DrawClearRectangle(sb, BugList[i].locendrect, 1, Color.Red, 1);
             }
         }
 
@@ -51,7 +51,17 @@ namespace SquatBugsGame.Managers
             {
                 if (BugList[i].IsDead && BugList[i].FadeTimer <= 0)
                 {
+                    if (BugList[i] is FriendlyBug)
+                    {
+                        SquatBugsMainGame.GetInstance().player.FriendlyBugsLeftKill--;
+                    }
+                    else
+                    {
+                        SquatBugsMainGame.GetInstance().player.EnemieBugsLeftKill--;
+                    }
                     BugList.Remove(BugList[i]);
+                    // Remove bug
+
                     
                 }
                 try

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SquatBugsGame.Managers;
 using SquatBugsGame.Players;
 using ParticleEngine;
+using XNAInterfaceComponents.ParentComponents;
 
 namespace SquatBugsGame
 {
@@ -46,9 +47,34 @@ namespace SquatBugsGame
         public void Update()
         {
             GameTimeManager.GetInstance().OnStartUpdate();
-            BugManager.GetInstance().UpdateBugs();
-            ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
-            this.player.Update();
+
+            switch (StateManager.GetInstance().GetState())
+            {
+                case StateManager.State.Running:
+                    {
+                        BugManager.GetInstance().UpdateBugs();
+                        ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
+                        this.player.Update();
+                        WinCheck();
+                        break;
+                    }
+                case StateManager.State.Paused:
+                    {
+
+                        break;
+                    }
+                case StateManager.State.Loss:
+                    {
+
+                        break;
+                    }
+                case StateManager.State.Victory:
+                    {
+
+                        break;
+                    }
+            }
+            
         }
 
         /// <summary>
@@ -67,6 +93,38 @@ namespace SquatBugsGame
             ParticleManager.GetInstance().Draw(sb);
             BugManager.GetInstance().DrawBugs(sb);
             this.player.Draw(sb);
+        }
+
+
+        /// <summary>
+        /// Checks if the current user has won.
+        /// </summary>
+        public void WinCheck()
+        {
+
+            if (player.FriendlyBugsLeftKill > 0)
+            {
+                return;
+            }
+            else
+            {
+                StateManager.GetInstance().SetState(StateManager.State.Victory);
+                XNAMessageDialog.CreateDialog("Congratulations, you've lost!", XNAMessageDialog.DialogType.OK);
+            }
+
+            if (player.EnemieBugsLeftKill > 0)
+            {
+                return;
+            }
+            else
+            {
+                StateManager.GetInstance().SetState(StateManager.State.Victory);
+                XNAMessageDialog.CreateDialog("Congratulations, you've won!", XNAMessageDialog.DialogType.OK);
+            }
+
+
+           
+            
         }
     }
 }

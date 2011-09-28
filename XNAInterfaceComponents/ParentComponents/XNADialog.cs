@@ -23,6 +23,7 @@ namespace XNAInterfaceComponents.ParentComponents
         public XNADialog()
             : base(null, new Rectangle())
         {
+            this.z = 0.1f;
             this.font = ChildComponent.DEFAULT_FONT;
             this.padding = new Padding(5, 5, 5, 5);
             this.border = new Border(this, 3, Color.Black);

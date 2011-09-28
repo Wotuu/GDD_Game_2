@@ -52,7 +52,7 @@ namespace SquatBugsGame.Bugs
         public void Draw(SpriteBatch sb)
         {
             //sb.Draw(BUG, GetDrawRectangle(), this.color);
-            sb.Draw(BUG, location, new Rectangle((BUG.Width / NrOfFrames) * (spritenr - 1), 0, (BUG.Width / NrOfFrames), BUG.Height), DrawColor, rotation, GetCenter(), scale, SpriteEffects.None, 0.1f);
+            sb.Draw(BUG, location, new Rectangle((BUG.Width / NrOfFrames) * (spritenr - 1), 0, (BUG.Width / NrOfFrames), BUG.Height), DrawColor, rotation, GetCenter(), scale, SpriteEffects.None, 0.9f);
         }
 
         public void DrawDebug(SpriteBatch sb, int i)
@@ -113,7 +113,6 @@ namespace SquatBugsGame.Bugs
             }
         }
 
-
         /// <summary>
         /// Gets the draw rectangle of this bug.
         /// </summary>
@@ -144,7 +143,6 @@ namespace SquatBugsGame.Bugs
             return true;
         }
 
-
         public Boolean IsBugAtEndPoint( Vector2 endlocation)
         {
 
@@ -156,8 +154,6 @@ namespace SquatBugsGame.Bugs
 
             return false;
         }
-
-
 
         public void CheckBounds()
         {
