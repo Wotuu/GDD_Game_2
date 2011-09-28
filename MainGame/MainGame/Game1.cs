@@ -23,6 +23,8 @@ using BalloonPaintBucketGame;
 using BalloonPaintBucketGame.Balloons;
 using BalloonPaintBucketGame.Players;
 using SquatBugsGame;
+using MiniGameOverview;
+using MainGame.Backgrounds;
 
 namespace MainGame
 {
@@ -35,6 +37,7 @@ namespace MainGame
         public SpriteBatch spriteBatch;
 
         public XNALabel displayLbl { get; set; }
+        public MainGameBackground background { get; set; }
 
         private static Game1 instance { get; set; }
         public static Game1 GetInstance()
@@ -83,11 +86,9 @@ namespace MainGame
             graphics.ApplyChanges();
             //this.displayLbl = new XNALabel(parent, new Rectangle(5, 5, 200, 20), "");
             //this.displayLbl.backgroundColor = Color.Transparent;
-            BalloonPaintBucketMainGame.GetInstance().Initialize(this);
-            SquatBugsMainGame.GetInstance().Initialize(this);
 
             MenuManager.GetInstance().ShowMenu(MenuManager.Menu.MainMenu);
-            StateManager.GetInstance().SetState(StateManager.State.Idle);
+            StateManager.GetInstance().SetState(StateManager.State.MainMenu);
             KeyboardManager.GetInstance().keyPressedListeners += this.OnKeyPressed;
         }
 
@@ -102,6 +103,7 @@ namespace MainGame
 
             // TODO: use this.Content to load your game content here
             DrawUtil.lineTexture = DrawUtil.GetClearTexture2D(spriteBatch);
+            this.background = new MainGameBackground();
         }
 
         /// <summary>
@@ -135,9 +137,13 @@ namespace MainGame
             StateManager sm = StateManager.GetInstance();
             switch (sm.GetState())
             {
+                case StateManager.State.MainMenu:
+                    {
+                        this.background.Update();
+                        break;
+                    }
                 case StateManager.State.Idle:
                     {
-
                         break;
                     }
                 case StateManager.State.Running:
@@ -149,6 +155,9 @@ namespace MainGame
                                 break;
                             case StateManager.RunningGame.SquatBugsGame:
                                 SquatBugsMainGame.GetInstance().Update();
+                                break;
+                            case StateManager.RunningGame.MiniGameOverview:
+                                MiniGameOverviewMainGame.GetInstance().Update();
                                 break;
 
                         }
@@ -180,7 +189,7 @@ namespace MainGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Green);
+            GraphicsDevice.Clear(new Color(188, 215, 237));
             GameTimeManager.GetInstance().OnStartDraw();
 
             spriteBatch.Begin(SpriteSortMode.BackToFront, null);
@@ -192,13 +201,18 @@ namespace MainGame
 
             switch (StateManager.GetInstance().GetRunningGame())
             {
+                case StateManager.RunningGame.None:
+                    this.background.Draw(spriteBatch);
+                    break;
                 case StateManager.RunningGame.BalloonPaintBucketGame:
                     BalloonPaintBucketMainGame.GetInstance().Draw(spriteBatch);
                     break;
                 case StateManager.RunningGame.SquatBugsGame:
                     SquatBugsMainGame.GetInstance().Draw(spriteBatch);
                     break;
-
+                case StateManager.RunningGame.MiniGameOverview:
+                    MiniGameOverviewMainGame.GetInstance().Draw(spriteBatch);
+                    break;
             }
             // SquatBugsMainGame.GetInstance().Draw(spriteBatch);
             spriteBatch.End();

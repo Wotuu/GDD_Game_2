@@ -25,11 +25,16 @@ namespace MainGame.Managers
 
         public static Texture2D PANEL_BACKGROUND { get; set; }
         public static Texture2D BUTTON_BACKGROUND { get; set; }
+        public static Texture2D BUTTON_MOUSEOVER_BACKGROUND { get; set; }
+        public static SpriteFont MAIN_MENU_BUTTON_FONT { get; set; }
 
         static MenuManager()
         {
             PANEL_BACKGROUND = Game1.GetInstance().Content.Load<Texture2D>("UI/Interface/testMenuBackground");
             BUTTON_BACKGROUND = Game1.GetInstance().Content.Load<Texture2D>("UI/Interface/testButtonBackground");
+            BUTTON_MOUSEOVER_BACKGROUND = Game1.GetInstance().Content.Load<Texture2D>("UI/Interface/testMouseoverBackground");
+
+            MAIN_MENU_BUTTON_FONT = Game1.GetInstance().Content.Load<SpriteFont>("Fonts/MainMenu");
         }
 
         private ParentComponent currentMenu { get; set; }

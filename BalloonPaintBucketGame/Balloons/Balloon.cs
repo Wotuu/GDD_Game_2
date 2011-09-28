@@ -125,7 +125,7 @@ namespace BalloonPaintBucketGame.Balloons
             this.scale = new Vector2(0.25f, 0.25f);
             BalloonManager.GetInstance().balloons.AddLast(this);
 
-            this.z = 0.9f - (BalloonManager.GetInstance().balloons.Count() * 0.001f);
+            this.z = 0.9f - (BalloonManager.GetInstance().balloonsSpawned * 0.001f);
             this.polygon.z = this.z - 0.001f;
 
             this.speed = new Vector2(4 * this.scale.X, 8 * this.scale.Y);

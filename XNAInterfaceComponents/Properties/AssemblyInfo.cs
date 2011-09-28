@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("XNAInterfaceComponents")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
+[assembly: AssemblyCopyright("Copyright © Wouter Koppenol")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

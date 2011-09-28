@@ -123,7 +123,9 @@ namespace XNAInterfaceComponents.AbstractComponents
         /// <returns>The component</returns>
         public Component GetComponentAt(Point p)
         {
-            foreach (Component child in this.children)
+            LinkedList<Component> sortedChildren = ComponentManager.GetInstance().SortComponentsByZ(
+                this.children, false);
+            foreach (Component child in sortedChildren)
             {
                 if (!child.visible) continue;
                 if (child is ParentComponent)

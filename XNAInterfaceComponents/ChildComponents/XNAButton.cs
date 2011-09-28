@@ -24,8 +24,6 @@ namespace XNAInterfaceComponents.AbstractComponents
             this.text = text;
             MouseManager.GetInstance().mouseClickedListeners += OnMouseClick;
             MouseManager.GetInstance().mouseReleasedListeners += OnMouseRelease;
-
-            this.backgroundColor = Color.White;
         }
 
         public XNAButton(ParentComponent parent, Rectangle bounds, String text)
@@ -66,7 +64,9 @@ namespace XNAInterfaceComponents.AbstractComponents
             }
             else
             {
-                sb.Draw(this.backgroundTexture, drawRect, null, drawColor, 0, new Vector2(0, 0), SpriteEffects.None, 
+                Texture2D texture = this.backgroundTexture;
+                if (this.isMouseOver && this.mouseoverBackgroundTexture != null) texture = this.mouseoverBackgroundTexture;
+                sb.Draw(texture, drawRect, null, drawColor, 0, new Vector2(0, 0), SpriteEffects.None,
                     this.z - 0.001f);
             }
             // Draw the text on the button
@@ -118,13 +118,13 @@ namespace XNAInterfaceComponents.AbstractComponents
 
         public override void OnMouseEnter(MouseEvent m_event)
         {
-            if( this.enabled ) this.isMouseOver = true;
+            if (this.enabled) this.isMouseOver = true;
             // Console.Out.WriteLine("XNA Button @ " + this.GetScreenBounds() + " mouse entered!");
         }
 
         public override void OnMouseExit(MouseEvent m_event)
         {
-            if( this.enabled ) this.isMouseOver = false;
+            if (this.enabled) this.isMouseOver = false;
             // Console.Out.WriteLine("XNA Button @ " + this.GetScreenBounds() + " mouse exitted!");
         }
 

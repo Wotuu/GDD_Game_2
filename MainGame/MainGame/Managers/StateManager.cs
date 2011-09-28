@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MainGame.Managers;
+using BalloonPaintBucketGame;
+using SquatBugsGame;
+using MiniGameOverview;
 
 namespace MainGame.Managers
 {
@@ -21,22 +25,36 @@ namespace MainGame.Managers
         #endregion
 
         private RunningGame game { get; set; }
-        private State state { get; set; }
+        private State _state { get; set; }
+        private State state
+        {
+            get
+            {
+                return _state;
+            }
+            set
+            {
+                if (_state != value) this.OnStateChanged(_state, value);
+                this._state = value;
+            }
+        }
 
         public enum State
         {
-            Idle,
             Running,
             Paused,
             Victory,
-            Loss
+            Loss,
+            Idle,
+            MainMenu
         }
 
         public enum RunningGame
         {
             None,
             BalloonPaintBucketGame,
-            SquatBugsGame
+            SquatBugsGame,
+            MiniGameOverview
         }
 
         /// <summary>
@@ -69,6 +87,18 @@ namespace MainGame.Managers
         /// <param name="game">The game that is currently running.</param>
         public void SetRunningGame(RunningGame game)
         {
+            switch (game)
+            {
+                case RunningGame.BalloonPaintBucketGame:
+                    BalloonPaintBucketMainGame.GetInstance().Initialize(Game1.GetInstance());
+                    break;
+                case RunningGame.SquatBugsGame:
+                    SquatBugsMainGame.GetInstance().Initialize(Game1.GetInstance());
+                    break;
+                case RunningGame.MiniGameOverview:
+                    MiniGameOverviewMainGame.GetInstance().Initialize(Game1.GetInstance());
+                    break;
+            }
             this.game = game;
         }
 
@@ -79,6 +109,23 @@ namespace MainGame.Managers
         public RunningGame GetRunningGame()
         {
             return this.game;
+        }
+
+        /// <summary>
+        /// Called when the state has changed.
+        /// </summary>
+        /// <param name="old">The old state.</param>
+        /// <param name="newState">The new state.</param>
+        public void OnStateChanged(State old, State newState)
+        {
+            switch (this.GetRunningGame())
+            {
+                case RunningGame.BalloonPaintBucketGame:
+                    BalloonPaintBucketGame.Managers.StateManager.GetInstance().SetState(
+                        (BalloonPaintBucketGame.Managers.StateManager.State)((int)newState));
+
+                    break;
+            }
         }
     }
 }

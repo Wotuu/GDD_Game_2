@@ -17,7 +17,6 @@ namespace XNAInterfaceComponents.Components
             : base(parent, bounds)
         {
             this.backgroundTexture = backgroundTexture;
-            this.backgroundColor = Color.White;
         }
 
         public XNAPanel(ParentComponent parent, Rectangle bounds)

@@ -133,7 +133,9 @@ namespace XNAInterfaceComponents.Managers
         private Component previousMouseOver = null;
         public void OnMouseMotion(MouseEvent e)
         {
-            foreach (ParentComponent pc in this.componentList)
+            LinkedList<ParentComponent> sortedList = this.SortComponentsByZ(this.componentList, false);
+
+            foreach (ParentComponent pc in sortedList)
             {
                 Component mouseOver = pc.GetComponentAt(e.location);
 
@@ -172,5 +174,100 @@ namespace XNAInterfaceComponents.Managers
         {
             // throw new NotImplementedException();
         }
+
+
+        #region Sort components by Z
+        /// <summary>
+        /// Sorts a linked list of components by their Z value.
+        /// </summary>
+        /// <param name="toSort">The list to sort.</param>
+        /// <returns>The sorted list.</returns>
+        public LinkedList<ParentComponent> SortComponentsByZ(LinkedList<ParentComponent> toSort, Boolean asc)
+        {
+            // Bubble sort :]
+            var sorted = false;
+            if (toSort.Count() < 2) return toSort;
+            while (!sorted)
+            {
+                ParentComponent previous = null;
+                for (var i = 0; i < toSort.Count(); i++)
+                {
+                    ParentComponent current = toSort.ElementAt(i);
+
+                    if (previous != null && current.z > previous.z)
+                    {
+                        toSort.AddAfter(toSort.Find(toSort.ElementAt(i - 1)), current);
+                        toSort.AddAfter(toSort.Find(toSort.ElementAt(i)), previous);
+
+                        break;
+                    }
+
+
+                    if (i + 1 == toSort.Count())
+                    {
+                        sorted = true;
+                    }
+
+                    previous = current;
+                }
+            }
+            if (!asc)
+            {
+                LinkedList<ParentComponent> reversedList = new LinkedList<ParentComponent>();
+                for (int i = toSort.Count - 1; i > -1; i--)
+                {
+                    reversedList.AddLast(toSort.ElementAt(i));
+                }
+                return reversedList;
+            }
+            return toSort;
+        }
+
+        /// <summary>
+        /// Sorts a linked list of components by their Z value.
+        /// </summary>
+        /// <param name="toSort">The list to sort.</param>
+        /// <returns>The sorted list.</returns>
+        public LinkedList<Component> SortComponentsByZ(LinkedList<Component> toSort, Boolean asc)
+        {
+            // Bubble sort :]
+            var sorted = false;
+            if (toSort.Count() < 2) return toSort;
+            while (!sorted)
+            {
+                Component previous = null;
+                for (var i = 0; i < toSort.Count(); i++)
+                {
+                    Component current = toSort.ElementAt(i);
+
+                    if (previous != null && current.z > previous.z)
+                    {
+                        toSort.AddAfter(toSort.Find(toSort.ElementAt(i - 1)), current);
+                        toSort.AddAfter(toSort.Find(toSort.ElementAt(i)), previous);
+
+                        break;
+                    }
+
+
+                    if (i + 1 == toSort.Count())
+                    {
+                        sorted = true;
+                    }
+
+                    previous = current;
+                }
+            }
+            if (!asc)
+            {
+                LinkedList<Component> reversedList = new LinkedList<Component>();
+                for (int i = toSort.Count - 1; i > -1; i--)
+                {
+                    reversedList.AddLast(toSort.ElementAt(i));
+                }
+                return reversedList;
+            }
+            return toSort;
+        }
+        #endregion
     }
 }

@@ -24,7 +24,34 @@ namespace XNAInterfaceComponents.Components
         public Color mouseOverColor { get; set; }
         public Boolean isMouseOver { get; set; }
         public Boolean isFocussed { get; set; }
-        public Texture2D backgroundTexture { get; set; }
+
+        private Texture2D _mouseoverBackgroundTexture { get; set; }
+        public Texture2D mouseoverBackgroundTexture
+        {
+            get
+            {
+                return _mouseoverBackgroundTexture;
+            }
+            set
+            {
+                this.mouseOverColor = Color.White;
+                this._mouseoverBackgroundTexture = value;
+            }
+        }
+        private Texture2D _backgroundTexture { get; set; }
+        public Texture2D backgroundTexture
+        {
+            get
+            {
+                return _backgroundTexture;
+            }
+            set
+            {
+                this.backgroundColor = Color.White;
+
+                this._backgroundTexture = value;
+            }
+        }
 
         public float z { get; set; }
 

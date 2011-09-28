@@ -18,8 +18,7 @@ namespace BalloonPaintBucketGame.Players
 
         public Player()
         {
-
-            this.z = 0.9f;
+            this.z = 0.8f;
             this.paw = new Paw(this);
         }
 

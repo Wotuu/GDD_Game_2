@@ -30,6 +30,7 @@ namespace BalloonPaintBucketGame.Managers
         public double lastBalloonSpawnMS { get; set; }
 
         public int maxBlackBalloons = 4;
+        public int balloonsSpawned { get; set; }
 
         public void DrawBalloons(SpriteBatch sb)
         {
@@ -60,6 +61,7 @@ namespace BalloonPaintBucketGame.Managers
         /// </summary>
         public void SpawnNewBalloon()
         {
+            balloonsSpawned++;
             Random random = new Random();
 
             // One in 4 chance a black balloon will spawn

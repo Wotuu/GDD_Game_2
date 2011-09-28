@@ -28,6 +28,7 @@ namespace XNAInterfaceComponents.ParentComponents
             this.padding = new Padding(5, 5, 5, 5);
             this.border = new Border(this, 3, Color.Black);
 
+            this.z = 0.1f;
             // this.z = 1f - this.GetDrawDepthOffset();
         }
 
