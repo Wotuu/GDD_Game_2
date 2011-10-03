@@ -25,6 +25,9 @@ using BalloonPaintBucketGame.Players;
 using SquatBugsGame;
 using MiniGameOverview;
 using MainGame.Backgrounds;
+using MainGame.Cards;
+using ParticleEngine;
+using MainGame.Backgrounds.Birds;
 
 namespace MainGame
 {
@@ -34,7 +37,7 @@ namespace MainGame
     public class Game1 : Microsoft.Xna.Framework.Game, MouseMotionListener, KeyboardListener
     {
         public GraphicsDeviceManager graphics;
-        public SpriteBatch spriteBatch;
+        public SpriteBatch sb;
 
         public XNALabel displayLbl { get; set; }
         public MainGameBackground background { get; set; }
@@ -50,17 +53,14 @@ namespace MainGame
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            Content.RootDirectory = "Content";
             this.IsMouseVisible = true;
             this.IsFixedTimeStep = false;
             instance = this;
 
             this.graphics.PreferredBackBufferWidth = 1024;
             this.graphics.PreferredBackBufferHeight = 768;
-
-            this.graphics.SynchronizeWithVerticalRetrace = false;
-
             this.graphics.ApplyChanges();
+
             this.InactiveSleepTime = new System.TimeSpan(0);
 
             MouseManager.GetInstance().mouseMotionListeners += this.OnMouseMotion;
@@ -76,8 +76,6 @@ namespace MainGame
         {
             // TODO: Add your initialization logic here
             base.Initialize();
-            SpriteFont font = Content.Load<SpriteFont>("Fonts/Arial");
-            ChildComponent.DEFAULT_FONT = font;
 
             XNAPanel parent = new XNAPanel(null, new Rectangle(0, 0, 1024, 768));
             parent.backgroundColor = Color.Transparent;
@@ -90,6 +88,8 @@ namespace MainGame
             MenuManager.GetInstance().ShowMenu(MenuManager.Menu.MainMenu);
             StateManager.GetInstance().SetState(StateManager.State.MainMenu);
             KeyboardManager.GetInstance().keyPressedListeners += this.OnKeyPressed;
+
+            new BirdFlock(BirdFlock.FlyDirection.LeftToRight, 2);
         }
 
         /// <summary>
@@ -99,11 +99,17 @@ namespace MainGame
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            sb = new SpriteBatch(GraphicsDevice);
+            SpriteFont font = Content.Load<SpriteFont>("Fonts/Arial");
+            ChildComponent.DEFAULT_FONT = font;
 
             // TODO: use this.Content to load your game content here
-            DrawUtil.lineTexture = DrawUtil.GetClearTexture2D(spriteBatch);
+            DrawUtil.lineTexture = DrawUtil.GetClearTexture2D(sb);
             this.background = new MainGameBackground();
+
+            ParticleManager.DEFAULT_TEXTURE = this.Content.Load<Texture2D>("Particles/default");
+
+            new WinningCard(WinningCard.CardColor.Green);
         }
 
         /// <summary>
@@ -132,6 +138,8 @@ namespace MainGame
             // Updates all interface components
             ComponentManager.GetInstance().Update();
 
+            CardManager.GetInstance().Update();
+
             // TODO: Add your update logic here
 
             StateManager sm = StateManager.GetInstance();
@@ -140,6 +148,8 @@ namespace MainGame
                 case StateManager.State.MainMenu:
                     {
                         this.background.Update();
+
+                        BirdManager.GetInstance().UpdateBirds();
                         break;
                     }
                 case StateManager.State.Idle:
@@ -179,6 +189,8 @@ namespace MainGame
                         break;
                     }
             }
+
+            ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
             // SquatBugsMainGame.GetInstance().Update();
             base.Update(gameTime);
         }
@@ -192,9 +204,13 @@ namespace MainGame
             GraphicsDevice.Clear(new Color(188, 215, 237));
             GameTimeManager.GetInstance().OnStartDraw();
 
-            spriteBatch.Begin(SpriteSortMode.BackToFront, null);
+            sb.Begin(SpriteSortMode.BackToFront, null);
             // Draws all interface components
-            ComponentManager.GetInstance().Draw(spriteBatch);
+            ComponentManager.GetInstance().Draw(sb);
+
+            ParticleManager.GetInstance().Draw(sb);
+
+            CardManager.GetInstance().Draw(sb);
 
             // PolygonManager.GetInstance().DrawPolygons(spriteBatch);
             // TODO: Add your drawing code here
@@ -202,20 +218,22 @@ namespace MainGame
             switch (StateManager.GetInstance().GetRunningGame())
             {
                 case StateManager.RunningGame.None:
-                    this.background.Draw(spriteBatch);
+                    this.background.Draw(sb);
+
+                    BirdManager.GetInstance().DrawBirds(sb);
                     break;
                 case StateManager.RunningGame.BalloonPaintBucketGame:
-                    BalloonPaintBucketMainGame.GetInstance().Draw(spriteBatch);
+                    BalloonPaintBucketMainGame.GetInstance().Draw(sb);
                     break;
                 case StateManager.RunningGame.SquatBugsGame:
-                    SquatBugsMainGame.GetInstance().Draw(spriteBatch);
+                    SquatBugsMainGame.GetInstance().Draw(sb);
                     break;
                 case StateManager.RunningGame.MiniGameOverview:
-                    MiniGameOverviewMainGame.GetInstance().Draw(spriteBatch);
+                    MiniGameOverviewMainGame.GetInstance().Draw(sb);
                     break;
             }
             // SquatBugsMainGame.GetInstance().Draw(spriteBatch);
-            spriteBatch.End();
+            sb.End();
 
             base.Draw(gameTime);
         }
@@ -261,6 +279,31 @@ namespace MainGame
         public void OnKeyReleased(KeyEvent e)
         {
 
+        }
+
+        public void OnGameStart(MiniGameOverview.Managers.StateManager.SelectedGame game)
+        {
+            switch (game)
+            {
+                case MiniGameOverview.Managers.StateManager.SelectedGame.BalloonPaintBucketGame:
+
+                    MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
+                    StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.BalloonPaintBucketGame);
+                    StateManager.GetInstance().SetState(StateManager.State.Running);
+                    break;
+                case MiniGameOverview.Managers.StateManager.SelectedGame.SquatBugsGame:
+
+                    MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
+                    StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.SquatBugsGame);
+                    StateManager.GetInstance().SetState(StateManager.State.Running);
+                    break;
+                case MiniGameOverview.Managers.StateManager.SelectedGame.BuzzBattleGame:
+
+                    MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
+                    StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.BuzzBattleGame);
+                    StateManager.GetInstance().SetState(StateManager.State.Running);
+                    break;
+            }
         }
     }
 }

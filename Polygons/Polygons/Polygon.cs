@@ -55,6 +55,16 @@ namespace PolygonCollision.Polygons
         /// </summary>
         /// <param name="p">The point to check.</param>
         /// <returns>Yes or no.</returns>
+        public Boolean IsInside(Point p)
+        {
+            return this.IsInside(new Vector2(p.X, p.Y));
+        }
+
+        /// <summary>
+        /// Checks whether or not the point is inside this polygon.
+        /// </summary>
+        /// <param name="p">The point to check.</param>
+        /// <returns>Yes or no.</returns>
         public Boolean IsInside(Vector2 p)
         {
 

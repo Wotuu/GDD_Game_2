@@ -12,18 +12,10 @@ namespace BalloonPaintBucketGame.Particles.Particles
 {
     public class PaintParticle : Particle, RectangleCollideable
     {
-        public float gravity = 0.15f;
-
         public PaintParticle(PaintEmitter emitter)
             : base(emitter)
         {
 
-        }
-
-        public override bool Update(float time_step)
-        {
-            this.speedY += (float)(gravity * GameTimeManager.GetInstance().time_step);
-            return base.Update(time_step);
         }
 
         public Rectangle GetCollisionRectangle()

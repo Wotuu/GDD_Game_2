@@ -30,6 +30,15 @@ namespace MiniGameOverview.Managers
             Loss
         }
 
+        public enum SelectedGame
+        {
+            None,
+            BalloonPaintBucketGame,
+            SquatBugsGame,
+            MiniGameOverview,
+            BuzzBattleGame
+        }
+
         /// <summary>
         /// Sets the state of a game.
         /// </summary>

@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MiniGameOverview.Animations
+namespace MainGame.Animations
 {
     public class Animator
     {

@@ -32,7 +32,11 @@ namespace MainGame.Managers
 
         private static GameTimeManager instance = null;
 
-        private GameTimeManager() { msPerFrame = (1000.0 / targetFPS); }
+        private GameTimeManager()
+        {
+            msPerFrame = (1000.0 / targetFPS);
+            this.previousUpdateStartMS = new TimeSpan(DateTime.UtcNow.Ticks).TotalMilliseconds;
+        }
 
         /// <summary>
         /// Gets the amount of MS that is left to update this frame.
@@ -71,9 +75,9 @@ namespace MainGame.Managers
             // if (Game1.GetInstance().frames % 120 == 0) 
             // Console.Out.WriteLine(msTakenLastFrame);
 
-
             // Prevent huge stepping when using breakpoints, or when having a big lagspike
             time_step = Math.Min(5, (msTakenLastFrame / this.msPerFrame));
+
             if (this.currentUpdateStartMS - this.lastFrameCountMS > 1000)
             {
                 currentFPS = framesThisSecond;

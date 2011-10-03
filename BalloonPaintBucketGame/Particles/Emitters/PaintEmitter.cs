@@ -36,8 +36,10 @@ namespace BalloonPaintBucketGame.Particles.Emitters
             this.particleSpeedX = -0.3f;
             this.particleRandomSpeedX = 0.66f;
 
-            this.particleSpeedY = 2f;
+            this.particleSpeedY = 1f;
             this.particleRandomSpeedY = 1f;
+
+            this.particleGravity = 0.75f;
 
             this.particleRandomX = 50;
             this.particleRandomY = 50;

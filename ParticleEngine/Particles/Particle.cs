@@ -26,6 +26,9 @@ namespace ParticleEngine.Particles
         public float radianRotation { get; set; }
         public float radianRotationSpeed { get; set; }
 
+        public float gravity { get; set; }
+        public float terminalVelocity { get; set; }
+
         public Boolean alive { get; set; }
 
         public Texture2D texture { get; set; }
@@ -74,6 +77,9 @@ namespace ParticleEngine.Particles
             this.radianRotation = emitter.particleRadianRotation + ((RANDOM.Next(0, 10000) / 10000f) * emitter.particleRadianRotationRandom);
             this.radianRotationSpeed = emitter.particleRadianRotationSpeed + ((RANDOM.Next(0, 10000) / 10000f) * emitter.particleRadianRotationSpeedRandom);
 
+            this.gravity = emitter.particleGravity;
+            this.terminalVelocity = emitter.particleTerminalVelocity;
+
             this.color = emitter.particleColor;
 
             this.fadeAccordingToLifespan = emitter.fadeAccordingToLifespan;
@@ -114,11 +120,14 @@ namespace ParticleEngine.Particles
             else
             {
                 // No
-                this.x += (speedX * time_step);
-                this.y += (speedY * time_step);
+                this.x += ((speedX /*+= (float)((this.gravity / 2) * GameTimeManager.GetInstance().time_step)*/) * time_step);
+                this.y += ((speedY += (float)((this.gravity / 10) * GameTimeManager.GetInstance().time_step)) * time_step);
 
                 this.radianRotation += (radianRotationSpeed * time_step);
             }
+
+            if (this.speedY > this.terminalVelocity)
+                this.speedY = this.terminalVelocity;
             // Return
             return alive;
         }
@@ -146,7 +155,9 @@ namespace ParticleEngine.Particles
             }
 
             sb.Draw(this.texture, (this.lastDrawRectangle = this.CalculateDrawRectangle()), null, drawColor,
-                this.radianRotation, Vector2.Zero /*this.drawOffset*/, SpriteEffects.None, this.z);
+                this.radianRotation, //Vector2.Zero
+                new Vector2((this.lastDrawRectangle.Width / 2f), (this.lastDrawRectangle.Height / 2f)),//*/,
+                SpriteEffects.None, this.z);
         }
 
         /// <summary>

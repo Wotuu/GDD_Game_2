@@ -43,7 +43,7 @@ namespace MainGame.Backgrounds
             for (int i = 0; i < this.clouds.Length; i++)
             {
                 this.clouds[i] = new MainGameBackgroundItem(new Vector3((i * cloudWidthStepping) + 100, 0,
-                    0.9f),
+                    0.9f - ( 0.01f * i)),
                     MainGameBackgroundItem.BackgroundType.Cloud, i + 1);
             }
             for (int i = 0; i < this.bushes.Length; i++)

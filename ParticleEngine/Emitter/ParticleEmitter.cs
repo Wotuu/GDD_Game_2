@@ -47,6 +47,9 @@ namespace ParticleEngine.Emitter
         public double lifespanMS { get; set; }
         public double creationTimeMS { get; set; }
 
+        public float particleGravity { get; set; }
+        public float particleTerminalVelocity { get; set; }
+
         public Color particleColor { get; set; }
 
         public CustomArrayList<Particle> particles { get; set; }
@@ -81,6 +84,7 @@ namespace ParticleEngine.Emitter
             this.creationTimeMS = GameTimeManager.GetInstance().currentUpdateStartMS;
 
             this.lifespanMS = Double.MaxValue;
+            this.particleTerminalVelocity = Int32.MaxValue;
 
             this.alive = true;
 

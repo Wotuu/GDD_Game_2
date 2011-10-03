@@ -54,7 +54,8 @@ namespace MainGame.Managers
             None,
             BalloonPaintBucketGame,
             SquatBugsGame,
-            MiniGameOverview
+            MiniGameOverview,
+            BuzzBattleGame
         }
 
         /// <summary>
@@ -97,6 +98,8 @@ namespace MainGame.Managers
                     break;
                 case RunningGame.MiniGameOverview:
                     MiniGameOverviewMainGame.GetInstance().Initialize(Game1.GetInstance());
+
+                    MiniGameOverviewMainGame.GetInstance().gameInfoPanel.onGameStartListeners += Game1.GetInstance().OnGameStart;
                     break;
             }
             this.game = game;
