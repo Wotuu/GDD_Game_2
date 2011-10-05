@@ -84,7 +84,8 @@ namespace MainGame.Backgrounds.Birds
             sb.Draw(this.animator.sourceTexture, this.GetDrawRectangle(),
                 this.animator.GetSourceRectangle(GameTimeManager.GetInstance().currentUpdateStartMS),
                 Color.White, 0f, Vector2.Zero,
-                (this.flock.direction == BirdFlock.FlyDirection.LeftToRight) ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0.85f);
+                (this.flock.direction == BirdFlock.FlyDirection.LeftToRight) ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 
+                1f);
         }
     }
 }

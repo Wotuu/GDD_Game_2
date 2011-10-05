@@ -21,7 +21,11 @@ namespace MainGame.Managers
             return instance;
         }
 
-        private StateManager() { }
+        private StateManager()
+        {
+            // Listen to the game state of the balloon manager
+            BalloonPaintBucketGame.Managers.StateManager.GetInstance().onGameStateChangedListeners += this.OnBalloonGameStateChanged;
+        }
         #endregion
 
         private RunningGame game { get; set; }
@@ -55,7 +59,8 @@ namespace MainGame.Managers
             BalloonPaintBucketGame,
             SquatBugsGame,
             MiniGameOverview,
-            BuzzBattleGame
+            BuzzBattleGame,
+            DigGame
         }
 
         /// <summary>
@@ -98,7 +103,6 @@ namespace MainGame.Managers
                     break;
                 case RunningGame.MiniGameOverview:
                     MiniGameOverviewMainGame.GetInstance().Initialize(Game1.GetInstance());
-
                     MiniGameOverviewMainGame.GetInstance().gameInfoPanel.onGameStartListeners += Game1.GetInstance().OnGameStart;
                     break;
             }
@@ -127,6 +131,24 @@ namespace MainGame.Managers
                     BalloonPaintBucketGame.Managers.StateManager.GetInstance().SetState(
                         (BalloonPaintBucketGame.Managers.StateManager.State)((int)newState));
 
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// When the game state of the balloon game has changed.
+        /// </summary>
+        /// <param name="newState">The new state the game is in.</param>
+        public void OnBalloonGameStateChanged(BalloonPaintBucketGame.Managers.StateManager.State newState)
+        {
+            switch (newState)
+            {
+                case BalloonPaintBucketGame.Managers.StateManager.State.Loss:
+                    Game1.GetInstance().GameLost();
+                    break;
+
+                case BalloonPaintBucketGame.Managers.StateManager.State.Victory:
+                    Game1.GetInstance().GameWon();
                     break;
             }
         }

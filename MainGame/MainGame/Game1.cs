@@ -88,8 +88,6 @@ namespace MainGame
             MenuManager.GetInstance().ShowMenu(MenuManager.Menu.MainMenu);
             StateManager.GetInstance().SetState(StateManager.State.MainMenu);
             KeyboardManager.GetInstance().keyPressedListeners += this.OnKeyPressed;
-
-            new BirdFlock(BirdFlock.FlyDirection.LeftToRight, 2);
         }
 
         /// <summary>
@@ -98,6 +96,7 @@ namespace MainGame
         /// </summary>
         protected override void LoadContent()
         {
+            GameTimeManager.GetInstance().OnStartUpdate();
             // Create a new SpriteBatch, which can be used to draw textures.
             sb = new SpriteBatch(GraphicsDevice);
             SpriteFont font = Content.Load<SpriteFont>("Fonts/Arial");
@@ -109,7 +108,7 @@ namespace MainGame
 
             ParticleManager.DEFAULT_TEXTURE = this.Content.Load<Texture2D>("Particles/default");
 
-            new WinningCard(WinningCard.CardColor.Green);
+            // new GameResultCard(GameResultCard.CardColor.LostCard);
         }
 
         /// <summary>
@@ -205,12 +204,6 @@ namespace MainGame
             GameTimeManager.GetInstance().OnStartDraw();
 
             sb.Begin(SpriteSortMode.BackToFront, null);
-            // Draws all interface components
-            ComponentManager.GetInstance().Draw(sb);
-
-            ParticleManager.GetInstance().Draw(sb);
-
-            CardManager.GetInstance().Draw(sb);
 
             // PolygonManager.GetInstance().DrawPolygons(spriteBatch);
             // TODO: Add your drawing code here
@@ -219,7 +212,6 @@ namespace MainGame
             {
                 case StateManager.RunningGame.None:
                     this.background.Draw(sb);
-
                     BirdManager.GetInstance().DrawBirds(sb);
                     break;
                 case StateManager.RunningGame.BalloonPaintBucketGame:
@@ -232,7 +224,13 @@ namespace MainGame
                     MiniGameOverviewMainGame.GetInstance().Draw(sb);
                     break;
             }
-            // SquatBugsMainGame.GetInstance().Draw(spriteBatch);
+
+            CardManager.GetInstance().Draw(sb);
+            // Draws all interface components
+            ComponentManager.GetInstance().Draw(sb);
+
+            ParticleManager.GetInstance().Draw(sb);
+
             sb.End();
 
             base.Draw(gameTime);
@@ -304,6 +302,42 @@ namespace MainGame
                     StateManager.GetInstance().SetState(StateManager.State.Running);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Call this when the game is won!
+        /// </summary>
+        public void GameWon()
+        {
+            switch (StateManager.GetInstance().GetRunningGame())
+            {
+                case StateManager.RunningGame.BalloonPaintBucketGame:
+                    new GameResultCard(GameResultCard.CardColor.Pink);
+                    break;
+                case StateManager.RunningGame.SquatBugsGame:
+                    new GameResultCard(GameResultCard.CardColor.Green);
+                    break;
+                case StateManager.RunningGame.DigGame:
+                    new GameResultCard(GameResultCard.CardColor.Yellow);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Call this when the game is lost!
+        /// </summary>
+        public void GameLost()
+        {
+            new GameResultCard(GameResultCard.CardColor.LostCard);
+        }
+
+
+        /// <summary>
+        /// Orders the game to move back to the mini game overview
+        /// </summary>
+        public void BackToMiniGameOverview()
+        {
+            StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.MiniGameOverview);
         }
     }
 }

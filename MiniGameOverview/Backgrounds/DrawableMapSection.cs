@@ -26,7 +26,7 @@ namespace MiniGameOverview.Backgrounds
 
         public void Draw(SpriteBatch sb)
         {
-            this.polygon.Draw(sb);
+            // this.polygon.Draw(sb);
         }
     }
 }

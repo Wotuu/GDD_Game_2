@@ -12,14 +12,14 @@ namespace MainGame.Cards
     public class CardEmitter : ParticleEmitter
     {
         public static Texture2D STAR_TEXTURE { get; set; }
-        public WinningCard card { get; set; }
+        public GameResultCard card { get; set; }
 
         static CardEmitter()
         {
             STAR_TEXTURE = Game1.GetInstance().Content.Load<Texture2D>("Particles/ster");
         }
 
-        public CardEmitter(WinningCard card)
+        public CardEmitter(GameResultCard card)
             : base(card.GetDrawRectangle().X, card.GetDrawRectangle().Y, card.z)
         {
             this.particleRandomX = card.GetDrawRectangle().Width;

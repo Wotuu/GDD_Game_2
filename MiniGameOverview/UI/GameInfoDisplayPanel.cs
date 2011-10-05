@@ -29,6 +29,7 @@ namespace MiniGameOverview.UI
         public OnGameStart onGameStartListeners { get; set; }
 
         public String[] gameNames = new String[]{
+            "Main Menu",
             "Balloon Popper",
             "Bugs Swatter",
             "Sand Digger",
@@ -36,16 +37,29 @@ namespace MiniGameOverview.UI
         };
 
         public String[] gameDescriptions = new String[]{
+            "Go back to the main menu.",
+
             "Use your magic twig to pop the correct \n" +
             "balloons at the right time!\n" +
             "Spilling paint in a wrong bucket will\n" +
             "decrease your progress with that bucket,\n" +
             "so poke wisely. Beware of the black \n" +
             "balloons, however...",
+
             "No description yet.",
+
             "No description yet.",
+
             "No description yet."
 
+        };
+
+        public String[] startGameBtnText = new String[]{
+            "Main Menu",
+            "Start Game",
+            "Start Game",
+            "Start Game",
+            "Start Game"
         };
 
         static GameInfoDisplayPanel()
@@ -60,8 +74,10 @@ namespace MiniGameOverview.UI
                 50,
                 375, 300))
         {
+            this.backgroundTexture = MiniGameOverviewMainGame.GetInstance().game.Content.Load<Texture2D>("UI/Interface/uitleg_block");
+
             this.z = z;
-            this.backgroundColor = new Color(150, 0, 0, 150);
+            // this.backgroundColor = new Color(150, 0, 0, 150);
             this.border = new Border(this, 4, Color.Black);
 
             this.gameNameLbl = new XNALabel(this, new Rectangle(0, 10, this.bounds.Width, 30), "Gamename");
@@ -85,19 +101,28 @@ namespace MiniGameOverview.UI
         {
             switch (item.game)
             {
-                case StateManager.SelectedGame.BalloonPaintBucketGame:
+                case StateManager.SelectedGame.MainMenu:
                     this.gameNameLbl.text = gameNames[0];
                     this.gameDescriptionLbl.text = gameDescriptions[0];
+                    this.startGameBtn.text = startGameBtnText[0];
+                    break;
+
+                case StateManager.SelectedGame.BalloonPaintBucketGame:
+                    this.gameNameLbl.text = gameNames[1];
+                    this.gameDescriptionLbl.text = gameDescriptions[1];
+                    this.startGameBtn.text = startGameBtnText[1];
                     break;
 
                 case StateManager.SelectedGame.SquatBugsGame:
-                    this.gameNameLbl.text = gameNames[1];
-                    this.gameDescriptionLbl.text = gameDescriptions[1];
+                    this.gameNameLbl.text = gameNames[2];
+                    this.gameDescriptionLbl.text = gameDescriptions[2];
+                    this.startGameBtn.text = startGameBtnText[2];
                     break;
 
                 case StateManager.SelectedGame.BuzzBattleGame:
-                    this.gameNameLbl.text = gameNames[3];
-                    this.gameDescriptionLbl.text = gameDescriptions[3];
+                    this.gameNameLbl.text = gameNames[4];
+                    this.gameDescriptionLbl.text = gameDescriptions[4];
+                    this.startGameBtn.text = startGameBtnText[4];
                     break;
             }
 
@@ -108,6 +133,8 @@ namespace MiniGameOverview.UI
         {
             if (onGameStartListeners != null)
                 onGameStartListeners(this.selectedGame);
+
+            this.Unload();
         }
     }
 }

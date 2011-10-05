@@ -84,7 +84,7 @@ namespace MiniGameOverview.Map.Pathing
         public void CheckIfFullyColored()
         {
             int currentColoredPixelsCount = 0;
-            foreach (Quad q in MiniGameOverviewMainGame.GetInstance().map.coloredMap.tree.leafList)
+            foreach (Quad q in MiniGameOverviewMainGame.GetInstance().backgroundMap.coloredMap.tree.leafList)
             {
                 if (this.drawableMapSection.polygon.IsInside(q.rectangle.Center))
                 {

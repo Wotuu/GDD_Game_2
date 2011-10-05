@@ -29,15 +29,16 @@ namespace BalloonPaintBucketGame.Particles.Emitters
         }
 
         public PaintEmitter(Balloon balloon)
+            // -25 to compensate for the random X and Y
             : base(balloon.GetCenter().X - 25, balloon.GetCenter().Y - 25, balloon.z - 0.1f)
         {
             this.particleRandomX = 30;
 
-            this.particleSpeedX = -0.3f;
-            this.particleRandomSpeedX = 0.66f;
+            this.particleSpeedX = -0.6f;
+            this.particleRandomSpeedX = 1.33f;
 
-            this.particleSpeedY = 1f;
-            this.particleRandomSpeedY = 1f;
+            this.particleSpeedY = 2f;
+            this.particleRandomSpeedY = 2f;
 
             this.particleGravity = 0.75f;
 

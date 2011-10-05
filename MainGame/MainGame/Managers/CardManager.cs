@@ -22,12 +22,12 @@ namespace MainGame.Managers
         private CardManager() { }
         #endregion
 
-        public LinkedList<WinningCard> drawnCards = new LinkedList<WinningCard>();
-        public LinkedList<WinningCard> awardedCards = new LinkedList<WinningCard>();
+        public LinkedList<GameResultCard> drawnCards = new LinkedList<GameResultCard>();
+        public LinkedList<GameResultCard> awardedCards = new LinkedList<GameResultCard>();
 
         public void Update()
         {
-            foreach (WinningCard card in this.drawnCards)
+            foreach (GameResultCard card in this.drawnCards)
             {
                 card.Update();
             }
@@ -37,7 +37,7 @@ namespace MainGame.Managers
         {
             for (int i = 0; i < this.drawnCards.Count; i++)
             {
-                WinningCard card = this.drawnCards.ElementAt(i);
+                GameResultCard card = this.drawnCards.ElementAt(i);
                 if (card.shouldBeRemoved)
                 {
                     this.drawnCards.Remove(card);
@@ -52,9 +52,9 @@ namespace MainGame.Managers
         /// </summary>
         /// <param name="card">The card you want to add.</param>
         /// <returns>Yes no no.</returns>
-        public Boolean IsAwarded(WinningCard card)
+        public Boolean IsAwarded(GameResultCard card)
         {
-            foreach (WinningCard value in this.awardedCards)
+            foreach (GameResultCard value in this.awardedCards)
             {
                 if (value.color == card.color) return true;
             }

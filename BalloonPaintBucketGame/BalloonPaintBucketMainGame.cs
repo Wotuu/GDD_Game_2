@@ -84,23 +84,40 @@ namespace BalloonPaintBucketGame
             */
         }
 
+        /// <summary>
+        /// Restarts the game.
+        /// </summary>
+        public void RestartGame()
+        {
+            BalloonManager.GetInstance().balloons.Clear();
+
+            this.paintBuckets = null;
+            this.player = null;
+
+            ParticleManager.GetInstance().RemoveAllEmitters(10);
+            StateManager.GetInstance().SetState(StateManager.State.Running);
+
+            this.Initialize(this.game);
+        }
+
         public void Update()
         {
             GameTimeManager.GetInstance().OnStartUpdate();
+
+            // Always check for collision
+            if (GameTimeManager.GetInstance().currentUpdateStartMS - this.lastCollisionCheckMS >
+                this.collisionCheckMS)
+            {
+                this.CheckCollision();
+                this.lastCollisionCheckMS = GameTimeManager.GetInstance().currentUpdateStartMS;
+            }
 
             switch (StateManager.GetInstance().GetState())
             {
                 case StateManager.State.Running:
                     {
                         BalloonManager.GetInstance().UpdateBalloons();
-                        ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
-
-                        if (GameTimeManager.GetInstance().currentUpdateStartMS - this.lastCollisionCheckMS >
-                            this.collisionCheckMS)
-                        {
-                            this.CheckCollision();
-                            this.lastCollisionCheckMS = GameTimeManager.GetInstance().currentUpdateStartMS;
-                        }
+                        // ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
 
                         this.player.Update();
                         this.WinCheck();
@@ -188,7 +205,7 @@ namespace BalloonPaintBucketGame
                 if (bucket.currentValue != bucket.maxValue) return;
             }
             StateManager.GetInstance().SetState(StateManager.State.Victory);
-            XNAMessageDialog.CreateDialog("Congratulations, you've won!", XNAMessageDialog.DialogType.OK);
+            
         }
     }
 }

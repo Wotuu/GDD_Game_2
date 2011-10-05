@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BalloonPaintBucketGame.Managers;
 
+public delegate void OnGameStateChanged(StateManager.State newState);
 namespace BalloonPaintBucketGame.Managers
 {
     public class StateManager
@@ -21,6 +23,7 @@ namespace BalloonPaintBucketGame.Managers
         #endregion
 
         private State state { get; set; }
+        public OnGameStateChanged onGameStateChangedListeners { get; set; }
 
         public enum State
         {
@@ -37,6 +40,8 @@ namespace BalloonPaintBucketGame.Managers
         public void SetState(State state)
         {
             this.state = state;
+            if (this.onGameStateChangedListeners != null)
+                onGameStateChangedListeners(state);
         }
 
         /// <summary>

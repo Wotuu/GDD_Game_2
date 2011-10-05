@@ -65,7 +65,7 @@ namespace BalloonPaintBucketGame.Managers
             Random random = new Random();
 
             // One in 4 chance a black balloon will spawn
-            if (random.Next(4) == 0 && this.balloons.Count() < this.maxBlackBalloons)
+            if (random.Next(4) == 0 && this.GetBlackBalloonCount() < this.maxBlackBalloons)
             {
                 new Balloon(Balloon.BalloonColor.Black);
                 return;
@@ -93,6 +93,19 @@ namespace BalloonPaintBucketGame.Managers
 
             // Random color
             new Balloon(nonActiveBalloons.ElementAt(r));
+        }
+
+        /// <summary>
+        /// Gets the black balloon count.
+        /// </summary>
+        public int GetBlackBalloonCount()
+        {
+            int count = 0;
+            for (int i = 0; i < this.balloons.Count(); i++)
+            {
+                if (this.balloons.ElementAt(i).color == Balloon.BalloonColor.Black) count++;
+            }
+            return count;
         }
     }
 }

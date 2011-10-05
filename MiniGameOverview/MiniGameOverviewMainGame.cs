@@ -33,20 +33,27 @@ namespace MiniGameOverview
         private MiniGameOverviewMainGame() { }
         #endregion
 
-        public BackgroundMap map { get; set; }
+        public BackgroundMap backgroundMap { get; set; }
         public Game game { get; set; }
         public Player player { get; set; }
         public GameInfoDisplayPanel gameInfoPanel { get; set; }
 
         public void Initialize(Game game)
         {
+            // We've already initialized!!
+            if (this.player != null)
+            {
+                // But we need to re-initialise the info panel, as it is unloaded on game-load.
+                // The GameInfoDisplayPanel needs a player, so please leave the 2 seperate calls in this function
+                this.gameInfoPanel = new GameInfoDisplayPanel(0.8f);
+                return;
+            }
             this.game = game;
 
             this.player = new Player();
-
             this.gameInfoPanel = new GameInfoDisplayPanel(0.8f);
 
-            this.map = new BackgroundMap();
+            this.backgroundMap = new BackgroundMap();
         }
 
         public void Update()
@@ -54,10 +61,10 @@ namespace MiniGameOverview
             GameTimeManager.GetInstance().OnStartUpdate();
             KeyboardManager.GetInstance().Update(Keyboard.GetState());
             MouseManager.GetInstance().Update(this.game);
-            ComponentManager.GetInstance().Update();
+            // ComponentManager.GetInstance().Update();
 
             this.player.Update();
-            this.map.Update();
+            this.backgroundMap.Update();
         }
 
         public void Draw(SpriteBatch sb)
@@ -70,10 +77,10 @@ namespace MiniGameOverview
             GameTimeManager.GetInstance().OnStartDraw();
             KeyboardManager.GetInstance().Update(Keyboard.GetState());
             MouseManager.GetInstance().Update(this.game);
-            ComponentManager.GetInstance().Draw(sb);
+            // ComponentManager.GetInstance().Draw(sb);
 
             this.player.Draw(sb);
-            this.map.Draw(sb);
+            this.backgroundMap.Draw(sb);
         }
     }
 }

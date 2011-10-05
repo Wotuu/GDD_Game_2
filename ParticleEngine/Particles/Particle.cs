@@ -56,8 +56,7 @@ namespace ParticleEngine.Particles
         public Particle(ParticleEmitter emitter)
         {
             this.alive = true;
-            long ticks = DateTime.UtcNow.Ticks;
-            this.creationTime = new TimeSpan(ticks).TotalMilliseconds;
+            this.creationTime = GameTimeManager.GetInstance().currentUpdateStartMS;
 
             if (emitter.particleTexture == null)
                 this.texture = ParticleManager.DEFAULT_TEXTURE;
@@ -138,7 +137,8 @@ namespace ParticleEngine.Particles
         /// <returns></returns>
         public int GetPercentageOfLifespan()
         {
-            return (int)(((GameTimeManager.GetInstance().currentUpdateStartMS - this.creationTime) / this.lifespanMS) * 100f);
+            return Math.Min(100, (int)(((GameTimeManager.GetInstance().currentUpdateStartMS - this.creationTime) /
+                this.lifespanMS) * 100f));
         }
 
         public void Draw(SpriteBatch sb)

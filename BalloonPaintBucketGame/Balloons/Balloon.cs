@@ -188,10 +188,17 @@ namespace BalloonPaintBucketGame.Balloons
         public void OnPlayerClick()
         {
             if (this.descending) return;
-            BalloonManager.GetInstance().balloons.Remove(this);
+
             new BalloonDeathEmitter(this);
             new PaintEmitter(this);
             this.polygon.Destroy();
+
+            if (this.color == BalloonColor.Black)
+            {
+                BalloonPaintBucketMainGame.GetInstance().player.LostLife();
+            }
+
+            BalloonManager.GetInstance().balloons.Remove(this);
         }
 
         /// <summary>
@@ -233,8 +240,8 @@ namespace BalloonPaintBucketGame.Balloons
         /// <returns>The dead center.</returns>
         public Vector2 GetCenter()
         {
-            return new Vector2(this.location.X + ((this.texture.Width * this.scale.X) / 2),
-                this.location.Y + ((this.texture.Height * this.scale.Y) / 2));
+            return new Vector2(this.location.X + ((this.texture.Width * this.scale.X) / 2f),
+                this.location.Y + ((this.texture.Height * this.scale.Y) / 2f));
         }
     }
 }

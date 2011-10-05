@@ -19,18 +19,18 @@ namespace BalloonPaintBucketGame.Players
         public Vector3 location { get; set; }
         public Vector2 scale { get; set; }
 
-        public MoveState state { get; set; }
         public float moveSpeed { get; set; }
-        public float yRestLocation { get; set; }
+        //public float yRestLocation { get; set; }
 
         public Point clickedLocation { get; set; }
-
+        /*
+         * public MoveState state { get; set; }
         public enum MoveState
         {
             MovingToBalloon,
             MovingFromBalloon,
             Still
-        }
+        }*/
 
         public Paw(Player player)
         {
@@ -47,9 +47,10 @@ namespace BalloonPaintBucketGame.Players
 
             this.scale = new Vector2(0.7f, 0.7f);
 
+            /*
             this.yRestLocation = BalloonPaintBucketMainGame.GetInstance().game.GraphicsDevice.Viewport.Height -
-                (this.GetDrawRectangle().Height / 2);
-            this.state = MoveState.Still;
+                (this.GetDrawRectangle().Height / 2);*/
+            // this.state = MoveState.Still;
 
             this.moveSpeed = 20f;
         }
@@ -60,10 +61,10 @@ namespace BalloonPaintBucketGame.Players
         /// <param name="mouseLocation">The mouse location.</param>
         private void MovePaw(Point mouseLocation)
         {
-            if (StateManager.GetInstance().GetState() == StateManager.State.Running && this.state == MoveState.Still)
+            if (StateManager.GetInstance().GetState() == StateManager.State.Running /*&& this.state == MoveState.Still*/)
             {
                 Rectangle drawRect = this.GetDrawRectangle();
-                this.location = new Vector3(mouseLocation.X - drawRect.Width, this.yRestLocation, this.location.Z);
+                this.location = new Vector3(mouseLocation.X - drawRect.Width, mouseLocation.Y, this.location.Z);
             }
         }
 
@@ -82,6 +83,7 @@ namespace BalloonPaintBucketGame.Players
         /// </summary>
         public void Update()
         {
+            /*
             switch (this.state)
             {
                 case MoveState.MovingToBalloon:
@@ -106,7 +108,7 @@ namespace BalloonPaintBucketGame.Players
                         this.MovePaw(new Point(Mouse.GetState().X, Mouse.GetState().Y));
                     }
                     break;
-            }
+            }*/
         }
 
         public void Draw(SpriteBatch sb)
@@ -117,11 +119,13 @@ namespace BalloonPaintBucketGame.Players
 
         public void OnMouseClick(MouseEvent m_event)
         {
+            this.PerformSting(m_event.location);
+            /*
             if (this.state == MoveState.Still)
             {
                 this.state = MoveState.MovingToBalloon;
                 this.clickedLocation = m_event.location;
-            }
+            }*/
         }
 
         public void OnMouseRelease(MouseEvent m_event)

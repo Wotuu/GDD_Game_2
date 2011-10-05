@@ -57,9 +57,18 @@ namespace MiniGameOverview.Players
         public Player()
         {
             this.scale = new Vector2(0.40f, 0.40f);
+            /*
             this.animator = new Animator(
                 MiniGameOverviewMainGame.GetInstance().game.Content.Load<Texture2D>("Player/fuzz_sprite"),
                 new Rectangle(0, 0, 267, 258), 150);
+             */
+            this.animator = new Animator(
+                MiniGameOverviewMainGame.GetInstance().game.Content.Load<Texture2D>("Player/fuzz_sprite_walk2"),
+                new Rectangle(0, 0, 267, 258), 150);
+            /*
+            this.animator = new Animator(
+                MiniGameOverviewMainGame.GetInstance().game.Content.Load<Texture2D>("Player/buzz_sprite_walk2"),
+                new Rectangle(0, 0, 270, 230), 150);*/
 
             this.z = 0.87f;
         }

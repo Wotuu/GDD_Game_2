@@ -36,8 +36,8 @@ namespace MiniGameOverview.Backgrounds
 
 
         private StateManager.SelectedGame[] gameSequence = new StateManager.SelectedGame[]{
+            StateManager.SelectedGame.MainMenu,
             StateManager.SelectedGame.BalloonPaintBucketGame,
-            StateManager.SelectedGame.SquatBugsGame,
             StateManager.SelectedGame.SquatBugsGame,
             StateManager.SelectedGame.SquatBugsGame,
             StateManager.SelectedGame.BuzzBattleGame,
@@ -52,12 +52,20 @@ namespace MiniGameOverview.Backgrounds
         };
         private Polygon[] pathDrawPolygons { get; set; }
         private int[] pathDrawPolygonsMaxPixels = new int[5]{
+            1,
+            1,
+            1,
+            1,
+            1
+        };
+        /*
+        private int[] pathDrawPolygonsMaxPixels = new int[5]{
             350000,
             350000,
             470000,
             220000,
             320000
-        };
+        };*/
 
         public BackgroundMap()
         {
@@ -82,11 +90,8 @@ namespace MiniGameOverview.Backgrounds
                 this.paths[i].drawableMapSection.polygon.scale = this.scale;
             }
 
+            /// Main menu
             this.paths[0].isUnlocked = true;
-            this.paths[1].isUnlocked = false;
-            this.paths[2].isUnlocked = true;
-            this.paths[3].isUnlocked = false;
-            this.paths[4].isUnlocked = true;
 
             MiniGameOverviewMainGame.GetInstance().player.TeleportTo(this.paths[0]);
 
@@ -148,6 +153,21 @@ namespace MiniGameOverview.Backgrounds
                         item.CheckIfFullyColored();
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets a path item by selected game!
+        /// </summary>
+        /// <param name="game">The game you want to have the pathitem from.</param>
+        /// <returns>The path item!</returns>
+        public PathItem GetPathByGame(StateManager.SelectedGame game)
+        {
+            for (int i = 0; i < this.paths.Length; i++)
+            {
+                PathItem path = this.paths.ElementAt(i);
+                if (path.game == game) return path;
+            }
+            return null;
         }
 
         #region Init draw polygon locations

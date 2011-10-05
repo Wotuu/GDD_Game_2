@@ -33,10 +33,12 @@ namespace MiniGameOverview.Managers
         public enum SelectedGame
         {
             None,
+            MainMenu,
             BalloonPaintBucketGame,
             SquatBugsGame,
             MiniGameOverview,
-            BuzzBattleGame
+            BuzzBattleGame,
+            DigGame
         }
 
         /// <summary>
