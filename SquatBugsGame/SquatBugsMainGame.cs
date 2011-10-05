@@ -30,7 +30,7 @@ namespace SquatBugsGame
         public SpriteFont font;
         public Player player;
         public Texture2D background { get; set; }
-       
+        public Viewport viewport;
 
         public void Initialize(Game game)
         {
@@ -39,6 +39,7 @@ namespace SquatBugsGame
             this.background = this.game.Content.Load<Texture2D>("Backgrounds/squatbugs");
             ParticleManager.DEFAULT_TEXTURE = this.game.Content.Load<Texture2D>("Particles/default");
             this.player = new Player();
+            this.viewport = game.GraphicsDevice.Viewport;
         }
 
         /// <summary>
@@ -53,7 +54,6 @@ namespace SquatBugsGame
                 case StateManager.State.Running:
                     {
                         BugManager.GetInstance().UpdateBugs();
-                        ParticleManager.GetInstance().Update((float)GameTimeManager.GetInstance().time_step);
                         this.player.Update();
                         WinCheck();
                         break;
@@ -90,7 +90,6 @@ namespace SquatBugsGame
             sb.Draw(this.background, new Rectangle(0, 0, this.game.GraphicsDevice.Viewport.Width,
             this.game.GraphicsDevice.Viewport.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
             GameTimeManager.GetInstance().OnStartDraw();
-            ParticleManager.GetInstance().Draw(sb);
             BugManager.GetInstance().DrawBugs(sb);
             this.player.Draw(sb);
         }

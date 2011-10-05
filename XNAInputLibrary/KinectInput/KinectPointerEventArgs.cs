@@ -11,15 +11,21 @@ namespace XNAInputLibrary.KinectInput
     {
         public Vector3 RightHandPosition;
         public Vector3 LeftHandPosition;
+        public Vector3 PreviousRightHandPosition;
+        public Vector3 PreviousLeftHandPosition;
         public int PlayerID;
         public SkeletonData SkeletonData;
 
-        public KinectPointerEventArgs(Vector3 righthand, Vector3 lefthand,SkeletonData data,int player)
+        public KinectPointerEventArgs(Vector3 righthand, Vector3 lefthand,Vector3 previousrighthand,Vector3 previouslefthand,SkeletonData data,int player)
         {
             this.RightHandPosition = righthand;
             this.LeftHandPosition = lefthand;
+            this.PreviousLeftHandPosition = previouslefthand;
+            this.PreviousRightHandPosition = previousrighthand;
             this.SkeletonData = data;
             this.PlayerID = player;
         }
+
+
     }
 }

@@ -6,6 +6,7 @@ using MainGame.Managers;
 using BalloonPaintBucketGame;
 using SquatBugsGame;
 using MiniGameOverview;
+using DiggingGame;
 
 namespace MainGame.Managers
 {
@@ -60,6 +61,7 @@ namespace MainGame.Managers
             SquatBugsGame,
             MiniGameOverview,
             BuzzBattleGame,
+            KinectGame,
             DigGame
         }
 
@@ -104,6 +106,9 @@ namespace MainGame.Managers
                 case RunningGame.MiniGameOverview:
                     MiniGameOverviewMainGame.GetInstance().Initialize(Game1.GetInstance());
                     MiniGameOverviewMainGame.GetInstance().gameInfoPanel.onGameStartListeners += Game1.GetInstance().OnGameStart;
+                    break;
+                case RunningGame.DigGame:
+                    DiggingMainGame.GetInstance().Initialize(Game1.GetInstance());
                     break;
             }
             this.game = game;

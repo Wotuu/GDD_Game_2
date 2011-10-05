@@ -9,6 +9,7 @@ using SquatBugsGame.Managers;
 using SquatBugsGame.Bugs;
 using SquatBugsGame.Players;
 using SquatBugsGame;
+using XNAInputLibrary.KinectInput;
 
 namespace SquatBugsGame.Players
 {
@@ -27,7 +28,7 @@ namespace SquatBugsGame.Players
 
         public MoveState state { get; set; }
 
-        private MouseEvent mousePosition;
+        private Vector3 MousePosition;
 
         public enum MoveState
         {
@@ -38,6 +39,7 @@ namespace SquatBugsGame.Players
 
         public Paw(Player player)
         {
+            KinectManager.GetInstance().PointerMoved += OnKinectUpdate;
             MouseManager.GetInstance().mouseClickedListeners += this.OnMouseClick;
             MouseManager.GetInstance().mouseReleasedListeners += this.OnMouseRelease;
 
@@ -59,18 +61,30 @@ namespace SquatBugsGame.Players
             this.state = MoveState.Still;
         }
 
+        public void OnKinectUpdate(object sender, KinectPointerEventArgs e)
+        {
+            //RightHand = e.RightHandPosition.ScaleTo(game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, 0.5f, 0.5f);
+            //LeftHand = e.LeftHandPosition.ScaleTo(game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, 0.5f, 0.5f);
+            if (state == MoveState.Still)
+            {
+                
+                Vector3 HandPosition = e.RightHandPosition.ScaleTo(SquatBugsMainGame.GetInstance().viewport.Width, SquatBugsMainGame.GetInstance().viewport.Height, 0.5f, 0.5f);
+                MousePosition = HandPosition;
+                Rectangle drawRect = this.GetDrawRectangle();
+                this.location = new Vector3(HandPosition.X- (drawRect.Width - (100 * scale.X)),
+                    HandPosition.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
+            }
+
+        }
+
         public void OnMouseMotion(MouseEvent e)
         {
             if (state == MoveState.Still)
             {
-                mousePosition = e;
-                Rectangle drawRect = this.GetDrawRectangle();
-                //this.location = new Vector3(e.location.X - drawRect.Width,
-                //    SquatBugsMainGame.GetInstance().game.GraphicsDevice.Viewport.Height -
-                //(drawRect.Height / 2),
-                //    this.location.Z);
-                this.location = new Vector3(e.location.X - (drawRect.Width - (100 * scale.X)),
-                    e.location.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
+            //MousePosition = e;
+            Rectangle drawRect = this.GetDrawRectangle();
+            this.location = new Vector3(e.location.X - (drawRect.Width - (100 * scale.X)),
+                e.location.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
             }
         }
 
@@ -87,7 +101,7 @@ namespace SquatBugsGame.Players
                 //Scale the flyswatter to make it look like its hitting the bug
                 double updatetime = GameTimeManager.GetInstance().currentUpdateStartMS - GameTimeManager.GetInstance().previousUpdateStartMS;
                 SquatTimer -= updatetime;
-
+                
                 if (SquatTimer <= 0)
                 {
                     this.SquatTimer = SquatTime;
@@ -96,7 +110,7 @@ namespace SquatBugsGame.Players
                 float scaleXValue = (float)((IdleScale.X - SquatScale.X) / SquatTime) * (float)updatetime;
                 float scaleYValue = (float)((IdleScale.Y - SquatScale.Y) / SquatTime) * (float)updatetime;
                 this.scale = new Vector2(scale.X - scaleXValue, scale.Y - scaleYValue);
-
+                
             }
 
             if (this.state == MoveState.MovingFromBug)
@@ -113,7 +127,7 @@ namespace SquatBugsGame.Players
                 float scaleXValue = (float)((IdleScale.X - SquatScale.X) / SquatTime) * (float)updatetime;
                 float scaleYValue = (float)((IdleScale.Y - SquatScale.Y) / SquatTime) * (float)updatetime;
                 this.scale = new Vector2(scale.X + scaleXValue, scale.Y + scaleYValue);
-
+                
             }
 
             if (this.state == MoveState.Still)
@@ -124,9 +138,8 @@ namespace SquatBugsGame.Players
             //Make the scale move on center of squater
 
             Rectangle drawRect = this.GetDrawRectangle();
-            if (mousePosition != null)
-                this.location = new Vector3(mousePosition.location.X - (drawRect.Width - (100 * scale.X)),
-                    mousePosition.location.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
+            this.location = new Vector3(MousePosition.X - (drawRect.Width - (100 * scale.X)),
+                MousePosition.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
 
         }
 
@@ -156,10 +169,10 @@ namespace SquatBugsGame.Players
         public Rectangle GetDrawRectangle()
         {
             return new Rectangle((int)location.X, (int)location.Y,
-                (int)(pawTexture.Width * this.scale.X), (int)(pawTexture.Height * this.scale.Y));
+                (int)(pawTexture.Width * this.scale.X), (int)(pawTexture.Height * this.scale.Y ));
         }
 
 
-
+        
     }
 }

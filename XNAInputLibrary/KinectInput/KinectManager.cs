@@ -6,6 +6,7 @@ using Microsoft.Research.Kinect;
 using Microsoft.Research.Kinect.Nui;
 using XNAInputLibrary.KinectInput;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 
 
@@ -30,35 +31,68 @@ namespace XNAInputLibrary.KinectInput
 
         Runtime nui;
 
-        #region Hands
+        #region Arms
         Vector3 RightHandPosition;
         Vector3 LeftHandPosition;
         Vector3 PreviousRightHandPosition;
         Vector3 PreviousLeftHandPosition;
+
+
+        
         #endregion
 
+
+        #region scaling
+        Viewport viewport;
+        float MaxY;
+        float MaxX;
+        #endregion
         #region delegates
         public delegate void KinectPointerMoved(object sender, KinectPointerEventArgs e);
         #endregion
         /// <summary>
         /// Initialize the NUI
         /// </summary>
+        /// 
+
         private KinectManager()
         {
-            nui = new Runtime();
+            
+        }
 
+        public void Initialize(Viewport viewport,float maxx,float maxy)
+        {
+            nui = new Runtime();
+            this.viewport = viewport;
+            this.MaxX = maxx;
+            this.MaxY = maxy;
             try
             {
                 nui.Initialize(RuntimeOptions.UseDepthAndPlayerIndex | RuntimeOptions.UseSkeletalTracking | RuntimeOptions.UseColor);
             }
             catch (InvalidOperationException)
             {
-                throw new Exception("Runtime initialization failed. Please make sure Kinect device is plugged in.");
+                //throw new Exception("Runtime initialization failed. Please make sure Kinect device is plugged in.");
+                return;
             }
 
 
             nui.DepthStream.Open(ImageStreamType.Depth, 2, ImageResolution.Resolution320x240, ImageType.DepthAndPlayerIndex);
             nui.VideoStream.Open(ImageStreamType.Video, 2, ImageResolution.Resolution640x480, ImageType.Color);
+
+            TransformSmoothParameters parameters = new TransformSmoothParameters
+            {
+                Smoothing = .5f,
+                Correction = 0.5f,
+                Prediction = 0.5f,
+                JitterRadius = 0.05f,
+                MaxDeviationRadius = 0.04f
+            };
+
+
+
+
+            //nui.SkeletonEngine.SmoothParameters = parameters;
             nui.SkeletonEngine.TransformSmooth = true;
             nui.SkeletonFrameReady += new EventHandler<SkeletonFrameReadyEventArgs>(nui_SkeletonFrameReady);
         }
@@ -86,18 +120,38 @@ namespace XNAInputLibrary.KinectInput
                     {
                         if (!LeftHandPosition.Equals(PreviousLeftHandPosition) && !RightHandPosition.Equals(PreviousRightHandPosition))
                         {
-                            RaisePointerMoved(new KinectPointerEventArgs(RightHandPosition, LeftHandPosition,data,playerID));
+                            RaisePointerMoved(CreateEventArgs(data,playerID));
                         }
                     }
                     else
                     {
                         //Initial always raise
-                        RaisePointerMoved(new KinectPointerEventArgs(RightHandPosition, LeftHandPosition,data,playerID));
+                        RaisePointerMoved(CreateEventArgs(data, playerID));
+
                     }
+
+
+
+                    //Check for a Hit
+
                 }
 
                 playerID++;
             }
+        }
+
+
+        public KinectPointerEventArgs CreateEventArgs(SkeletonData data,int playerid)
+        {
+            KinectPointerEventArgs eventargs;
+            eventargs = new KinectPointerEventArgs(RightHandPosition.ScaleTo(viewport.Width, viewport.Height, MaxX, MaxY),
+                LeftHandPosition.ScaleTo(viewport.Width, viewport.Height, MaxX, MaxY),
+                PreviousRightHandPosition.ScaleTo(viewport.Width,viewport.Height,MaxX,MaxY),
+                PreviousLeftHandPosition.ScaleTo(viewport.Width,viewport.Height,MaxX,MaxY),
+                data,
+                playerid);
+
+            return eventargs;
         }
 
         #region events

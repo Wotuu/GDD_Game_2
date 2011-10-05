@@ -16,6 +16,7 @@ namespace MainGame.UI
         public XNAButton balloonGameBtn { get; set; }
         public XNAButton bugsGameBtn { get; set; }
         public XNAButton gameOverviewBtn { get; set; }
+        public XNAButton KinectTestBtn { get; set; }
         public XNAButton exitGameBtn { get; set; }
 
         public MainMenu()
@@ -37,6 +38,7 @@ namespace MainGame.UI
 
             this.bugsGameBtn = new XNAButton(this, new Rectangle(10, 60, this.bounds.Width - 20, 40), "Bugs Game");
             this.bugsGameBtn.border = null;
+
             this.bugsGameBtn.onClickListeners += this.OnBugsGameBtnPressed;
             this.bugsGameBtn.mouseoverBackgroundTexture = MenuManager.BUTTON_MOUSEOVER_BACKGROUND;
             this.bugsGameBtn.backgroundColor = Color.Transparent;
@@ -58,6 +60,16 @@ namespace MainGame.UI
             this.exitGameBtn.backgroundColor = Color.Transparent;
             this.exitGameBtn.mouseOverColor = new Color(252, 161, 255);
             this.exitGameBtn.font = MenuManager.MAIN_MENU_BUTTON_FONT;
+
+
+            this.KinectTestBtn = new XNAButton(this, new Rectangle(10, 210, this.bounds.Width - 20, 30), "Kinect Test");
+            this.KinectTestBtn.border = null;
+
+            this.KinectTestBtn.onClickListeners += this.OnKinectGameBtnPressed;
+            this.KinectTestBtn.mouseoverBackgroundTexture = MenuManager.BUTTON_MOUSEOVER_BACKGROUND;
+            this.KinectTestBtn.backgroundColor = Color.Transparent;
+            this.KinectTestBtn.mouseOverColor = new Color(137, 233, 172);
+            this.KinectTestBtn.font = MenuManager.MAIN_MENU_BUTTON_FONT;
         }
 
         public void OnBallonGameBtnPressed(XNAButton source)
@@ -71,6 +83,14 @@ namespace MainGame.UI
         {
             MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
             StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.SquatBugsGame);
+            StateManager.GetInstance().SetState(StateManager.State.Running);
+        }
+
+        public void OnKinectGameBtnPressed(XNAButton source)
+        {
+            MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
+            StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.DigGame);
+            //StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.KinectGame);
             StateManager.GetInstance().SetState(StateManager.State.Running);
         }
 

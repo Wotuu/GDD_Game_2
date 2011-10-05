@@ -22,8 +22,10 @@ using MainGame.Managers;
 using BalloonPaintBucketGame;
 using BalloonPaintBucketGame.Balloons;
 using BalloonPaintBucketGame.Players;
+using KinectTest;
 using SquatBugsGame;
 using MiniGameOverview;
+using DiggingGame;
 using MainGame.Backgrounds;
 using MainGame.Cards;
 using ParticleEngine;
@@ -54,7 +56,7 @@ namespace MainGame
             Content.RootDirectory = "Content";
 
             this.IsMouseVisible = true;
-            this.IsFixedTimeStep = false;
+            this.IsFixedTimeStep = true;
             instance = this;
 
             this.graphics.PreferredBackBufferWidth = 1024;
@@ -84,6 +86,11 @@ namespace MainGame
             graphics.ApplyChanges();
             //this.displayLbl = new XNALabel(parent, new Rectangle(5, 5, 200, 20), "");
             //this.displayLbl.backgroundColor = Color.Transparent;
+            BalloonPaintBucketMainGame.GetInstance().Initialize(this);
+            SquatBugsMainGame.GetInstance().Initialize(this);
+            KinectTestMainGame.GetInstance().Initialize(this);
+
+            
 
             MenuManager.GetInstance().ShowMenu(MenuManager.Menu.MainMenu);
             StateManager.GetInstance().SetState(StateManager.State.MainMenu);
@@ -153,6 +160,7 @@ namespace MainGame
                     }
                 case StateManager.State.Idle:
                     {
+
                         break;
                     }
                 case StateManager.State.Running:
@@ -167,6 +175,12 @@ namespace MainGame
                                 break;
                             case StateManager.RunningGame.MiniGameOverview:
                                 MiniGameOverviewMainGame.GetInstance().Update();
+                                break;
+                            case StateManager.RunningGame.KinectGame:
+                                KinectTestMainGame.GetInstance().Update();
+                                break;
+                            case StateManager.RunningGame.DigGame:
+                                DiggingMainGame.GetInstance().Update();
                                 break;
 
                         }
@@ -220,8 +234,14 @@ namespace MainGame
                 case StateManager.RunningGame.SquatBugsGame:
                     SquatBugsMainGame.GetInstance().Draw(sb);
                     break;
+                case StateManager.RunningGame.KinectGame:
+                    KinectTestMainGame.GetInstance().Draw(sb);
+                    break;
                 case StateManager.RunningGame.MiniGameOverview:
                     MiniGameOverviewMainGame.GetInstance().Draw(sb);
+                    break;
+                case StateManager.RunningGame.DigGame:
+                    DiggingMainGame.GetInstance().Draw(sb);
                     break;
             }
 

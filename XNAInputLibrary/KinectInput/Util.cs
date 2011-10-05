@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 
-namespace KinectTest
+namespace XNAInputLibrary
 {
     internal static class Util
     {
