@@ -8,16 +8,19 @@ using System.Diagnostics;
 using XNAInterfaceComponents.Components;
 using XNAInterfaceComponents.AbstractComponents;
 using MainGame.Managers;
+using MainGame.UI.Credits;
 
 namespace MainGame.UI
 {
     public class MainMenu : XNAPanel
     {
-        public XNAButton balloonGameBtn { get; set; }
-        public XNAButton bugsGameBtn { get; set; }
+        public XNAButton startGameBtn { get; set; }
+        public XNAButton creditsBtn { get; set; }
         public XNAButton gameOverviewBtn { get; set; }
-        public XNAButton KinectTestBtn { get; set; }
+        public XNAButton kinectTestBtn { get; set; }
         public XNAButton exitGameBtn { get; set; }
+
+        public CreditsPresentation creditsPresentation { get; set; }
 
         public MainMenu()
             : base(null,
@@ -28,30 +31,32 @@ namespace MainGame.UI
             this.backgroundColor = Color.Transparent;
             this.border = null;
 
-            this.balloonGameBtn = new XNAButton(this, new Rectangle(10, 10, this.bounds.Width - 20, 40), "Balloon Game");
-            this.balloonGameBtn.border = null;
-            this.balloonGameBtn.onClickListeners += this.OnBallonGameBtnPressed;
-            this.balloonGameBtn.mouseoverBackgroundTexture = MenuManager.BUTTON_MOUSEOVER_BACKGROUND;
-            this.balloonGameBtn.backgroundColor = Color.Transparent;
-            this.balloonGameBtn.mouseOverColor = new Color(242, 221, 95);
-            this.balloonGameBtn.font = MenuManager.MAIN_MENU_BUTTON_FONT;
+            this.startGameBtn = new XNAButton(this, new Rectangle(10, 10, this.bounds.Width - 20, 40), "Start Game");
+            this.startGameBtn.border = null;
 
-            this.bugsGameBtn = new XNAButton(this, new Rectangle(10, 60, this.bounds.Width - 20, 40), "Bugs Game");
-            this.bugsGameBtn.border = null;
+            this.startGameBtn.onClickListeners += this.OnGameStartPressed;
+            this.startGameBtn.mouseoverBackgroundTexture = MenuManager.BUTTON_MOUSEOVER_BACKGROUND;
+            this.startGameBtn.backgroundColor = Color.Transparent;
+            this.startGameBtn.mouseOverColor = new Color(242, 221, 95);
+            this.startGameBtn.font = MenuManager.MAIN_MENU_BUTTON_FONT;
 
-            this.bugsGameBtn.onClickListeners += this.OnBugsGameBtnPressed;
-            this.bugsGameBtn.mouseoverBackgroundTexture = MenuManager.BUTTON_MOUSEOVER_BACKGROUND;
-            this.bugsGameBtn.backgroundColor = Color.Transparent;
-            this.bugsGameBtn.mouseOverColor = new Color(137, 233, 172);
-            this.bugsGameBtn.font = MenuManager.MAIN_MENU_BUTTON_FONT;
+            this.creditsBtn = new XNAButton(this, new Rectangle(10, 60, this.bounds.Width - 20, 40), "Credits");
+            this.creditsBtn.border = null;
+            this.creditsBtn.onClickListeners += this.OnCreditsPressed;
+            this.creditsBtn.mouseoverBackgroundTexture = MenuManager.BUTTON_MOUSEOVER_BACKGROUND;
+            this.creditsBtn.backgroundColor = Color.Transparent;
+            this.creditsBtn.mouseOverColor = new Color(137, 233, 172);
+            this.creditsBtn.font = MenuManager.MAIN_MENU_BUTTON_FONT;
 
-            this.gameOverviewBtn = new XNAButton(this, new Rectangle(10, 110, this.bounds.Width - 20, 40), "Game Overview");
-            this.gameOverviewBtn.border = null;
-            this.gameOverviewBtn.onClickListeners += this.OnGameOverviewBtnPressed;
-            this.gameOverviewBtn.mouseoverBackgroundTexture = MenuManager.BUTTON_MOUSEOVER_BACKGROUND;
-            this.gameOverviewBtn.backgroundColor = Color.Transparent;
-            this.gameOverviewBtn.mouseOverColor = new Color(132, 184, 239);
-            this.gameOverviewBtn.font = MenuManager.MAIN_MENU_BUTTON_FONT;
+
+            this.kinectTestBtn = new XNAButton(this, new Rectangle(10, 110, this.bounds.Width - 20, 40), "Kinect Test");
+            this.kinectTestBtn.border = null;
+
+            this.kinectTestBtn.onClickListeners += this.OnKinectGameBtnPressed;
+            this.kinectTestBtn.mouseoverBackgroundTexture = MenuManager.BUTTON_MOUSEOVER_BACKGROUND;
+            this.kinectTestBtn.backgroundColor = Color.Transparent;
+            this.kinectTestBtn.mouseOverColor = new Color(137, 233, 172);
+            this.kinectTestBtn.font = MenuManager.MAIN_MENU_BUTTON_FONT;
 
             this.exitGameBtn = new XNAButton(this, new Rectangle(10, 160, this.bounds.Width - 20, 40), "Exit Game");
             this.exitGameBtn.border = null;
@@ -60,18 +65,36 @@ namespace MainGame.UI
             this.exitGameBtn.backgroundColor = Color.Transparent;
             this.exitGameBtn.mouseOverColor = new Color(252, 161, 255);
             this.exitGameBtn.font = MenuManager.MAIN_MENU_BUTTON_FONT;
-
-
-            this.KinectTestBtn = new XNAButton(this, new Rectangle(10, 210, this.bounds.Width - 20, 30), "Kinect Test");
-            this.KinectTestBtn.border = null;
-
-            this.KinectTestBtn.onClickListeners += this.OnKinectGameBtnPressed;
-            this.KinectTestBtn.mouseoverBackgroundTexture = MenuManager.BUTTON_MOUSEOVER_BACKGROUND;
-            this.KinectTestBtn.backgroundColor = Color.Transparent;
-            this.KinectTestBtn.mouseOverColor = new Color(137, 233, 172);
-            this.KinectTestBtn.font = MenuManager.MAIN_MENU_BUTTON_FONT;
         }
 
+        public void OnGameStartPressed(XNAButton source)
+        {
+            MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
+            StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.MiniGameOverview);
+            StateManager.GetInstance().SetState(StateManager.State.Running);
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (this.creditsPresentation != null)
+                this.creditsPresentation.Update();
+
+
+        }
+
+        public void OnCreditsPressed(XNAButton source)
+        {
+            this.creditsPresentation = new CreditsPresentation();
+            this.visible = false;
+
+            /*
+            StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.MiniGameOverview);
+            StateManager.GetInstance().SetState(StateManager.State.Running);*/
+        }
+
+        /*
         public void OnBallonGameBtnPressed(XNAButton source)
         {
             MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
@@ -84,20 +107,13 @@ namespace MainGame.UI
             MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
             StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.SquatBugsGame);
             StateManager.GetInstance().SetState(StateManager.State.Running);
-        }
+        }*/
 
         public void OnKinectGameBtnPressed(XNAButton source)
         {
             MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
             StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.DigGame);
             //StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.KinectGame);
-            StateManager.GetInstance().SetState(StateManager.State.Running);
-        }
-
-        public void OnGameOverviewBtnPressed(XNAButton source)
-        {
-            MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
-            StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.MiniGameOverview);
             StateManager.GetInstance().SetState(StateManager.State.Running);
         }
 

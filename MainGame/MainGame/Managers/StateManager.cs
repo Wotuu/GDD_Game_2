@@ -26,6 +26,8 @@ namespace MainGame.Managers
         {
             // Listen to the game state of the balloon manager
             BalloonPaintBucketGame.Managers.StateManager.GetInstance().onGameStateChangedListeners += this.OnBalloonGameStateChanged;
+            SquatBugsGame.Managers.StateManager.GetInstance().onGameStateChangedListeners += this.OnSquatBugsGameStateChanged;
+            DiggingGame.Managers.StateManager.GetInstance().onGameStateChangedListeners += this.OnDigGameStateChanged;
         }
         #endregion
 
@@ -153,6 +155,42 @@ namespace MainGame.Managers
                     break;
 
                 case BalloonPaintBucketGame.Managers.StateManager.State.Victory:
+                    Game1.GetInstance().GameWon();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// When the game state of the squat bugs game has changed.
+        /// </summary>
+        /// <param name="newState">The new state the game is in.</param>
+        public void OnSquatBugsGameStateChanged(SquatBugsGame.Managers.StateManager.State newState)
+        {
+            switch (newState)
+            {
+                case SquatBugsGame.Managers.StateManager.State.Loss:
+                    Game1.GetInstance().GameLost();
+                    break;
+
+                case SquatBugsGame.Managers.StateManager.State.Victory:
+                    Game1.GetInstance().GameWon();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// When the game state of the dig game has changed.
+        /// </summary>
+        /// <param name="newState">The new state the game is in.</param>
+        public void OnDigGameStateChanged(DiggingGame.Managers.StateManager.State newState)
+        {
+            switch (newState)
+            {
+                case DiggingGame.Managers.StateManager.State.Loss:
+                    Game1.GetInstance().GameLost();
+                    break;
+
+                case DiggingGame.Managers.StateManager.State.Victory:
                     Game1.GetInstance().GameWon();
                     break;
             }

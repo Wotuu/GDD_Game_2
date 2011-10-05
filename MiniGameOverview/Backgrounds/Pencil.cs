@@ -15,11 +15,15 @@ namespace MiniGameOverview.Backgrounds
         public Vector2 location { get; set; }
         public Vector2 scale { get; set; }
 
+        public int rotationXCorrection = 35;
+
         public Pencil()
         {
             this.scale = new Vector2(0.5f, 0.5f);
 
             this.texture = MiniGameOverviewMainGame.GetInstance().game.Content.Load<Texture2D>("Misc/penseel");
+
+            this.rotationXCorrection = (int)(this.rotationXCorrection * (MiniGameOverviewMainGame.GetInstance().game.GraphicsDevice.Viewport.Width / 1920f));
 
             MouseManager.GetInstance().mouseMotionListeners += this.OnMouseMotion;
             MouseManager.GetInstance().mouseDragListeners += this.OnMouseDrag;
@@ -31,7 +35,7 @@ namespace MiniGameOverview.Backgrounds
         /// <returns>bla</returns>
         public Rectangle GetDrawRectangle()
         {
-            return new Rectangle((int)(this.location.X - ((this.texture.Width / 2) * this.scale.X)),
+            return new Rectangle((int)(this.location.X - ((this.texture.Width / 2) * this.scale.X)) + rotationXCorrection,
                 (int)(this.location.Y),
                 (int)(this.texture.Width * this.scale.X),
                 (int)(this.texture.Height * this.scale.Y));
@@ -44,7 +48,8 @@ namespace MiniGameOverview.Backgrounds
 
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(this.texture, this.GetDrawRectangle(), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.85f);
+            sb.Draw(this.texture, this.GetDrawRectangle(), null, Color.White,
+                MathHelper.ToRadians(215), Vector2.Zero, SpriteEffects.None, 0.85f);
         }
 
         public void OnMouseMotion(MouseEvent e)

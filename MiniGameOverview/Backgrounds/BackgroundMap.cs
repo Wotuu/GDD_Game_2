@@ -38,7 +38,7 @@ namespace MiniGameOverview.Backgrounds
         private StateManager.SelectedGame[] gameSequence = new StateManager.SelectedGame[]{
             StateManager.SelectedGame.MainMenu,
             StateManager.SelectedGame.BalloonPaintBucketGame,
-            StateManager.SelectedGame.SquatBugsGame,
+            StateManager.SelectedGame.DigGame,
             StateManager.SelectedGame.SquatBugsGame,
             StateManager.SelectedGame.BuzzBattleGame,
         };
@@ -92,6 +92,10 @@ namespace MiniGameOverview.Backgrounds
 
             /// Main menu
             this.paths[0].isUnlocked = true;
+            /// Balloon game
+            this.paths[1].isUnlocked = true;
+            this.paths[2].isUnlocked = true;
+            this.paths[3].isUnlocked = true;
 
             MiniGameOverviewMainGame.GetInstance().player.TeleportTo(this.paths[0]);
 

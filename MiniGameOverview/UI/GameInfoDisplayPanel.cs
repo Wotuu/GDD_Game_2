@@ -31,8 +31,8 @@ namespace MiniGameOverview.UI
         public String[] gameNames = new String[]{
             "Main Menu",
             "Balloon Popper",
-            "Bugs Swatter",
             "Sand Digger",
+            "Bugs Swatter",
             "Buzz' Reclamation"
         };
 
@@ -69,10 +69,7 @@ namespace MiniGameOverview.UI
         }
 
         public GameInfoDisplayPanel(float z)
-            : base(null,
-                new Rectangle(MiniGameOverviewMainGame.GetInstance().game.GraphicsDevice.Viewport.Width - 400,
-                50,
-                375, 300))
+            : base(null, GameInfoDisplayPanel.GetDrawRectangle(0))
         {
             this.backgroundTexture = MiniGameOverviewMainGame.GetInstance().game.Content.Load<Texture2D>("UI/Interface/uitleg_block");
 
@@ -97,6 +94,10 @@ namespace MiniGameOverview.UI
             MiniGameOverviewMainGame.GetInstance().player.onPlayerReachedPathItemListeners += this.OnPlayerPathChanged;
         }
 
+        /// <summary>
+        /// When the player's path has changed.
+        /// </summary>
+        /// <param name="item">The item to which the path was changed.</param>
         public void OnPlayerPathChanged(PathItem item)
         {
             switch (item.game)
@@ -105,24 +106,35 @@ namespace MiniGameOverview.UI
                     this.gameNameLbl.text = gameNames[0];
                     this.gameDescriptionLbl.text = gameDescriptions[0];
                     this.startGameBtn.text = startGameBtnText[0];
+                    this.bounds = GameInfoDisplayPanel.GetDrawRectangle(0);
                     break;
 
                 case StateManager.SelectedGame.BalloonPaintBucketGame:
                     this.gameNameLbl.text = gameNames[1];
                     this.gameDescriptionLbl.text = gameDescriptions[1];
                     this.startGameBtn.text = startGameBtnText[1];
+                    this.bounds = GameInfoDisplayPanel.GetDrawRectangle(1);
                     break;
 
-                case StateManager.SelectedGame.SquatBugsGame:
+                case StateManager.SelectedGame.DigGame:
                     this.gameNameLbl.text = gameNames[2];
                     this.gameDescriptionLbl.text = gameDescriptions[2];
                     this.startGameBtn.text = startGameBtnText[2];
+                    this.bounds = GameInfoDisplayPanel.GetDrawRectangle(2);
+                    break;
+
+                case StateManager.SelectedGame.SquatBugsGame:
+                    this.gameNameLbl.text = gameNames[3];
+                    this.gameDescriptionLbl.text = gameDescriptions[3];
+                    this.startGameBtn.text = startGameBtnText[3];
+                    this.bounds = GameInfoDisplayPanel.GetDrawRectangle(3);
                     break;
 
                 case StateManager.SelectedGame.BuzzBattleGame:
                     this.gameNameLbl.text = gameNames[4];
                     this.gameDescriptionLbl.text = gameDescriptions[4];
                     this.startGameBtn.text = startGameBtnText[4];
+                    this.bounds = GameInfoDisplayPanel.GetDrawRectangle(4);
                     break;
             }
 
@@ -135,6 +147,24 @@ namespace MiniGameOverview.UI
                 onGameStartListeners(this.selectedGame);
 
             this.Unload();
+        }
+
+        /// <summary>
+        /// Gets the draw rectangle of this display panel according to a certain index.
+        /// </summary>
+        /// <param name="index">The index to use when calculating.</param>
+        /// <returns>The draw rectangle</returns>
+        public static Rectangle GetDrawRectangle(int index)
+        {
+            Rectangle rect = Rectangle.Empty;
+
+            if (index < 2)
+                rect = new Rectangle(MiniGameOverviewMainGame.GetInstance().game.GraphicsDevice.Viewport.Width - 400,
+                    30, 375, 300);
+            else
+                rect = new Rectangle(30, 30, 375, 300);
+
+            return rect;
         }
     }
 }

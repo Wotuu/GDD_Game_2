@@ -487,7 +487,8 @@ namespace XNAInterfaceComponents.ChildComponents
                     this.caret.row = this.rows - 1;
                     return;
                 }
-                else if (keyString.Equals("Tab") || keyString.Equals("ScrollLock") || keyString.Equals("Insert"))
+                else if (keyString.Equals("Tab") || keyString.Equals("ScrollLock") || 
+                    keyString.Equals("Insert") || keyString.Equals("Pause"))
                 {
                     // Do nothing
                     return;

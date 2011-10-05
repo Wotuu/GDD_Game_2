@@ -13,7 +13,7 @@ namespace SquatBugsGame.Particles.Emitters
         public Bug bug { get; set; }
 
         public BugDeathEmitter(Bug bug)
-            : base(bug.location.X, bug.location.Y, 0.1f)
+            : base(bug.GetCenter().X + bug.location.X, bug.GetCenter().Y + bug.location.Y, 0.1f)
         {
             this.particleScale = 2f;
             this.particlesPerTick = 50;
@@ -34,7 +34,7 @@ namespace SquatBugsGame.Particles.Emitters
 
         protected override void CreateParticle()
         {
-           new Particle(this);
+            new Particle(this);
         }
     }
 }

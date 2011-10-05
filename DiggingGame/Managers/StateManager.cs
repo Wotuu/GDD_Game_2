@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DiggingGame.Managers;
 
+public delegate void OnDigGameStateChanged(StateManager.State newState);
 namespace DiggingGame.Managers
 {
     public class StateManager
@@ -21,6 +23,7 @@ namespace DiggingGame.Managers
         #endregion
 
         private State state { get; set; }
+        public OnDigGameStateChanged onGameStateChangedListeners { get; set; }
 
         public enum State
         {
@@ -37,6 +40,8 @@ namespace DiggingGame.Managers
         public void SetState(State state)
         {
             this.state = state;
+            if (this.onGameStateChangedListeners != null)
+                onGameStateChangedListeners(state);
         }
 
         /// <summary>

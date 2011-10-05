@@ -11,7 +11,7 @@ using XNAInterfaceComponents.ParentComponents;
 
 namespace SquatBugsGame
 {
-   public class SquatBugsMainGame
+    public class SquatBugsMainGame
     {
 
         #region Singleton logic
@@ -74,7 +74,7 @@ namespace SquatBugsGame
                         break;
                     }
             }
-            
+
         }
 
         /// <summary>
@@ -100,6 +100,19 @@ namespace SquatBugsGame
         /// </summary>
         public void WinCheck()
         {
+            if (player.FriendlyBugsLeftKill == 0) StateManager.GetInstance().SetState(StateManager.State.Loss);
+            else if (player.EnemyBugsLeftKill <= 0) StateManager.GetInstance().SetState(StateManager.State.Victory);
+
+            /*
+            if (player.EnemyBugsLeftKill > 0)
+            {
+                return;
+            }
+            else
+            {
+                StateManager.GetInstance().SetState(StateManager.State.Victory);
+                //XNAMessageDialog.CreateDialog("Congratulations, you've won!", XNAMessageDialog.DialogType.OK);
+            }
 
             if (player.FriendlyBugsLeftKill > 0)
             {
@@ -107,23 +120,9 @@ namespace SquatBugsGame
             }
             else
             {
-                StateManager.GetInstance().SetState(StateManager.State.Victory);
-                XNAMessageDialog.CreateDialog("Congratulations, you've lost!", XNAMessageDialog.DialogType.OK);
-            }
-
-            if (player.EnemieBugsLeftKill > 0)
-            {
-                return;
-            }
-            else
-            {
-                StateManager.GetInstance().SetState(StateManager.State.Victory);
-                XNAMessageDialog.CreateDialog("Congratulations, you've won!", XNAMessageDialog.DialogType.OK);
-            }
-
-
-           
-            
+                StateManager.GetInstance().SetState(StateManager.State.Loss);
+                //XNAMessageDialog.CreateDialog("Congratulations, you've lost!", XNAMessageDialog.DialogType.OK);
+            }*/
         }
     }
 }

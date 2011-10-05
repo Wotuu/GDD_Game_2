@@ -57,7 +57,7 @@ namespace SquatBugsGame.Managers
                     }
                     else
                     {
-                        SquatBugsMainGame.GetInstance().player.EnemieBugsLeftKill--;
+                        SquatBugsMainGame.GetInstance().player.EnemyBugsLeftKill--;
                     }
                     BugList.Remove(BugList[i]);
                     // Remove bug

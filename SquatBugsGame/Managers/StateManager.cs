@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using SquatBugsGame.Managers;
 
+public delegate void OnSquatBugsGameStateChanged(StateManager.State newState);
 namespace SquatBugsGame.Managers
 {
     public class StateManager
@@ -21,6 +23,7 @@ namespace SquatBugsGame.Managers
         #endregion
 
         private State state { get; set; }
+        public OnSquatBugsGameStateChanged onGameStateChangedListeners { get; set; }
 
         public enum State
         {
@@ -37,6 +40,8 @@ namespace SquatBugsGame.Managers
         public void SetState(State state)
         {
             this.state = state;
+            if (this.onGameStateChangedListeners != null)
+                onGameStateChangedListeners(state);
         }
 
         /// <summary>

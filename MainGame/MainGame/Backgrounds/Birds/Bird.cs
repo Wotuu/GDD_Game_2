@@ -15,8 +15,11 @@ namespace MainGame.Backgrounds.Birds
         public BirdFlock flock { get; set; }
 
         public Vector2 location { get; set; }
+        public float z { get; set; }
         public Vector2 scale { get; set; }
         public Vector2 speed { get; set; }
+
+        public int nrInFlock { get; set; }
 
         public static Texture2D BIRD_TEXTURE { get; set; }
 
@@ -28,6 +31,9 @@ namespace MainGame.Backgrounds.Birds
         public Bird(BirdFlock flock, int nrInFlock)
         {
             this.flock = flock;
+
+            this.nrInFlock = nrInFlock;
+
             this.scale = new Vector2(1f, 1f);
             this.speed = new Vector2(5f, 0f);
 
@@ -51,6 +57,8 @@ namespace MainGame.Backgrounds.Birds
 
             float tempScale = 0.2f;//(0.2f + (0.005f * random.Next(10)));
             this.scale = new Vector2(tempScale - 0.05f, tempScale);
+
+            this.z = 0.99f;
 
             BirdManager.GetInstance().birds.AddLast(this);
         }
@@ -79,13 +87,13 @@ namespace MainGame.Backgrounds.Birds
                 (int)(this.animator.sourceTexture.Height * this.scale.Y));
         }
 
-        public void Draw(SpriteBatch sb)
+        public virtual void Draw(SpriteBatch sb)
         {
             sb.Draw(this.animator.sourceTexture, this.GetDrawRectangle(),
                 this.animator.GetSourceRectangle(GameTimeManager.GetInstance().currentUpdateStartMS),
                 Color.White, 0f, Vector2.Zero,
                 (this.flock.direction == BirdFlock.FlyDirection.LeftToRight) ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 
-                1f);
+                this.z - ( 0.01f * this.nrInFlock ));
         }
     }
 }

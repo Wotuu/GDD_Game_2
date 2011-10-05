@@ -90,7 +90,7 @@ namespace MainGame
             SquatBugsMainGame.GetInstance().Initialize(this);
             KinectTestMainGame.GetInstance().Initialize(this);
 
-            
+
 
             MenuManager.GetInstance().ShowMenu(MenuManager.Menu.MainMenu);
             StateManager.GetInstance().SetState(StateManager.State.MainMenu);
@@ -335,7 +335,7 @@ namespace MainGame
                     new GameResultCard(GameResultCard.CardColor.Pink);
                     break;
                 case StateManager.RunningGame.SquatBugsGame:
-                    new GameResultCard(GameResultCard.CardColor.Green);
+                    new GameResultCard(GameResultCard.CardColor.Blue);
                     break;
                 case StateManager.RunningGame.DigGame:
                     new GameResultCard(GameResultCard.CardColor.Yellow);
