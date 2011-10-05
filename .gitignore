@@ -26,3 +26,7 @@ Thumbs.db
 *.pfx
 *.cd
 *Debug*
+MainGame/MainGame/Game1.cs.orig
+MainGame/MainGame/Managers/StateManager.cs.orig
+MainGame/MainGame/UI/MainMenu.cs.orig
+SquatBugsGame/Players/Paw.cs.orig

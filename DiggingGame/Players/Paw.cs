@@ -136,9 +136,9 @@ namespace Digging.Players
 
             //Make the scale move on center of squater
 
-            Rectangle drawRect = this.GetDrawRectangle();
-            this.location = new Vector3(MousePosition.X - (drawRect.Width - (100 * scale.X)),
-                MousePosition.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
+            //Rectangle drawRect = this.GetDrawRectangle();
+            //this.location = new Vector3(MousePosition.X - (drawRect.Width - (100 * scale.X)),
+            //    MousePosition.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
 
         }
 
@@ -150,8 +150,8 @@ namespace Digging.Players
 
         public void OnMouseClick(MouseEvent m_event)
         {
-            //if (this.state == MoveState.Still)
-            //    this.state = MoveState.MovingToBug;
+            if (this.state == MoveState.Still)
+                this.state = MoveState.MovingToBug;
         }
 
         public void OnMouseRelease(MouseEvent m_event)

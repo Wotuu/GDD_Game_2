@@ -34,14 +34,13 @@ namespace SquatBugsGame.Bugs
            this.bugcolor = color;
            switch (color){
                case BugColor.Pink :
-                   BUG = SquatBugsMainGame.GetInstance().game.Content.Load<Texture2D>("Bugs/lieveheersb3_sprite");
-                   
+                   BUG = SquatBugsMainGame.GetInstance().game.Content.Load<Texture2D>("Bugs/lieveheers_roze_sprite");
                    break;
                case BugColor.Blue:
-                   BUG = SquatBugsMainGame.GetInstance().game.Content.Load<Texture2D>("Bugs/lieveheersb2_sprite");
+                   BUG = SquatBugsMainGame.GetInstance().game.Content.Load<Texture2D>("Bugs/lieveheers_blauw_sprite");
                    break;
                case BugColor.Green:
-                   BUG = SquatBugsMainGame.GetInstance().game.Content.Load<Texture2D>("Bugs/lieveheersb1_sprite");
+                   BUG = SquatBugsMainGame.GetInstance().game.Content.Load<Texture2D>("Bugs/lieveheers_geel_sprite");
                    break;
            }
         }

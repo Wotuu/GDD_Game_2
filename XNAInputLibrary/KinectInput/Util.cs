@@ -32,5 +32,7 @@ namespace XNAInputLibrary
                 return 0;
             return value;
         }
+
+
     }
 }

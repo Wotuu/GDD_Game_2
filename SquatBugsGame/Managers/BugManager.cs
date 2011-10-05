@@ -58,13 +58,26 @@ namespace SquatBugsGame.Managers
             {
                 if (BugList[i].IsDead && BugList[i].FadeTimer <= 0)
                 {
+                    try
+                    {
+
+                    
                     if (BugList[i] is FriendlyBug)
                     {
                         SquatBugsMainGame.GetInstance().player.FriendlyBugsLeftKill--;
+                        SquatBugsMainGame.GetInstance().player.lifeDisplayPanel.lives.RemoveLast();
                     }
                     else
                     {
                         SquatBugsMainGame.GetInstance().player.EnemyBugsLeftKill--;
+                        SquatBugsMainGame.GetInstance().player.lifeDisplayPanel.EnemieBugsLives.RemoveLast();
+                    }
+
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
                     }
                     BugList.Remove(BugList[i]);
                     // Remove bug

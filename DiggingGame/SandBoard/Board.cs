@@ -12,6 +12,10 @@ namespace DiggingGame.SandBoard
     {
         public List<SandTile> Tiles = new List<SandTile>();
         Viewport viewport;
+        #region Win Detection
+        int nrGoodObjectsFound = 0;
+        int nrBadObjectsFound = 0;
+        #endregion
 
         #region Textures
         public List<Texture2D> SandTiles = new List<Texture2D>();
@@ -90,7 +94,7 @@ namespace DiggingGame.SandBoard
         {
             SchelpTextures.Add(DiggingMainGame.GetInstance().game.Content.Load<Texture2D>("DigObjects/schelp_geel"));
             SchelpTextures.Add(DiggingMainGame.GetInstance().game.Content.Load<Texture2D>("DigObjects/schelp_blauw"));
-            SchelpTextures.Add(DiggingMainGame.GetInstance().game.Content.Load<Texture2D>("DigObjects/schelp_groen"));
+            //SchelpTextures.Add(DiggingMainGame.GetInstance().game.Content.Load<Texture2D>("DigObjects/schelp_groen"));
             SchelpTextures.Add(DiggingMainGame.GetInstance().game.Content.Load<Texture2D>("DigObjects/schelp_roze"));
 
             EvilDigTextures.Add(DiggingMainGame.GetInstance().game.Content.Load<Texture2D>("DigObjects/krab"));
@@ -127,12 +131,38 @@ namespace DiggingGame.SandBoard
         #region Update
         public void Update()
         {
+            nrGoodObjectsFound = 0;
+            nrBadObjectsFound = 0;
             foreach (SandTile tile in Tiles)
             {
                 tile.Update();
+                CheckWin(tile);
             }
         }
         #endregion
 
+        public void CheckWin(SandTile tile)
+        {
+            if(tile.DigStatus == DiggingGame.SandBoard.SandTile.DigDepth.DugThrice){
+                if (tile.DigObject is Schelp)
+                {
+                    nrGoodObjectsFound++;
+                }
+                else
+                {
+                    nrBadObjectsFound++;
+                }
+            
+            }
+            if (nrGoodObjectsFound == 10)
+            {
+                //WIN
+            }
+            else if(nrBadObjectsFound == 3)
+            {
+                //LOSS
+            }
+            
+        }
     }
 }

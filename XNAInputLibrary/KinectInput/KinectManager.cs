@@ -7,6 +7,7 @@ using Microsoft.Research.Kinect.Nui;
 using XNAInputLibrary.KinectInput;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using XNAInputLibrary.KinectInput.Gestures;
 
 
 
@@ -30,7 +31,9 @@ namespace XNAInputLibrary.KinectInput
         #endregion
 
         Runtime nui;
-
+        SwipeDetector SwipeDetector;
+        bool haslock = false;
+        bool PreviousLockState = false;
         #region Arms
         Vector3 RightHandPosition;
         Vector3 LeftHandPosition;
@@ -47,8 +50,10 @@ namespace XNAInputLibrary.KinectInput
         float MaxY;
         float MaxX;
         #endregion
+
         #region delegates
         public delegate void KinectPointerMoved(object sender, KinectPointerEventArgs e);
+        public delegate void KinectSwipeDetected(object sender, KinectSwipeEventArgs e);
         #endregion
         /// <summary>
         /// Initialize the NUI
@@ -57,7 +62,7 @@ namespace XNAInputLibrary.KinectInput
 
         private KinectManager()
         {
-            
+           SwipeDetector  = new SwipeDetector();
         }
 
         public void Initialize(Viewport viewport,float maxx,float maxy)
@@ -100,46 +105,91 @@ namespace XNAInputLibrary.KinectInput
         void nui_SkeletonFrameReady(object sender, SkeletonFrameReadyEventArgs e)
         {
             SkeletonFrame skeletonframe = e.SkeletonFrame;
-            Joint right;
-            Joint left;
+            
             int playerID = 0;
+            haslock = false;
             foreach (SkeletonData data in skeletonframe.Skeletons)
             {
+               
                 if (SkeletonTrackingState.Tracked == data.TrackingState)
                 {
-                   
-                    //HANDS
-                    right = data.Joints[JointID.HandRight];
-                    left = data.Joints[JointID.HandLeft];
-                    PreviousRightHandPosition = RightHandPosition;
-                    PreviousLeftHandPosition = LeftHandPosition;
-
-                    RightHandPosition = new Vector3(right.Position.X, right.Position.Y, right.Position.Z);
-                    LeftHandPosition = new Vector3(left.Position.X, left.Position.Y, left.Position.Z);
-                    if (PreviousLeftHandPosition != null && PreviousRightHandPosition != null)
-                    {
-                        if (!LeftHandPosition.Equals(PreviousLeftHandPosition) && !RightHandPosition.Equals(PreviousRightHandPosition))
-                        {
-                            RaisePointerMoved(CreateEventArgs(data,playerID));
-                        }
-                    }
-                    else
-                    {
-                        //Initial always raise
-                        RaisePointerMoved(CreateEventArgs(data, playerID));
-
-                    }
-
-
-
+                    haslock = true;
+                    CheckHandVectors(data, playerID);
+                    CalculateElbowRotation(data, playerID);
                     //Check for a Hit
 
                 }
+                
+               
+
+                
 
                 playerID++;
             }
+
+            if (!PreviousLockState && haslock)
+            {
+                Console.WriteLine("Got a Lock");
+                PreviousLockState = true;
+            }
+            else if (PreviousLockState && !haslock)
+            {
+                Console.WriteLine("Lost lock");
+                PreviousLockState = false;
+            }
         }
 
+        public void CheckHandVectors(SkeletonData data,int playerid)
+        {
+            Joint right;
+            Joint left;
+
+            //HANDS
+            right = data.Joints[JointID.HandRight];
+            left = data.Joints[JointID.HandLeft];
+            PreviousRightHandPosition = RightHandPosition;
+            PreviousLeftHandPosition = LeftHandPosition;
+
+            RightHandPosition = new Vector3(right.Position.X, right.Position.Y, right.Position.Z);
+            LeftHandPosition = new Vector3(left.Position.X, left.Position.Y, left.Position.Z);
+            SwipeDetector.Add(RightHandPosition);
+            if (PreviousLeftHandPosition != null && PreviousRightHandPosition != null)
+            {
+                if (!LeftHandPosition.Equals(PreviousLeftHandPosition) && !RightHandPosition.Equals(PreviousRightHandPosition))
+                {
+                    RaisePointerMoved(CreateEventArgs(data, playerid));
+                }
+            }
+            else
+            {
+                //Initial always raise
+                RaisePointerMoved(CreateEventArgs(data, playerid));
+
+            }
+        }
+        public void CalculateElbowRotation(SkeletonData data, int playerid)
+        {
+            Joint elbowright = data.Joints[JointID.ElbowRight];
+            Vector3 elbow = new Vector3(elbowright.Position.X,elbowright.Position.Y,elbowright.Position.Z);
+
+            Joint shoulderright = data.Joints[JointID.ShoulderRight];
+            Vector3 shoulder = new Vector3(shoulderright.Position.X, shoulderright.Position.Y, shoulderright.Position.Z);
+            //Dot Product
+            Vector3 b1 = elbow - RightHandPosition;
+            Vector3 b2 = elbow - shoulder;
+
+           // Console.Write(AngleBetweenTwoVectors(b1, b2));
+
+
+        }
+
+        public float AngleBetweenTwoVectors(Vector3 a, Vector3 b)
+        {
+
+            float dotproduct = 0.0f;
+            dotproduct = Vector3.Dot(Vector3.Normalize(a), Vector3.Normalize(b));
+            return (float)Math.Acos(dotproduct);
+        }
 
         public KinectPointerEventArgs CreateEventArgs(SkeletonData data,int playerid)
         {
@@ -150,7 +200,6 @@ namespace XNAInputLibrary.KinectInput
                 PreviousLeftHandPosition.ScaleTo(viewport.Width,viewport.Height,MaxX,MaxY),
                 data,
                 playerid);
-
             return eventargs;
         }
 
@@ -161,6 +210,15 @@ namespace XNAInputLibrary.KinectInput
             if (EventArgs != null && PointerMoved != null)
             {
                 PointerMoved(this, EventArgs);
+            }
+        }
+
+        public event KinectSwipeDetected SwipeDetected;
+        public virtual void RaiseSwipeDetected(KinectSwipeEventArgs EventArgs)
+        {
+            if (EventArgs != null && SwipeDetected != null)
+            {
+                SwipeDetected(this, EventArgs);
             }
         }
         #endregion

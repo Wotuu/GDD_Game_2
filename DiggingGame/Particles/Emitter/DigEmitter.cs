@@ -11,7 +11,7 @@ namespace DiggingGame.Particles.Emitter
 {
     class DigEmitter : ParticleEmitter
     {
-        public SandTile tile;
+       
 
         public DigEmitter(SandTile tile)
             : base(tile.DrawRectangle.X + tile.DrawRectangle.Width / 2, tile.DrawRectangle.Y + tile.DrawRectangle.Height / 2, 0.0001f)

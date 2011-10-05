@@ -9,6 +9,8 @@ using MiniGameOverview.Managers;
 using MiniGameOverview.Map.Pathing;
 using XNAInputLibrary.KeyboardInput;
 using Microsoft.Xna.Framework.Input;
+using XNAInputLibrary.KinectInput;
+using XNAInputLibrary.KinectInput.Gestures;
 
 public delegate void OnPlayerReachedPathItem(PathItem item);
 
@@ -71,6 +73,11 @@ namespace MiniGameOverview.Players
                 new Rectangle(0, 0, 270, 230), 150);*/
 
             this.z = 0.87f;
+
+            //Kinect
+
+            KinectManager.GetInstance().SwipeDetected += new KinectManager.KinectSwipeDetected(KinectSwipeDetected);
+
         }
 
         /// <summary>
@@ -91,25 +98,11 @@ namespace MiniGameOverview.Players
                 KeyboardState state = Keyboard.GetState();
                 if (state.IsKeyDown(Keys.Left))
                 {
-                    // Assignment to itsself, or the next
-                    if (this.moveTarget.previous != null)
-                    {
-                        this.moveTarget = this.moveTarget.previous;
-                        this.moveState = State.Moving;
-
-                        this.speed = (this.speed.X > 0) ? this.speed * -1f : this.speed;
-                    }
+                    MoveFuzzLeft();
                 }
                 else if (state.IsKeyDown(Keys.Right))
                 {
-                    if (this.moveTarget.isFullyColored)
-                    {
-                        // Assignment to itsself, or the next
-                        this.moveTarget = (this.moveTarget.next == null) ? this.moveTarget : this.moveTarget.next;
-
-                        this.moveState = State.Moving;
-                    }
-                    this.speed = (this.speed.X < 0) ? this.speed * -1f : this.speed;
+                    MoveFuzzRight();
                 }
             }
 
@@ -124,6 +117,49 @@ namespace MiniGameOverview.Players
                 }
             }
         }
+
+
+        #region move functions
+        public void MoveFuzzLeft()
+        {
+            // Assignment to itsself, or the next
+            if (this.moveTarget.previous != null)
+            {
+                this.moveTarget = this.moveTarget.previous;
+                this.moveState = State.Moving;
+
+                this.speed = (this.speed.X > 0) ? this.speed * -1f : this.speed;
+            }
+        }
+
+        public void MoveFuzzRight()
+        {
+            if (this.moveTarget.isFullyColored)
+            {
+                // Assignment to itsself, or the next
+                this.moveTarget = (this.moveTarget.next == null) ? this.moveTarget : this.moveTarget.next;
+
+                this.moveState = State.Moving;
+            }
+            this.speed = (this.speed.X < 0) ? this.speed * -1f : this.speed;
+        }
+
+        #endregion
+
+        #region kinect
+        public void KinectSwipeDetected(object sender, KinectSwipeEventArgs e)
+        {
+            switch (e.swipedirection)
+            {
+                case SwipeDirection.Right:
+                    MoveFuzzRight();
+                    break;
+                case SwipeDirection.Left:
+                    MoveFuzzLeft();
+                    break;
+            }
+        }
+        #endregion
 
         public void Draw(SpriteBatch sb)
         {
