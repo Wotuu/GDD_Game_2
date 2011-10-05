@@ -9,6 +9,7 @@ using MiniGameOverview.Backgrounds;
 using MiniGameOverview.Backgrounds.QuadTree;
 using System.Diagnostics;
 using MiniGameOverview.Managers;
+using MiniGameOverview.Particles;
 
 namespace MiniGameOverview.Map.Pathing
 {
@@ -18,8 +19,24 @@ namespace MiniGameOverview.Map.Pathing
         public PathItem previous { get; set; }
         public PathItem next { get; set; }
 
-        public Vector2 location { get; set; }
-        public Boolean isUnlocked { get; set; }
+        public UnlockedEmitter emitter { get; set; }
+
+        public Vector3 location { get; set; }
+        private Boolean _isUnlocked { get; set; }
+        public Boolean isUnlocked
+        {
+            get
+            {
+                return _isUnlocked;
+            }
+            set
+            {
+                if (this.emitter == null && value)
+                    this.emitter = new UnlockedEmitter(this.location);
+
+                this._isUnlocked = value;
+            }
+        }
         public Boolean isFullyColored { get; set; }
 
         public StateManager.SelectedGame game { get; set; }
@@ -73,7 +90,7 @@ namespace MiniGameOverview.Map.Pathing
         public void Draw(SpriteBatch sb)
         {
             sb.Draw(PathItem.PATH_ITEM_TEXTURE, this.GetDrawRectangle(), null,
-                Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0.9f);
+                Color.White, 0f, Vector2.Zero, SpriteEffects.None, location.Z);
 
             if (this.drawableMapSection != null) this.drawableMapSection.Draw(sb);
         }

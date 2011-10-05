@@ -38,26 +38,32 @@ namespace SquatBugsGame.Bugs
 
         public float FadeTime = 1500;
         public double FadeTimer;
-      
-        
+
+
         public Vector2 EndLocation;
 
         protected int TimePerSpriteFrame = 100;
         public Double SpriteTimer = 100;
         private int spritenr = 1;
         public int NrOfFrames;
-        
+
 
 
         public void Draw(SpriteBatch sb)
         {
+            Rectangle source = this.GetSourceRectangle();
             //sb.Draw(BUG, GetDrawRectangle(), this.color);
-            sb.Draw(BUG, location, new Rectangle((BUG.Width / NrOfFrames) * (spritenr - 1), 0, (BUG.Width / NrOfFrames), BUG.Height), DrawColor, rotation, GetCenter(), scale, SpriteEffects.None, 0.9f);
+            sb.Draw(BUG, this.GetDrawRectangle(),
+                source,
+                DrawColor, rotation, new Vector2(source.Width / 2f, source.Height / 2f), SpriteEffects.None, 0.9f);
+
+
+            // Util.DrawClearRectangle(sb, this.GetCollisionRectangle(), 1, Color.Red, 0.9f);
         }
 
         public void DrawDebug(SpriteBatch sb, int i)
         {
-            sb.DrawString(SquatBugsMainGame.GetInstance().font, i.ToString(), location, Color.Red,0f,Vector2.Zero,10f,SpriteEffects.None,.01f);
+            sb.DrawString(SquatBugsMainGame.GetInstance().font, i.ToString(), location, Color.Red, 0f, Vector2.Zero, 10f, SpriteEffects.None, .01f);
             sb.DrawString(SquatBugsMainGame.GetInstance().font, i.ToString(), EndLocation, Color.Red, 0f, Vector2.Zero, 10f, SpriteEffects.None, .01f);
         }
 
@@ -90,8 +96,8 @@ namespace SquatBugsGame.Bugs
                 DeathCalculations();
             }
             //drawRectangle = new Rectangle((int)location.X + (int)Math.Sin(rotation), (int)location.Y - (int)Math.Cos(rotation), (int)((float)BUG.Width / NrOfFrames * scale.X), (int)((float)BUG.Height * scale.Y));
-            drawRectangle = new Rectangle((int)(location.X - (BUG.Width  / (2 * NrOfFrames)* scale.X)), (int)(location.Y -  BUG.Height / 2 * scale.Y ), (int)((BUG.Width / NrOfFrames) * scale.X), (int)(BUG.Height * scale.Y));
-           
+            drawRectangle = new Rectangle((int)(location.X - (BUG.Width / (2 * NrOfFrames) * scale.X)), (int)(location.Y - BUG.Height / 2 * scale.Y), (int)((BUG.Width / NrOfFrames) * scale.X), (int)(BUG.Height * scale.Y));
+
 
         }
 
@@ -108,9 +114,30 @@ namespace SquatBugsGame.Bugs
                 {
                     spritenr++;
                 }
-                
+
                 SpriteTimer = TimePerSpriteFrame;
             }
+        }
+
+        /// <summary>
+        /// Gets the source rectangle of the bug.
+        /// </summary>
+        /// <returns>The source rectangle you should use when drawing!</returns>
+        public Rectangle GetSourceRectangle()
+        {
+            return new Rectangle((BUG.Width / NrOfFrames) * (spritenr - 1), 0, (BUG.Width / NrOfFrames), BUG.Height);
+        }
+
+        /// <summary>
+        /// Gets the rectangle you should use for the collision.
+        /// </summary>
+        /// <returns>The collision rectangle</returns>
+        public Rectangle GetCollisionRectangle()
+        {
+            Rectangle source = this.GetSourceRectangle();
+            return new Rectangle((int)(this.location.X - (source.Width * this.scale.X)),
+                (int)(this.location.Y - (source.Height * this.scale.Y)),
+                (int)(source.Width * this.scale.X), (int)(source.Height * this.scale.Y));
         }
 
         /// <summary>
@@ -119,8 +146,10 @@ namespace SquatBugsGame.Bugs
         /// <returns>The rectangle that can be used for drawing.</returns>
         public Rectangle GetDrawRectangle()
         {
-            return new Rectangle((int)this.location.X, (int)this.location.Y,
-                (int)(BUG.Width * this.scale.X), (int)(BUG.Height * this.scale.Y));
+            Rectangle source = this.GetSourceRectangle();
+            return new Rectangle((int)(this.location.X - (source.Width * this.scale.X) / 2),
+                (int)(this.location.Y - (source.Height * this.scale.Y) / 2),
+                (int)(source.Width * this.scale.X), (int)(source.Height * this.scale.Y));
         }
 
         /// <summary>
@@ -129,21 +158,24 @@ namespace SquatBugsGame.Bugs
         /// <returns>The dead center.</returns>
         public Vector2 GetCenter()
         {
-            //return new Vector2(this.location.X + ((BUG.Width * this.scale.X) / 2),
-            //    this.location.Y + ((BUG.Height * this.scale.Y) / 2));
-            return new Vector2((BUG.Width / 4)/ 2, BUG.Height / 2);
+            Rectangle source = this.GetSourceRectangle();
+            return new Vector2(this.location.X + ((source.Width * this.scale.X) / 2),
+                this.location.Y + ((source.Height * this.scale.Y) / 2));
+            //return new Vector2((BUG.Width / 4) / 2, BUG.Height / 2);
         }
 
         public Boolean NotOutOfBounds()
         {
-            if ((location.X  + Speed.X) > viewport.Width || (location.X  + Speed.X) < 0 || (location.Y  + Speed.Y) > viewport.Height || (location.Y  + Speed.Y) < 0)
+            Rectangle location = this.GetCollisionRectangle();
+            if ((location.Center.X + Speed.X) > viewport.Width || (location.Center.X + Speed.X) < 0 ||
+                (location.Center.Y + Speed.Y) > viewport.Height || (location.Center.Y + Speed.Y) < 0)
             {
                 return false;
             }
             return true;
         }
 
-        public Boolean IsBugAtEndPoint( Vector2 endlocation)
+        public Boolean IsBugAtEndPoint(Vector2 endlocation)
         {
 
             locendrect = new Rectangle((int)endlocation.X - (drawRectangle.Width), (int)endlocation.Y - (drawRectangle.Height), drawRectangle.Width * 2, drawRectangle.Height * 2);
@@ -165,7 +197,7 @@ namespace SquatBugsGame.Bugs
             {
                 Speed = getRandomSpeed(random);
             }
-            
+
         }
 
         private void SpeedCalculations()
@@ -236,7 +268,7 @@ namespace SquatBugsGame.Bugs
         public void DeathCalculations()
         {
             this.FadeTimer -= GameTimeManager.GetInstance().currentUpdateStartMS - GameTimeManager.GetInstance().previousUpdateStartMS;
-            
+
             double AlphaValue = (float)(255 / FadeTime) * FadeTimer;
 
             DrawColor = new Color((int)AlphaValue, (int)AlphaValue, (int)AlphaValue, (int)AlphaValue);

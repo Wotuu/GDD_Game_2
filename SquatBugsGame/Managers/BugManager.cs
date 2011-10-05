@@ -25,6 +25,13 @@ namespace SquatBugsGame.Managers
         
 
         public List<Bug> BugList = new List<Bug>();
+
+        /*
+        / Just for testing - @W
+        private int MaximumBugs = 2;
+        private int MaximumEvilBugs = 1;
+        private int MaximumFriendlyBugs = 1;*/
+        
         private int MaximumBugs = 30;
         private int MaximumEvilBugs = 8;
         private int MaximumFriendlyBugs = 22;

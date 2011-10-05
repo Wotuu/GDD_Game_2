@@ -116,7 +116,8 @@ namespace MiniGameOverview.Players
             if (this.moveState == State.Moving)
             {
                 this.location += (this.speed * (float)GameTimeManager.GetInstance().time_step);
-                if (Math.Abs(this.location.X - this.moveTarget.location.X) < 1f)
+                if ((this.speed.X > 0 && this.location.X > this.moveTarget.location.X) ||
+                    (this.speed.X < 0 && this.location.X < this.moveTarget.location.X))
                 {
                     this.TeleportTo(this.moveTarget);
                     this.moveState = State.Idle;

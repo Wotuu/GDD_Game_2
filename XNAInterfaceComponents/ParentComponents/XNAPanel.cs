@@ -46,7 +46,7 @@ namespace XNAInterfaceComponents.Components
             }
             else
             {
-                sb.Draw(this.backgroundTexture, this.GetScreenBounds(), null, drawColor, 0f, new Vector2(0, 0),
+                sb.Draw(this.backgroundTexture, this.GetTextureDrawRectangle(), null, drawColor, 0f, new Vector2(0, 0),
                     SpriteEffects.None, this.z);
             }
 

@@ -76,12 +76,10 @@ namespace MainGame.UI
 
         public override void Update()
         {
-            base.Update();
-
             if (this.creditsPresentation != null)
                 this.creditsPresentation.Update();
 
-
+            base.Update();
         }
 
         public void OnCreditsPressed(XNAButton source)

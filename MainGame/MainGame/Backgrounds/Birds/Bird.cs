@@ -63,13 +63,22 @@ namespace MainGame.Backgrounds.Birds
             BirdManager.GetInstance().birds.AddLast(this);
         }
 
+        /// <summary>
+        /// If this bird is on the screen or no.
+        /// </summary>
+        /// <returns>True or false.</returns>
+        public virtual Boolean OnScreen()
+        {
+            return this.GetDrawRectangle().Intersects(Game1.GetInstance().GraphicsDevice.Viewport.Bounds);
+        }
+
         public void Update()
         {
             this.location += (this.speed * (float)GameTimeManager.GetInstance().time_step);
 
             if (((this.flock.direction == BirdFlock.FlyDirection.LeftToRight && this.location.X > 200) ||
                 (this.flock.direction == BirdFlock.FlyDirection.RightToLeft && this.location.X < 200)) &&
-                !this.GetDrawRectangle().Intersects(Game1.GetInstance().GraphicsDevice.Viewport.Bounds))
+                !this.OnScreen())
             {
                 BirdManager.GetInstance().birds.Remove(this);
             }

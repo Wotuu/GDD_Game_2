@@ -5,12 +5,13 @@ using System.Text;
 using MainGame.Managers;
 using MainGame.Backgrounds.Birds;
 using MainGame.Backgrounds.Birds.BannerBirds;
+using System.Diagnostics;
 
 namespace MainGame.UI.Credits
 {
     public class CreditsPresentation
     {
-        public int totalDuration = 20000;
+        public int totalDuration = 15000;
         public int spawnInterval = 5000;
 
         public double creationTime { get; set; }
@@ -20,18 +21,16 @@ namespace MainGame.UI.Credits
 
         public CreditsPresentation()
         {
-            MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
-
             this.creationTime = GameTimeManager.GetInstance().currentUpdateStartMS;
 
             creditsStrings.AddLast(new String[] { "Programming", "Menno van Scheers", "Wouter Koppenol" });
-            creditsStrings.AddLast(new String[] { "Design and storyline", "Odette Jansen" });
+            creditsStrings.AddLast(new String[] { "Design & Art", "Odette Jansen" });
         }
 
         public void Update()
         {
             double updateStart = GameTimeManager.GetInstance().currentUpdateStartMS;
-            if (updateStart - this.lastSpawnMS > this.spawnInterval)
+            if (updateStart - this.lastSpawnMS > this.spawnInterval && this.creditsStrings.Count > 0)
             {
                 this.lastSpawnMS = updateStart;
 

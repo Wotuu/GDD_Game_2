@@ -358,6 +358,7 @@ namespace MainGame
         public void BackToMiniGameOverview()
         {
             StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.MiniGameOverview);
+            MiniGameOverviewMainGame.GetInstance().OnShow();
         }
     }
 }

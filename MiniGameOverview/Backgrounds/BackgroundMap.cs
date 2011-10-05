@@ -43,12 +43,12 @@ namespace MiniGameOverview.Backgrounds
             StateManager.SelectedGame.BuzzBattleGame,
         };
 
-        private Vector2[] pathLocations = new Vector2[]{
-            new Vector2( 130, 820), 
-            new Vector2( 593, 820),
-            new Vector2( 1102, 820),
-            new Vector2( 1441, 820),
-            new Vector2( 1789, 820)
+        private Vector3[] pathLocations = new Vector3[]{
+            new Vector3( 130, 820, 0.9f), 
+            new Vector3( 593, 820, 0.9f),
+            new Vector3( 1102, 820, 0.9f),
+            new Vector3( 1441, 820, 0.9f),
+            new Vector3( 1789, 820, 0.9f)
         };
         private Polygon[] pathDrawPolygons { get; set; }
         private int[] pathDrawPolygonsMaxPixels = new int[5]{
@@ -84,7 +84,10 @@ namespace MiniGameOverview.Backgrounds
             for (int i = 0; i < this.paths.Length; i++)
             {
                 this.paths[i] = new PathItem(this.gameSequence[i], ((i == 0) ? null : this.paths[i - 1]));
-                this.paths[i].location = pathLocations[i] * this.scale;
+                this.paths[i].location = new Vector3(
+                    pathLocations[i].X * this.scale.X, 
+                    pathLocations[i].Y * this.scale.Y, 
+                    pathLocations[i].Z);
                 this.paths[i].drawableMapSection = new DrawableMapSection(this.paths[i], this.pathDrawPolygons[i],
                     (int)(pathDrawPolygonsMaxPixels[i] * this.scale.X * this.scale.Y));
                 this.paths[i].drawableMapSection.polygon.scale = this.scale;

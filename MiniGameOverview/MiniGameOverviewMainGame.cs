@@ -82,5 +82,32 @@ namespace MiniGameOverview
             this.player.Draw(sb);
             this.backgroundMap.Draw(sb);
         }
+
+        /// <summary>
+        /// Should be called when the interface should be hidden.
+        /// </summary>
+        public void OnHide()
+        {
+            foreach (PathItem item in this.backgroundMap.paths)
+            {
+                if (item.emitter != null)
+                {
+                    item.emitter.QuicklyDie(10);
+                    item.emitter = null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Should be called when the interface should be shown again.
+        /// </summary>
+        public void OnShow()
+        {
+            foreach (PathItem item in this.backgroundMap.paths)
+            {
+                // Intended
+                item.isUnlocked = item.isUnlocked;
+            }
+        }
     }
 }

@@ -66,7 +66,7 @@ namespace XNAInterfaceComponents.AbstractComponents
             {
                 Texture2D texture = this.backgroundTexture;
                 if (this.isMouseOver && this.mouseoverBackgroundTexture != null) texture = this.mouseoverBackgroundTexture;
-                sb.Draw(texture, drawRect, null, drawColor, 0, new Vector2(0, 0), SpriteEffects.None,
+                sb.Draw(texture, this.GetTextureDrawRectangle(), null, drawColor, 0, new Vector2(0, 0), SpriteEffects.None,
                     this.z - 0.001f);
             }
             // Draw the text on the button
@@ -105,7 +105,8 @@ namespace XNAInterfaceComponents.AbstractComponents
 
         public void OnMouseRelease(MouseEvent m_event)
         {
-            if (this.isFocussed && m_event.button == MouseEvent.MOUSE_BUTTON_1)
+            if (this.isFocussed && m_event.button == MouseEvent.MOUSE_BUTTON_1 &&
+                this.parent.visible)
             {
                 Point screenLocation = parent.RequestScreenLocation(new Point(this.bounds.X, this.bounds.Y));
                 Rectangle screenRect = new Rectangle(screenLocation.X, screenLocation.Y, this.bounds.Width, this.bounds.Height);

@@ -148,10 +148,14 @@ namespace ParticleEngine.Particles
             if (fadeAccordingToLifespan)
             {
                 int percentageOfLifespan = this.GetPercentageOfLifespan();
+
+                float percentage = ((this.emitter.blendState != BlendState.AlphaBlend) ? 0f : percentageOfLifespan / 100f);
+                // Console.Out.WriteLine(percentage);
                 if (inverseFade)
                     drawColor = new Color(this.color.R, this.color.G, this.color.B, (int)(percentageOfLifespan * 2.55f));
                 else
-                    drawColor = new Color(this.color.R, this.color.G, this.color.B, 255 - (int)(percentageOfLifespan * 2.55f));
+                    drawColor = new Color((int)(this.color.R * (1f - percentage)), (int)(this.color.G * (1f - percentage)),
+                        (int)(this.color.B * (1f - percentage)), 255 - (int)(percentageOfLifespan * 2.55f));
             }
 
             sb.Draw(this.texture, (this.lastDrawRectangle = this.CalculateDrawRectangle()), null, drawColor,

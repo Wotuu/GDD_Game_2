@@ -25,6 +25,8 @@ namespace XNAInterfaceComponents.Components
         public Boolean isMouseOver { get; set; }
         public Boolean isFocussed { get; set; }
 
+        public Vector2 backgroundTextureScale { get; set; }
+
         private Texture2D _mouseoverBackgroundTexture { get; set; }
         public Texture2D mouseoverBackgroundTexture
         {
@@ -65,6 +67,23 @@ namespace XNAInterfaceComponents.Components
             this.border = new Border(this, 1, Color.Black);
             if (parent != null) this.z = parent.z - 0.01f;
             else this.z = 1f - this.GetDrawDepthOffset();
+
+            this.backgroundTextureScale = new Vector2(1f, 1f);
+        }
+
+        /// <summary>
+        /// Gets the texture draw rectangle.
+        /// </summary>
+        /// <returns>The rectangle that you should use to draw the background texture.</returns>
+        public Rectangle GetTextureDrawRectangle()
+        {
+            Rectangle screenLocation = this.GetScreenBounds();
+
+            if (this.backgroundTextureScale == Vector2.Zero) return screenLocation;
+
+            return new Rectangle(screenLocation.X, screenLocation.Y,
+                (int)(this.backgroundTexture.Width * this.backgroundTextureScale.X),
+                (int)(this.backgroundTexture.Height * this.backgroundTextureScale.Y));
         }
 
         /// <summary>

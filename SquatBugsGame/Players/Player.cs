@@ -40,7 +40,7 @@ namespace SquatBugsGame.Players
         {
             foreach (Bug bug in BugManager.GetInstance().BugList)
             {
-                if(bug.drawRectangle.Intersects(new Rectangle(m_event.location.X,m_event.location.Y,5,5)))
+                if (bug.GetCollisionRectangle().Intersects(new Rectangle(m_event.location.X, m_event.location.Y, 5, 5)))
                 {
                     bug.Destroy();
                 }
