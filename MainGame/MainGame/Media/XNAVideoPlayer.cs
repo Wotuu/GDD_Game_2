@@ -86,23 +86,26 @@ namespace MainGame.Media
 
         public void Draw(SpriteBatch sb)
         {
-            if (this.player.State == MediaState.Stopped && this.previousState == MediaState.Playing &&
-                this.onVideoStoppedPlayingListeners != null)
-                onVideoStoppedPlayingListeners(this);
+            
+                if (this.player.State == MediaState.Stopped && this.previousState == MediaState.Playing &&
+                    this.onVideoStoppedPlayingListeners != null)
+                    onVideoStoppedPlayingListeners(this);
 
-            if (this.player.State == MediaState.Playing)
-            {
-                Color drawColor = Color.White;
-                double difference = GameTimeManager.GetInstance().currentUpdateStartMS - this.playerStartMS;
-                if (difference > this.fadeOutAfterMS)
+                if (this.player.State == MediaState.Playing)
                 {
-                    int color = (int)(255 - (255 * (difference - fadeOutAfterMS) / this.fadeOutDurationMS));
-                    drawColor = new Color(color, color, color, color);
-                    this.fadingOut = true;
+                    Color drawColor = Color.White;
+                    double difference = GameTimeManager.GetInstance().currentUpdateStartMS - this.playerStartMS;
+                    if (difference > this.fadeOutAfterMS)
+                    {
+                        int color = (int)(255 - (255 * (difference - fadeOutAfterMS) / this.fadeOutDurationMS));
+                        drawColor = new Color(color, color, color, color);
+                        this.fadingOut = true;
+                    }
+                    sb.Draw(this.player.GetTexture(), this.bounds, null,
+                        drawColor, 0f, Vector2.Zero, SpriteEffects.None, this.z);
                 }
-                sb.Draw(this.player.GetTexture(), this.bounds, null,
-                    drawColor, 0f, Vector2.Zero, SpriteEffects.None, this.z);
-            }
+                
+           
 
             this.previousState = this.player.State;
         }

@@ -28,7 +28,7 @@ namespace SquatBugsGame.Players
 
         public MoveState state { get; set; }
 
-        private Vector3 MousePosition;
+        private MouseEvent MousePosition;
 
         public enum MoveState
         {
@@ -65,19 +65,19 @@ namespace SquatBugsGame.Players
         {
             //RightHand = e.RightHandPosition.ScaleTo(game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, 0.5f, 0.5f);
             //LeftHand = e.LeftHandPosition.ScaleTo(game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height, 0.5f, 0.5f);
-            if (state == MoveState.Still)
-            {
+            //if (state == MoveState.Still)
+            //{
                 
-                Vector3 HandPosition = e.RightHandPosition.ScaleTo(SquatBugsMainGame.GetInstance().viewport.Width, SquatBugsMainGame.GetInstance().viewport.Height, 0.5f, 0.5f);
-                MousePosition = HandPosition;
-                Rectangle drawRect = this.GetDrawRectangle();
-                this.location = new Vector3(HandPosition.X- (drawRect.Width - (100 * scale.X)),
-                    HandPosition.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
-                Console.WriteLine("X :" + HandPosition.X + " y: " + HandPosition.X);
+            //    Vector3 HandPosition = e.RightHandPosition.ScaleTo(SquatBugsMainGame.GetInstance().viewport.Width, SquatBugsMainGame.GetInstance().viewport.Height, 0.5f, 0.5f);
+            //    MousePosition = HandPosition;
+            //    Rectangle drawRect = this.GetDrawRectangle();
+            //    this.location = new Vector3(HandPosition.X- (drawRect.Width - (100 * scale.X)),
+            //        HandPosition.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
+            //    Console.WriteLine("X :" + HandPosition.X + " y: " + HandPosition.X);
 
 
 
-            }
+            //}
 
         }
 
@@ -85,7 +85,7 @@ namespace SquatBugsGame.Players
         {
             if (state == MoveState.Still)
             {
-            //MousePosition = e;
+            MousePosition = e;
             Rectangle drawRect = this.GetDrawRectangle();
             this.location = new Vector3(e.location.X - (drawRect.Width - (100 * scale.X)),
                 e.location.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
@@ -140,11 +140,14 @@ namespace SquatBugsGame.Players
             }
 
             //Make the scale move on center of squater
+            if (this.location != null && MousePosition != null)
+            {
+                Rectangle drawRect = this.GetDrawRectangle();
+                this.location = new Vector3(MousePosition.location.X - (drawRect.Width - (100 * scale.X)),
+                    MousePosition.location.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
 
-            Rectangle drawRect = this.GetDrawRectangle();
-            this.location = new Vector3(MousePosition.X - (drawRect.Width - (100 * scale.X)),
-                MousePosition.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
-
+            }
+            
         }
 
         public void Draw(SpriteBatch sb)

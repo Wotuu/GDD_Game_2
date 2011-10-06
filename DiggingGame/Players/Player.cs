@@ -48,6 +48,7 @@ namespace DiggingGame.Players
                     
                     if (tile.DigStatus != SandTile.DigDepth.DugThrice)
                     {
+                        DiggingMainGame.GetInstance().AudioManager.PlayDigSound();
                         new DigEmitter(tile);
                         tile.DigStatus = tile.DigStatus + 1;
                         tile.DigTexture = DiggingMainGame.GetInstance().board.DigTiles[(int)tile.DigStatus -1];

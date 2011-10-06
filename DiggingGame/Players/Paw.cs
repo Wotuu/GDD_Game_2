@@ -46,7 +46,7 @@ namespace Digging.Players
             MouseManager.GetInstance().mouseDragListeners += this.OnMouseDrag;
 
             this.pawTexture = DiggingMainGame.GetInstance().game.Content.Load<Texture2D>
-                ("Misc/vliegenmepper");
+                ("DigObjects/schep");
             this.player = player;
             this.location = new Vector3(2000, 2000, 0.001f);
 
@@ -82,8 +82,8 @@ namespace Digging.Players
             {
                 //MousePosition = e;
                 Rectangle drawRect = this.GetDrawRectangle();
-                this.location = new Vector3(e.location.X - (drawRect.Width - (100 * scale.X)),
-                    e.location.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
+                this.location = new Vector3(e.location.X - (drawRect.Width - (50 * scale.X)),
+                    e.location.Y - (drawRect.Height - ( 360 * scale.Y)), this.location.Z);
             }
         }
 

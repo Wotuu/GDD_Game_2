@@ -8,6 +8,8 @@ using SquatBugsGame.Managers;
 using SquatBugsGame.Players;
 using ParticleEngine;
 using XNAInterfaceComponents.ParentComponents;
+using SquatBugs.Audio;
+using XNAInputHandler.MouseInput;
 
 namespace SquatBugsGame
 {
@@ -31,6 +33,7 @@ namespace SquatBugsGame
         public Player player;
         public Texture2D background { get; set; }
         public Viewport viewport;
+        public AudioManager AudioManager;
 
         public void Initialize(Game game)
         {
@@ -40,7 +43,8 @@ namespace SquatBugsGame
             ParticleManager.DEFAULT_TEXTURE = this.game.Content.Load<Texture2D>("Particles/default");
             this.player = new Player();
             this.viewport = game.GraphicsDevice.Viewport;
-
+            AudioManager = new AudioManager();
+            AudioManager.PlayAmbientBackGroundMusic();
             StateManager.GetInstance().SetState(StateManager.State.Running);
         }
 
@@ -71,6 +75,7 @@ namespace SquatBugsGame
                         BugManager.GetInstance().UpdateBugs();
                         this.player.Update();
                         WinCheck();
+                        
                         break;
                     }
                 case StateManager.State.Paused:
@@ -98,6 +103,8 @@ namespace SquatBugsGame
         /// <param name="sb">The spritebatch to draw on.</param>
         public void Draw(SpriteBatch sb)
         {
+            
+            
             if (Util.lineTexture == null)
             {
                 Util.lineTexture = Util.GetClearTexture2D(sb);
@@ -107,6 +114,7 @@ namespace SquatBugsGame
             GameTimeManager.GetInstance().OnStartDraw();
             BugManager.GetInstance().DrawBugs(sb);
             this.player.Draw(sb);
+            
         }
 
 
@@ -117,6 +125,23 @@ namespace SquatBugsGame
         {
             if (player.FriendlyBugsLeftKill == 0) StateManager.GetInstance().SetState(StateManager.State.Loss);
             else if (player.EnemyBugsLeftKill <= 0) StateManager.GetInstance().SetState(StateManager.State.Victory);
+        }
+
+
+        /// <summary>
+        /// Will clean up all remeaning resources of this instance eg: MouseListeners,Clear Lists
+        /// </summary>
+        public void CleanUp()
+        {
+            //Remove MouseListeners
+            MouseManager.GetInstance().mouseClickedListeners -= this.player.paw.OnMouseClick;
+            MouseManager.GetInstance().mouseReleasedListeners -= this.player.paw.OnMouseRelease;
+
+            MouseManager.GetInstance().mouseMotionListeners -= this.player.paw.OnMouseMotion;
+            MouseManager.GetInstance().mouseDragListeners -= this.player.paw.OnMouseDrag;
+
+            //Clear Bugs
+            BugManager.GetInstance().BugList.Clear();
         }
     }
 }

@@ -35,7 +35,7 @@ namespace XNAInputLibrary.KinectInput.Gestures
                 Entry entrytodelete = HandPoints[0];
                 HandPoints.Remove(entrytodelete);
             }
-            if (HandPoints.Count > 40)
+            if (HandPoints.Count > 30)
             {
                 CheckSwipeGesture();
             }

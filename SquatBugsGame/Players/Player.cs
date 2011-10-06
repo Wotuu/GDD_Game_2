@@ -44,6 +44,11 @@ namespace SquatBugsGame.Players
 
         public void OnMouseClick(MouseEvent m_event)
         {
+            if (StateManager.GetInstance().GetState() == StateManager.State.Running)
+            {
+                SquatBugsMainGame.GetInstance().AudioManager.PlaySwatSound();
+            }
+            
             foreach (Bug bug in BugManager.GetInstance().BugList)
             {
                 if (bug.GetCollisionRectangle().Intersects(new Rectangle(m_event.location.X, m_event.location.Y, 5, 5)))

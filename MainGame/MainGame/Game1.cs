@@ -65,6 +65,7 @@ namespace MainGame
 
             this.graphics.PreferredBackBufferWidth = 1024;
             this.graphics.PreferredBackBufferHeight = 768;
+            this.graphics.IsFullScreen = false;
             this.graphics.ApplyChanges();
 
             this.InactiveSleepTime = new System.TimeSpan(0);
@@ -90,9 +91,9 @@ namespace MainGame
             graphics.ApplyChanges();
             //this.displayLbl = new XNALabel(parent, new Rectangle(5, 5, 200, 20), "");
             //this.displayLbl.backgroundColor = Color.Transparent;
-            BalloonPaintBucketMainGame.GetInstance().Initialize(this);
-            SquatBugsMainGame.GetInstance().Initialize(this);
-            KinectTestMainGame.GetInstance().Initialize(this);
+            //BalloonPaintBucketMainGame.GetInstance().Initialize(this);
+            //SquatBugsMainGame.GetInstance().Initialize(this);
+            //KinectTestMainGame.GetInstance().Initialize(this);
 
 
 
@@ -389,29 +390,35 @@ namespace MainGame
         /// </summary>
         public void BackToMiniGameOverview()
         {
+            //Unload Mousehandlers
             switch (StateManager.GetInstance().GetRunningGame())
             {
                 case StateManager.RunningGame.BalloonPaintBucketGame:
+                    BalloonPaintBucketMainGame.GetInstance().CleanUp();
                     BalloonPaintBucketGame.Managers.StateManager.GetInstance().
                         SetState(BalloonPaintBucketGame.Managers.StateManager.State.Paused);
                     break;
 
                 case StateManager.RunningGame.SquatBugsGame:
+                    SquatBugsMainGame.GetInstance().CleanUp();
                     SquatBugsGame.Managers.StateManager.GetInstance().
                         SetState(SquatBugsGame.Managers.StateManager.State.Paused);
                     break;
 
                 case StateManager.RunningGame.DigGame:
+                    DiggingMainGame.GetInstance().CleanUp();
                     DiggingGame.Managers.StateManager.GetInstance().
                         SetState(DiggingGame.Managers.StateManager.State.Paused);
                     break;
 
                 case StateManager.RunningGame.BuzzBattleGame:
+                    //BuzzBattleMainGame.GetInstance().CleanUp();
                     BuzzBattle.Managers.StateManager.GetInstance().
                         SetState(BuzzBattle.Managers.StateManager.State.Paused);
                     break;
 
             }
+            MediaPlayer.Stop();
             StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.MiniGameOverview);
             MiniGameOverviewMainGame.GetInstance().OnShow();
         }

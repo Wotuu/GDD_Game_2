@@ -190,6 +190,7 @@ namespace BalloonPaintBucketGame.Balloons
             if (this.descending) return;
 
             new BalloonDeathEmitter(this);
+            BalloonPaintBucketMainGame.GetInstance().AudioManager.PlayBalloonPop();
             new PaintEmitter(this);
             this.polygon.Destroy();
 

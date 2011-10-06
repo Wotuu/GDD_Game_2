@@ -17,6 +17,8 @@ using BalloonPaintBucketGame.Particles;
 using PolygonCollision.Managers;
 using BalloonPaintBucketGame.Util;
 using XNAInterfaceComponents.ParentComponents;
+using BalloonPaintBucketGame.Audio;
+using XNAInputHandler.MouseInput;
 
 namespace BalloonPaintBucketGame
 {
@@ -43,6 +45,8 @@ namespace BalloonPaintBucketGame
 
         public Texture2D background { get; set; }
 
+        public AudioManager AudioManager;
+
         public void Initialize(Game game)
         {
             this.game = game;
@@ -51,7 +55,8 @@ namespace BalloonPaintBucketGame
 
             this.background = this.game.Content.Load<Texture2D>("Backgrounds/balloonpaintbucket");
 
-
+            AudioManager = new AudioManager();
+            AudioManager.PlayAmbientBackGroundMusic();
 
             // new Balloon(Balloon.BalloonColor.Pink);
             this.player = new Player();
@@ -105,7 +110,7 @@ namespace BalloonPaintBucketGame
         public void Update()
         {
             GameTimeManager.GetInstance().OnStartUpdate();
-
+            AudioManager.Update();
             // Always check for collision
             if (GameTimeManager.GetInstance().currentUpdateStartMS - this.lastCollisionCheckMS >
                 this.collisionCheckMS)
@@ -149,23 +154,25 @@ namespace BalloonPaintBucketGame
         /// <param name="sb">The spritebatch to draw on.</param>
         public void Draw(SpriteBatch sb)
         {
-            if (DrawUtil.lineTexture == null)
-                DrawUtil.lineTexture = DrawUtil.GetClearTexture2D(sb);
-            GameTimeManager.GetInstance().OnStartDraw();
-            sb.Draw(this.background, new Rectangle(0, 0, this.game.GraphicsDevice.Viewport.Width,
-            this.game.GraphicsDevice.Viewport.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
+           
+                if (DrawUtil.lineTexture == null)
+                    DrawUtil.lineTexture = DrawUtil.GetClearTexture2D(sb);
+                GameTimeManager.GetInstance().OnStartDraw();
+                sb.Draw(this.background, new Rectangle(0, 0, this.game.GraphicsDevice.Viewport.Width,
+                this.game.GraphicsDevice.Viewport.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
 
-            BalloonManager.GetInstance().DrawBalloons(sb);
-            ParticleManager.GetInstance().Draw(sb);
-            // PolygonManager.GetInstance().DrawPolygons(sb);
+                BalloonManager.GetInstance().DrawBalloons(sb);
+                ParticleManager.GetInstance().Draw(sb);
+                // PolygonManager.GetInstance().DrawPolygons(sb);
 
-            foreach (PaintBucket bucket in this.paintBuckets)
-            {
-                bucket.Draw(sb);
-            }
+                foreach (PaintBucket bucket in this.paintBuckets)
+                {
+                    bucket.Draw(sb);
+                }
 
-            // Draw the background
-            this.player.Draw(sb);
+                // Draw the background
+                this.player.Draw(sb);
+           
         }
 
         /// <summary>
@@ -208,6 +215,22 @@ namespace BalloonPaintBucketGame
             }
             StateManager.GetInstance().SetState(StateManager.State.Victory);
             
+        }
+
+        /// <summary>
+        /// Will clean up all remeaning resources of this instance eg: MouseListeners,Clear Lists
+        /// </summary>
+        public void CleanUp()
+        {
+            //Remove MouseListeners
+            MouseManager.GetInstance().mouseClickedListeners -= this.player.paw.OnMouseClick;
+            MouseManager.GetInstance().mouseReleasedListeners -= this.player.paw.OnMouseRelease;
+
+            MouseManager.GetInstance().mouseMotionListeners -= this.player.paw.OnMouseMotion;
+            MouseManager.GetInstance().mouseDragListeners -= this.player.paw.OnMouseDrag;
+
+            //Clear Balloons
+            BalloonManager.GetInstance().balloons.Clear();
         }
     }
 }

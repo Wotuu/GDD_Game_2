@@ -42,7 +42,7 @@ namespace BuzzBattle
 
             ParticleManager.DEFAULT_TEXTURE = this.game.Content.Load<Texture2D>("Particles/default");
 
-            this.background = this.game.Content.Load<Texture2D>("Backgrounds/lair");
+                this.background = this.game.Content.Load<Texture2D>("Backgrounds/lair");
 
 
 

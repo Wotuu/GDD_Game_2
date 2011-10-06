@@ -149,7 +149,12 @@ namespace BalloonPaintBucketGame.Players
                 }
             }
             if (clickedBalloons.Count() != 0)
+            {
                 this.SortBalloonsByZ(clickedBalloons, false).GetFirst().OnPlayerClick();
+                
+            }
+             
+            
         }
 
         /// <summary>
