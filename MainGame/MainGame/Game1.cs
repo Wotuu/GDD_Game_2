@@ -30,6 +30,8 @@ using MainGame.Backgrounds;
 using MainGame.Cards;
 using ParticleEngine;
 using MainGame.Backgrounds.Birds;
+using MainGame.Media;
+using MainGame.UI;
 
 namespace MainGame
 {
@@ -43,6 +45,7 @@ namespace MainGame
 
         public XNALabel displayLbl { get; set; }
         public MainGameBackground background { get; set; }
+        public IntroMoviePanel introMoviePanel { get; set; }
 
         private static Game1 instance { get; set; }
         public static Game1 GetInstance()
@@ -108,6 +111,8 @@ namespace MainGame
             sb = new SpriteBatch(GraphicsDevice);
             SpriteFont font = Content.Load<SpriteFont>("Fonts/Arial");
             ChildComponent.DEFAULT_FONT = font;
+
+            this.introMoviePanel = new IntroMoviePanel();
 
             // TODO: use this.Content to load your game content here
             DrawUtil.lineTexture = DrawUtil.GetClearTexture2D(sb);
@@ -218,6 +223,15 @@ namespace MainGame
             GameTimeManager.GetInstance().OnStartDraw();
 
             sb.Begin(SpriteSortMode.BackToFront, null);
+
+            if (this.introMoviePanel.introVideoPlayer.IsPlaying())
+            {
+                // That's it.
+                ComponentManager.GetInstance().Draw(sb);
+                sb.End();
+                base.Draw(gameTime);
+                return;
+            }
 
             // PolygonManager.GetInstance().DrawPolygons(spriteBatch);
             // TODO: Add your drawing code here

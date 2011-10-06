@@ -61,7 +61,7 @@ namespace XNAInterfaceComponents.ParentComponents
         }
         public XNATextField sliderTextField { get; set; }
 
-        private XNAButton sliderButton { get; set; }
+        public XNAButton sliderButton { get; set; }
         public Color lineColor { get; set; }
 
         public Boolean useIntegerValues { get; set; }
@@ -105,20 +105,24 @@ namespace XNAInterfaceComponents.ParentComponents
             }
         }
 
+        /// <summary>
+        /// Sets the slider button width.
+        /// </summary>
+        /// <param name="width">The new width.</param>
         public void SetSliderButtonWidth(int width)
         {
             this.sliderButton.bounds = new Rectangle(this.sliderButton.bounds.X,
-                this.bounds.Y, width, this.sliderButton.bounds.Height);
+                this.sliderButton.bounds.Y, width, this.sliderButton.bounds.Height);
         }
 
         /// <summary>
         /// Sets the slider button height.
         /// </summary>
-        /// <param name="height">The new height</param>
+        /// <param name="height">The new height.</param>
         public void SetSliderButtonHeight(int height)
         {
             this.sliderButton.bounds = new Rectangle(this.sliderButton.bounds.X,
-                this.bounds.Y - (height / 2), this.sliderButton.bounds.Width, height);
+                this.sliderButton.bounds.Y - (height / 2), this.sliderButton.bounds.Width, height);
         }
 
         public override void Update()
