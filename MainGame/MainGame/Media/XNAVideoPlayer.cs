@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Graphics;
 using MainGame.Media;
+using MainGame.Managers;
 
 public delegate void OnVideoStoppedPlaying(XNAVideoPlayer source);
 namespace MainGame.Media
@@ -21,12 +22,23 @@ namespace MainGame.Media
         public OnVideoStoppedPlaying onVideoStoppedPlayingListeners { get; set; }
         private MediaState previousState { get; set; }
 
+        public float fadeOutAfterMS { get; set; }
+        public float fadeOutDurationMS { get; set; }
+
+        public Boolean fadingOut { get; set; }
+
+        public double playerStartMS { get; set; }
+
         public XNAVideoPlayer(Rectangle bounds, Video video, float z)
         {
             this.bounds = bounds;
             this.video = video;
 
+            this.fadeOutAfterMS = Int32.MaxValue;
+
             this.player = new VideoPlayer();
+
+            this.z = z;
         }
 
         /// <summary>
@@ -53,6 +65,7 @@ namespace MainGame.Media
         public void StartPlaying()
         {
             this.player.Play(video);
+            this.playerStartMS = GameTimeManager.GetInstance().currentUpdateStartMS;
         }
 
         /// <summary>
@@ -78,7 +91,18 @@ namespace MainGame.Media
                 onVideoStoppedPlayingListeners(this);
 
             if (this.player.State == MediaState.Playing)
-                sb.Draw(this.player.GetTexture(), this.bounds, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, this.z);
+            {
+                Color drawColor = Color.White;
+                double difference = GameTimeManager.GetInstance().currentUpdateStartMS - this.playerStartMS;
+                if (difference > this.fadeOutAfterMS)
+                {
+                    int color = (int)(255 - (255 * (difference - fadeOutAfterMS) / this.fadeOutDurationMS));
+                    drawColor = new Color(color, color, color, color);
+                    this.fadingOut = true;
+                }
+                sb.Draw(this.player.GetTexture(), this.bounds, null,
+                    drawColor, 0f, Vector2.Zero, SpriteEffects.None, this.z);
+            }
 
             this.previousState = this.player.State;
         }

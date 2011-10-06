@@ -46,6 +46,7 @@ namespace MiniGameOverview
                 // But we need to re-initialise the info panel, as it is unloaded on game-load.
                 // The GameInfoDisplayPanel needs a player, so please leave the 2 seperate calls in this function
                 this.gameInfoPanel = new GameInfoDisplayPanel(0.8f);
+                this.player.TeleportTo(this.player.moveTarget);
                 return;
             }
             this.game = game;

@@ -29,7 +29,6 @@ namespace MainGame.Cards.UI
                 ("UI/Interface/Cards/tryagain_btn");
             RESTART_GAME_BACKGROUND_HOVER = Game1.GetInstance().Content.Load<Texture2D>
                 ("UI/Interface/Cards/tryagain_btn_hover");
-
         }
 
         public RestartGamePanel(GameResultCard card)

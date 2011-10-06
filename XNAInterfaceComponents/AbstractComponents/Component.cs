@@ -36,7 +36,8 @@ namespace XNAInterfaceComponents.Components
             }
             set
             {
-                this.mouseOverColor = Color.White;
+                if (value != null)
+                    this.mouseOverColor = Color.White;
                 this._mouseoverBackgroundTexture = value;
             }
         }
@@ -49,7 +50,8 @@ namespace XNAInterfaceComponents.Components
             }
             set
             {
-                this.backgroundColor = Color.White;
+                if (value != null)
+                    this.backgroundColor = Color.White;
 
                 this._backgroundTexture = value;
             }
@@ -68,7 +70,7 @@ namespace XNAInterfaceComponents.Components
             if (parent != null) this.z = parent.z - 0.01f;
             else this.z = 1f - this.GetDrawDepthOffset();
 
-            this.backgroundTextureScale = new Vector2(1f, 1f);
+            this.backgroundTextureScale = Vector2.Zero;
         }
 
         /// <summary>

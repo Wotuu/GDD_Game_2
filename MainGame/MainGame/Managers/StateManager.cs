@@ -107,7 +107,11 @@ namespace MainGame.Managers
                     break;
                 case RunningGame.MiniGameOverview:
                     MiniGameOverviewMainGame.GetInstance().Initialize(Game1.GetInstance());
-                    MiniGameOverviewMainGame.GetInstance().gameInfoPanel.onGameStartListeners += Game1.GetInstance().OnGameStart;
+                    // Remove first
+                    MiniGameOverviewMainGame.GetInstance().gameInfoPanel.onGameStartListeners -= 
+                        Game1.GetInstance().OnGameStart;
+                    MiniGameOverviewMainGame.GetInstance().gameInfoPanel.onGameStartListeners += 
+                        Game1.GetInstance().OnGameStart;
                     break;
                 case RunningGame.DigGame:
                     DiggingMainGame.GetInstance().Initialize(Game1.GetInstance());

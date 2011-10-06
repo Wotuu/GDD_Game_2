@@ -48,7 +48,7 @@ namespace MiniGameOverview.Players
         }
         private SpriteEffects effects = SpriteEffects.None;
 
-        private PathItem moveTarget { get; set; }
+        public PathItem moveTarget { get; set; }
 
         public enum State
         {

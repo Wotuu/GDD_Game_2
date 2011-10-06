@@ -47,7 +47,8 @@ namespace MainGame.UI.Credits
             else if (updateStart - this.creationTime > this.totalDuration)
             {
                 // Re-show the main menu
-                MenuManager.GetInstance().GetCurrentMenu().visible = true;
+                if (MenuManager.GetInstance().GetCurrentMenu() != null)
+                    MenuManager.GetInstance().GetCurrentMenu().visible = true;
             }
         }
     }

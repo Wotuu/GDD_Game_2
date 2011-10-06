@@ -317,6 +317,11 @@ namespace MainGame
         {
             switch (game)
             {
+                case MiniGameOverview.Managers.StateManager.SelectedGame.MainMenu:
+                    MenuManager.GetInstance().ShowMenu(MenuManager.Menu.MainMenu);
+                    StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.None);
+                    StateManager.GetInstance().SetState(StateManager.State.MainMenu);
+                    break;
                 case MiniGameOverview.Managers.StateManager.SelectedGame.BalloonPaintBucketGame:
 
                     MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);

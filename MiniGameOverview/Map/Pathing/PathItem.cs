@@ -37,7 +37,22 @@ namespace MiniGameOverview.Map.Pathing
                 this._isUnlocked = value;
             }
         }
-        public Boolean isFullyColored { get; set; }
+
+        private Boolean _isFullyColored { get; set; }
+        public Boolean isFullyColored
+        {
+            get
+            {
+                return _isFullyColored;
+            }
+            set
+            {
+                _isFullyColored = value;
+                // Re-show the menu
+                MiniGameOverviewMainGame.GetInstance().gameInfoPanel.OnPlayerPathChanged(
+                    MiniGameOverviewMainGame.GetInstance().player.moveTarget);
+            }
+        }
 
         public StateManager.SelectedGame game { get; set; }
 
@@ -112,7 +127,6 @@ namespace MiniGameOverview.Map.Pathing
             if (this.drawableMapSection.maxPixelsToDraw < currentColoredPixelsCount)
             {
                 this.isFullyColored = true;
-                Debug.WriteLine("A pathitem is fully colored! :D");
             }
         }
     }
