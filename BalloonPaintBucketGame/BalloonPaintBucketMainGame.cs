@@ -76,6 +76,8 @@ namespace BalloonPaintBucketGame
 
             XNAMessageDialog.CLIENT_WINDOW_WIDTH = game.GraphicsDevice.Viewport.Width;
             XNAMessageDialog.CLIENT_WINDOW_HEIGHT = game.GraphicsDevice.Viewport.Height;
+
+            StateManager.GetInstance().SetState(StateManager.State.Running);
             /*
             this.game.Content.Load<Texture2D>("Balloons/balon1");
             this.game.Content.Load<Texture2D>("Balloons/balon2");

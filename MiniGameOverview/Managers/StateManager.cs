@@ -24,8 +24,8 @@ namespace MiniGameOverview.Managers
 
         public enum State
         {
-            Running,
             Paused,
+            Running,
             Victory,
             Loss
         }

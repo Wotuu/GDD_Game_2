@@ -98,7 +98,6 @@ namespace MiniGameOverview.Backgrounds
             /// Balloon game
             this.paths[1].isUnlocked = true;
             this.paths[2].isUnlocked = true;
-            this.paths[3].isUnlocked = true;
 
             MiniGameOverviewMainGame.GetInstance().player.TeleportTo(this.paths[0]);
 
@@ -149,6 +148,7 @@ namespace MiniGameOverview.Backgrounds
 
         public void OnMouseDrag(MouseEvent e)
         {
+            if (StateManager.GetInstance().GetState() != StateManager.State.Running) return;
             foreach (PathItem item in this.paths)
             {
                 if (item.isUnlocked && item.drawableMapSection.polygon != null &&

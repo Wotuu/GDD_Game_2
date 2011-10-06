@@ -2,46 +2,59 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SquatBugsGame.Managers;
-using SquatBugsGame.Players;
+using Microsoft.Xna.Framework;
+using System.Diagnostics;
 using ParticleEngine;
+using ParticleEngine.Emitter;
+using ParticleEngine.Particles;
+using PolygonCollision.Managers;
+using BuzzBattle.Util;
 using XNAInterfaceComponents.ParentComponents;
+using BuzzBattle.Managers;
 
-namespace SquatBugsGame
+namespace BuzzBattle
 {
-    public class SquatBugsMainGame
+    public class BuzzBattleMainGame
     {
-
         #region Singleton logic
-        private static SquatBugsMainGame instance;
+        private static BuzzBattleMainGame instance;
 
-        public static SquatBugsMainGame GetInstance()
+        public static BuzzBattleMainGame GetInstance()
         {
-            if (instance == null) instance = new SquatBugsMainGame();
+            if (instance == null) instance = new BuzzBattleMainGame();
             return instance;
         }
+
+        private BuzzBattleMainGame() { }
         #endregion
 
-        private SquatBugsMainGame() { }
-
         public Game game { get; set; }
-        public SpriteFont font;
-        public Player player;
+
+        public int collisionCheckMS = 25;
+        public Double lastCollisionCheckMS { get; set; }
+
         public Texture2D background { get; set; }
-        public Viewport viewport;
 
         public void Initialize(Game game)
         {
             this.game = game;
-            font = game.Content.Load<SpriteFont>("Fonts/Arial");
-            this.background = this.game.Content.Load<Texture2D>("Backgrounds/squatbugs");
-            ParticleManager.DEFAULT_TEXTURE = this.game.Content.Load<Texture2D>("Particles/default");
-            this.player = new Player();
-            this.viewport = game.GraphicsDevice.Viewport;
 
+            ParticleManager.DEFAULT_TEXTURE = this.game.Content.Load<Texture2D>("Particles/default");
+
+            this.background = this.game.Content.Load<Texture2D>("Backgrounds/lair");
+
+
+
+            XNAMessageDialog.CLIENT_WINDOW_WIDTH = game.GraphicsDevice.Viewport.Width;
+            XNAMessageDialog.CLIENT_WINDOW_HEIGHT = game.GraphicsDevice.Viewport.Height;
             StateManager.GetInstance().SetState(StateManager.State.Running);
+            /*
+            this.game.Content.Load<Texture2D>("Balloons/balon1");
+            this.game.Content.Load<Texture2D>("Balloons/balon2");
+            this.game.Content.Load<Texture2D>("Balloons/balon3");
+            this.game.Content.Load<Texture2D>("Balloons/balon4");
+            */
         }
 
         /// <summary>
@@ -52,25 +65,27 @@ namespace SquatBugsGame
 
             ParticleManager.GetInstance().RemoveAllEmitters(10);
             StateManager.GetInstance().SetState(StateManager.State.Running);
-            BugManager.GetInstance().BugList.Clear();
 
             this.Initialize(this.game);
         }
 
-        /// <summary>
-        /// Updates the game.
-        /// </summary>
         public void Update()
         {
             GameTimeManager.GetInstance().OnStartUpdate();
+
+            // Always check for collision
+            if (GameTimeManager.GetInstance().currentUpdateStartMS - this.lastCollisionCheckMS >
+                this.collisionCheckMS)
+            {
+                this.CheckCollision();
+                this.lastCollisionCheckMS = GameTimeManager.GetInstance().currentUpdateStartMS;
+            }
 
             switch (StateManager.GetInstance().GetState())
             {
                 case StateManager.State.Running:
                     {
-                        BugManager.GetInstance().UpdateBugs();
-                        this.player.Update();
-                        WinCheck();
+                        this.WinCheck();
                         break;
                     }
                 case StateManager.State.Paused:
@@ -89,7 +104,6 @@ namespace SquatBugsGame
                         break;
                     }
             }
-
         }
 
         /// <summary>
@@ -98,25 +112,31 @@ namespace SquatBugsGame
         /// <param name="sb">The spritebatch to draw on.</param>
         public void Draw(SpriteBatch sb)
         {
-            if (Util.lineTexture == null)
-            {
-                Util.lineTexture = Util.GetClearTexture2D(sb);
-            }
+            if (DrawUtil.lineTexture == null)
+                DrawUtil.lineTexture = DrawUtil.GetClearTexture2D(sb);
+            GameTimeManager.GetInstance().OnStartDraw();
+
+
             sb.Draw(this.background, new Rectangle(0, 0, this.game.GraphicsDevice.Viewport.Width,
             this.game.GraphicsDevice.Viewport.Height), null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 1f);
-            GameTimeManager.GetInstance().OnStartDraw();
-            BugManager.GetInstance().DrawBugs(sb);
-            this.player.Draw(sb);
+
+            ParticleManager.GetInstance().Draw(sb);
+            // PolygonManager.GetInstance().DrawPolygons(sb);
         }
 
+        /// <summary>
+        /// Checks collision of the particles with the buckets.
+        /// </summary>
+        public void CheckCollision()
+        {
+        }
 
         /// <summary>
         /// Checks if the current user has won.
         /// </summary>
         public void WinCheck()
         {
-            if (player.FriendlyBugsLeftKill == 0) StateManager.GetInstance().SetState(StateManager.State.Loss);
-            else if (player.EnemyBugsLeftKill <= 0) StateManager.GetInstance().SetState(StateManager.State.Victory);
+            
         }
     }
 }

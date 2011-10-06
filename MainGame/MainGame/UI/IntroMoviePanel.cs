@@ -54,8 +54,8 @@ namespace MainGame.UI
             this.introVideoPlayer.StartPlaying();
             this.introVideoPlayer.onVideoStoppedPlayingListeners += this.OnVideoStoppedPlaying;
             this.introVideoPlayer.SetVolume(0.1f);
-            this.introVideoPlayer.fadeOutAfterMS = 16000;
-            this.introVideoPlayer.fadeOutDurationMS = 4000;
+            this.introVideoPlayer.fadeOutAfterMS = 17000;
+            this.introVideoPlayer.fadeOutDurationMS = 3000;
 
 
             this.skipBtn = new XNAButton(this, new Rectangle(

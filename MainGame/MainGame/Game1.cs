@@ -32,6 +32,7 @@ using ParticleEngine;
 using MainGame.Backgrounds.Birds;
 using MainGame.Media;
 using MainGame.UI;
+using BuzzBattle;
 
 namespace MainGame
 {
@@ -187,6 +188,9 @@ namespace MainGame
                             case StateManager.RunningGame.DigGame:
                                 DiggingMainGame.GetInstance().Update();
                                 break;
+                            case StateManager.RunningGame.BuzzBattleGame:
+                                BuzzBattleMainGame.GetInstance().Update();
+                                break;
 
                         }
                         break;
@@ -257,6 +261,9 @@ namespace MainGame
                 case StateManager.RunningGame.DigGame:
                     DiggingMainGame.GetInstance().Draw(sb);
                     break;
+                case StateManager.RunningGame.BuzzBattleGame:
+                    BuzzBattleMainGame.GetInstance().Draw(sb);
+                    break;
             }
 
             CardManager.GetInstance().Draw(sb);
@@ -323,19 +330,16 @@ namespace MainGame
                     StateManager.GetInstance().SetState(StateManager.State.MainMenu);
                     break;
                 case MiniGameOverview.Managers.StateManager.SelectedGame.BalloonPaintBucketGame:
-
                     MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
                     StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.BalloonPaintBucketGame);
                     StateManager.GetInstance().SetState(StateManager.State.Running);
                     break;
                 case MiniGameOverview.Managers.StateManager.SelectedGame.SquatBugsGame:
-
                     MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
                     StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.SquatBugsGame);
                     StateManager.GetInstance().SetState(StateManager.State.Running);
                     break;
                 case MiniGameOverview.Managers.StateManager.SelectedGame.BuzzBattleGame:
-
                     MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
                     StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.BuzzBattleGame);
                     StateManager.GetInstance().SetState(StateManager.State.Running);
@@ -362,7 +366,11 @@ namespace MainGame
                     new GameResultCard(GameResultCard.CardColor.Blue);
                     break;
                 case StateManager.RunningGame.DigGame:
-                    new GameResultCard(GameResultCard.CardColor.Yellow);
+                    new GameResultCard(GameResultCard.CardColor.Yellow, GameResultCard.CardPosition.Left);
+                    new GameResultCard(GameResultCard.CardColor.Green, GameResultCard.CardPosition.Right);
+                    break;
+                case StateManager.RunningGame.BuzzBattleGame:
+                    // Nothing
                     break;
             }
         }
@@ -381,6 +389,29 @@ namespace MainGame
         /// </summary>
         public void BackToMiniGameOverview()
         {
+            switch (StateManager.GetInstance().GetRunningGame())
+            {
+                case StateManager.RunningGame.BalloonPaintBucketGame:
+                    BalloonPaintBucketGame.Managers.StateManager.GetInstance().
+                        SetState(BalloonPaintBucketGame.Managers.StateManager.State.Paused);
+                    break;
+
+                case StateManager.RunningGame.SquatBugsGame:
+                    SquatBugsGame.Managers.StateManager.GetInstance().
+                        SetState(SquatBugsGame.Managers.StateManager.State.Paused);
+                    break;
+
+                case StateManager.RunningGame.DigGame:
+                    DiggingGame.Managers.StateManager.GetInstance().
+                        SetState(DiggingGame.Managers.StateManager.State.Paused);
+                    break;
+
+                case StateManager.RunningGame.BuzzBattleGame:
+                    BuzzBattle.Managers.StateManager.GetInstance().
+                        SetState(BuzzBattle.Managers.StateManager.State.Paused);
+                    break;
+
+            }
             StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.MiniGameOverview);
             MiniGameOverviewMainGame.GetInstance().OnShow();
         }

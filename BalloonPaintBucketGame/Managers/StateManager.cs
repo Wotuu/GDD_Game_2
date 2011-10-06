@@ -27,8 +27,8 @@ namespace BalloonPaintBucketGame.Managers
 
         public enum State
         {
-            Running,
             Paused,
+            Running,
             Victory,
             Loss
         }

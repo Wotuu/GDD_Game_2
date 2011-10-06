@@ -48,6 +48,7 @@ namespace MainGame.Cards
         private double losingWaitMS = 6500;
 
         public RestartGamePanel restartGameBtn { get; set; }
+        public CardPosition position { get; set; }
 
         private CardColor _color { get; set; }
         public CardColor color
@@ -111,15 +112,55 @@ namespace MainGame.Cards
             LostCard
         }
 
+        public enum CardPosition
+        {
+            Left,
+            Center,
+            Right
+        }
+
         public GameResultCard(CardColor color)
         {
             this.color = color;
 
+            this.position = CardPosition.Center;
+            this.Init();
+        }
+
+        public GameResultCard(CardColor color, CardPosition position)
+        {
+            this.color = color;
+            this.position = position;
+
+            this.Init();
+        }
+
+        /// <summary>
+        /// Inits this card.
+        /// </summary>
+        private void Init()
+        {
             /*
             this.location = new Vector2(0f, 0f);*/
-            this.location = new Vector2(
-                Game1.GetInstance().graphics.PreferredBackBufferWidth / 2f,
-                Game1.GetInstance().graphics.PreferredBackBufferHeight / 2f);
+
+            switch (this.position)
+            {
+                case CardPosition.Left:
+                    this.location = new Vector2(
+                        (Game1.GetInstance().graphics.PreferredBackBufferWidth / 100f) * 33,
+                        (Game1.GetInstance().graphics.PreferredBackBufferHeight / 2f));
+                    break;
+                case CardPosition.Center:
+                    this.location = new Vector2(
+                        Game1.GetInstance().graphics.PreferredBackBufferWidth / 2f,
+                        Game1.GetInstance().graphics.PreferredBackBufferHeight / 2f);
+                    break;
+                case CardPosition.Right:
+                    this.location = new Vector2(
+                        (Game1.GetInstance().graphics.PreferredBackBufferWidth / 100f) * 66,
+                        (Game1.GetInstance().graphics.PreferredBackBufferHeight / 2f));
+                    break;
+            }
 
             this.originalScale = new Vector2(0.35f, 0.35f);
             this.scale = this.originalScale;
@@ -139,8 +180,6 @@ namespace MainGame.Cards
             }
 
             this.spawnMS = GameTimeManager.GetInstance().currentUpdateStartMS;
-
-
         }
 
         /// <summary>
@@ -239,7 +278,7 @@ namespace MainGame.Cards
         }
 
         /// <summary>
-        /// Unlocks the currently running game on the minimap overview game.
+        /// Unlocks the game that this card should unlock.
         /// </summary>
         public void UnlockGame()
         {
@@ -247,16 +286,23 @@ namespace MainGame.Cards
             switch (StateManager.GetInstance().GetRunningGame())
             {
                 case StateManager.RunningGame.BalloonPaintBucketGame:
-                    item = MiniGameOverviewMainGame.GetInstance().backgroundMap.GetPathByGame(MiniGameOverview.Managers.StateManager.SelectedGame.BalloonPaintBucketGame);
+                    item = MiniGameOverviewMainGame.GetInstance().backgroundMap.
+                        GetPathByGame(MiniGameOverview.Managers.StateManager.SelectedGame.DigGame);
                     break;
+
                 case StateManager.RunningGame.SquatBugsGame:
+                    item = MiniGameOverviewMainGame.GetInstance().backgroundMap.GetPathByGame
+                        (MiniGameOverview.Managers.StateManager.SelectedGame.BuzzBattleGame);
+                    break;
+
+                case StateManager.RunningGame.DigGame:
                     item = MiniGameOverviewMainGame.GetInstance().backgroundMap.GetPathByGame
                         (MiniGameOverview.Managers.StateManager.SelectedGame.SquatBugsGame);
                     break;
-                case StateManager.RunningGame.DigGame:
-                    item = MiniGameOverviewMainGame.GetInstance().backgroundMap.GetPathByGame
-                        (MiniGameOverview.Managers.StateManager.SelectedGame.DigGame);
+
+                case StateManager.RunningGame.BuzzBattleGame:
                     break;
+
             }
             if (item != null)
             {

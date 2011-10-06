@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using SquatBugsGame.Managers;
+using BuzzBattle.Managers;
+using BuzzBattle.Managers;
 
-public delegate void OnSquatBugsGameStateChanged(StateManager.State newState);
-namespace SquatBugsGame.Managers
+public delegate void OnBuzzBattleStateChanged(StateManager.State newState);
+namespace BuzzBattle.Managers
 {
     public class StateManager
     {
@@ -23,12 +24,12 @@ namespace SquatBugsGame.Managers
         #endregion
 
         private State state { get; set; }
-        public OnSquatBugsGameStateChanged onGameStateChangedListeners { get; set; }
+        public OnBuzzBattleStateChanged onGameStateChangedListeners { get; set; }
 
         public enum State
         {
-            Paused,
             Running,
+            Paused,
             Victory,
             Loss
         }

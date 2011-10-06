@@ -160,7 +160,7 @@ namespace DiggingGame.SandBoard
                 }
             
             }
-            if (nrGoodObjectsFound == 10)
+            if (nrGoodObjectsFound == 8)
             {
                 //WIN
                 StateManager.GetInstance().SetState(StateManager.State.Victory);

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Digging.Players;
 using DiggingGame.SandBoard;
 using DiggingGame.Particles.Emitter;
+using DiggingGame.Managers;
 
 namespace DiggingGame.Players
 {
@@ -38,6 +39,7 @@ namespace DiggingGame.Players
 
         public void OnMouseClick(MouseEvent m_event)
         {
+            if (StateManager.GetInstance().GetState() != StateManager.State.Running) return;
             foreach (SandTile tile in DiggingMainGame.GetInstance().board.Tiles)
             {
                 if (tile.DrawRectangle.Intersects(new Rectangle(m_event.location.X, m_event.location.Y, 5, 5)))

@@ -8,14 +8,15 @@ using DiggingGame.SandBoard;
 using ParticleEngine;
 using DiggingGame.Players;
 using DiggingGame.Managers;
+using XNAInputHandler.MouseInput;
 
 namespace DiggingGame
 {
-   
+
     public class DiggingMainGame
     {
 
-         #region Singleton logic
+        #region Singleton logic
         private static DiggingMainGame instance;
 
         public static DiggingMainGame GetInstance()
@@ -33,11 +34,27 @@ namespace DiggingGame
 
         public void Initialize(Game game)
         {
+            if (this.player != null)
+            {
+                MouseManager.GetInstance().mouseClickedListeners -= this.player.OnMouseClick;
+                MouseManager.GetInstance().mouseReleasedListeners -= this.player.OnMouseRelease;
+
+                MouseManager.GetInstance().mouseClickedListeners -= this.player.paw.OnMouseClick;
+                MouseManager.GetInstance().mouseReleasedListeners -= this.player.paw.OnMouseRelease;
+
+                MouseManager.GetInstance().mouseMotionListeners -= this.player.paw.OnMouseMotion;
+                MouseManager.GetInstance().mouseDragListeners -= this.player.paw.OnMouseDrag;
+
+                GameTimeManager.GetInstance().OnStartUpdate();
+                GameTimeManager.GetInstance().previousUpdateStartMS = GameTimeManager.GetInstance().currentUpdateStartMS;
+            }
+
             this.game = game;
             ParticleManager.DEFAULT_TEXTURE = this.game.Content.Load<Texture2D>("Particles/default");
             this.player = new Player();
             board = new Board(4, 3);
 
+            StateManager.GetInstance().SetState(StateManager.State.Running);
         }
 
         /// <summary>
@@ -45,7 +62,6 @@ namespace DiggingGame
         /// </summary>
         public void RestartGame()
         {
-
             board = null;
             player = null;
             StateManager.GetInstance().SetState(StateManager.State.Running);
@@ -83,8 +99,8 @@ namespace DiggingGame
                         break;
                     }
             }
-           
-            
+
+
         }
 
         public void Draw(SpriteBatch sb)

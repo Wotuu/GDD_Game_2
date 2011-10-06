@@ -135,10 +135,15 @@ namespace MiniGameOverview.UI
             selectedGame = item.game;
         }
 
+        /// <summary>
+        /// When the game should be started.
+        /// </summary>
+        /// <param name="source">Source button</param>
         public void OnStartGamePressed(XNAButton source)
         {
             if (onGameStartListeners != null)
                 onGameStartListeners(this.selectedGame);
+
             MiniGameOverviewMainGame.GetInstance().OnHide();
 
             this.Unload();

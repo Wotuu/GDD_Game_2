@@ -55,6 +55,8 @@ namespace MiniGameOverview
             this.gameInfoPanel = new GameInfoDisplayPanel(0.8f);
 
             this.backgroundMap = new BackgroundMap();
+
+            StateManager.GetInstance().SetState(StateManager.State.Running);
         }
 
         public void Update()
@@ -97,6 +99,8 @@ namespace MiniGameOverview
                     item.emitter = null;
                 }
             }
+
+            StateManager.GetInstance().SetState(StateManager.State.Paused);
         }
 
         /// <summary>
@@ -109,6 +113,8 @@ namespace MiniGameOverview
                 // Intended
                 item.isUnlocked = item.isUnlocked;
             }
+
+            StateManager.GetInstance().SetState(StateManager.State.Running);
         }
     }
 }

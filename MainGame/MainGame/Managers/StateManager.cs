@@ -7,6 +7,7 @@ using BalloonPaintBucketGame;
 using SquatBugsGame;
 using MiniGameOverview;
 using DiggingGame;
+using BuzzBattle;
 
 
 namespace MainGame.Managers
@@ -29,6 +30,7 @@ namespace MainGame.Managers
             BalloonPaintBucketGame.Managers.StateManager.GetInstance().onGameStateChangedListeners += this.OnBalloonGameStateChanged;
             SquatBugsGame.Managers.StateManager.GetInstance().onGameStateChangedListeners += this.OnSquatBugsGameStateChanged;
             DiggingGame.Managers.StateManager.GetInstance().onGameStateChangedListeners += this.OnDigGameStateChanged;
+            BuzzBattle.Managers.StateManager.GetInstance().onGameStateChangedListeners += this.OnBuzzGameStateChanged;
         }
         #endregion
 
@@ -49,8 +51,8 @@ namespace MainGame.Managers
 
         public enum State
         {
-            Running,
             Paused,
+            Running,
             Victory,
             Loss,
             Idle,
@@ -116,6 +118,9 @@ namespace MainGame.Managers
                     break;
                 case RunningGame.DigGame:
                     DiggingMainGame.GetInstance().Initialize(Game1.GetInstance());
+                    break;
+                case RunningGame.BuzzBattleGame:
+                    BuzzBattleMainGame.GetInstance().Initialize(Game1.GetInstance());
                     break;
             }
             this.game = game;
@@ -196,6 +201,24 @@ namespace MainGame.Managers
                     break;
 
                 case DiggingGame.Managers.StateManager.State.Victory:
+                    Game1.GetInstance().GameWon();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// When the game state of the dig game has changed.
+        /// </summary>
+        /// <param name="newState">The new state the game is in.</param>
+        public void OnBuzzGameStateChanged(BuzzBattle.Managers.StateManager.State newState)
+        {
+            switch (newState)
+            {
+                case BuzzBattle.Managers.StateManager.State.Loss:
+                    Game1.GetInstance().GameLost();
+                    break;
+
+                case BuzzBattle.Managers.StateManager.State.Victory:
                     Game1.GetInstance().GameWon();
                     break;
             }

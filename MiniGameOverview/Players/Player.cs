@@ -137,7 +137,8 @@ namespace MiniGameOverview.Players
             if (this.moveTarget.isFullyColored)
             {
                 // Assignment to itsself, or the next
-                this.moveTarget = (this.moveTarget.next == null) ? this.moveTarget : this.moveTarget.next;
+                this.moveTarget = (this.moveTarget.next == null || !this.moveTarget.next.isUnlocked) ? 
+                    this.moveTarget : this.moveTarget.next;
 
                 this.moveState = State.Moving;
             }

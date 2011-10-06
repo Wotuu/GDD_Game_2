@@ -16,6 +16,7 @@ namespace MainGame.Cards.UI
 {
     public class RestartGamePanel : XNAPanel
     {
+        public XNAButton toOverviewBtn { get; set; }
         public XNAButton restartGameBtn { get; set; }
         public GameResultCard card { get; set; }
 
@@ -45,6 +46,18 @@ namespace MainGame.Cards.UI
 
             this.backgroundColor = Color.Transparent;
 
+            this.toOverviewBtn = new XNAButton(this,
+                new Rectangle((int)(61 * card.scale.X), (int)(580 * card.scale.Y),
+                    (int)(635 * card.scale.X), (int)(145 * card.scale.Y)), "");
+            this.toOverviewBtn.onClickListeners += this.OnMiniGameOverview;
+            this.toOverviewBtn.border = null;
+            this.toOverviewBtn.backgroundColor = Color.Transparent;
+            // this.restartGameBtn.mouseOverColor = new Color(150, 0, 0, 150);
+            this.toOverviewBtn.z = this.card.z - 0.01f;
+            this.toOverviewBtn.font = RESTART_GAME_FONT;
+            this.toOverviewBtn.backgroundTexture = RESTART_GAME_BACKGROUND;
+            this.toOverviewBtn.mouseoverBackgroundTexture = RESTART_GAME_BACKGROUND_HOVER;
+
             this.restartGameBtn = new XNAButton(this,
                 new Rectangle((int)(61 * card.scale.X), (int)(744 * card.scale.Y),
                     (int)(635 * card.scale.X), (int)(145 * card.scale.Y)), "");
@@ -58,6 +71,15 @@ namespace MainGame.Cards.UI
             this.restartGameBtn.mouseoverBackgroundTexture = RESTART_GAME_BACKGROUND_HOVER;
         }
 
+        public void OnMiniGameOverview(XNAButton source)
+        {
+            card.shouldBeRemoved = true;
+
+            Game1.GetInstance().BackToMiniGameOverview();
+
+
+            this.Unload();
+        }
 
         public void OnGameRestart(XNAButton source)
         {
