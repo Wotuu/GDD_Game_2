@@ -37,6 +37,20 @@ namespace DiggingGame
             ParticleManager.DEFAULT_TEXTURE = this.game.Content.Load<Texture2D>("Particles/default");
             this.player = new Player();
             board = new Board(4, 3);
+
+        }
+
+        /// <summary>
+        /// Restarts the game.
+        /// </summary>
+        public void RestartGame()
+        {
+
+            board = null;
+            player = null;
+            StateManager.GetInstance().SetState(StateManager.State.Running);
+
+            this.Initialize(this.game);
         }
 
         /// <summary>
@@ -45,8 +59,32 @@ namespace DiggingGame
         public void Update()
         {
             GameTimeManager.GetInstance().OnStartUpdate();
-            player.Update();
-            board.Update();
+            switch (StateManager.GetInstance().GetState())
+            {
+                case StateManager.State.Running:
+                    {
+                        player.Update();
+                        board.Update();
+                        break;
+                    }
+                case StateManager.State.Paused:
+                    {
+
+                        break;
+                    }
+                case StateManager.State.Loss:
+                    {
+
+                        break;
+                    }
+                case StateManager.State.Victory:
+                    {
+
+                        break;
+                    }
+            }
+           
+            
         }
 
         public void Draw(SpriteBatch sb)

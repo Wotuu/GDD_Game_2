@@ -43,6 +43,19 @@ namespace SquatBugsGame
         }
 
         /// <summary>
+        /// Restarts the game.
+        /// </summary>
+        public void RestartGame()
+        {
+
+            ParticleManager.GetInstance().RemoveAllEmitters(10);
+            StateManager.GetInstance().SetState(StateManager.State.Running);
+            BugManager.GetInstance().BugList.Clear();
+
+            this.Initialize(this.game);
+        }
+
+        /// <summary>
         /// Updates the game.
         /// </summary>
         public void Update()

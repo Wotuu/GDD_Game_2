@@ -10,11 +10,11 @@ namespace XNAInputLibrary.KinectInput.Gestures
     {
 
         float MaxHorizontalYDeviation = 0.3f;
-        float MinXHorizontalLength = 0.8f;
+        float MinXHorizontalLength = 0.5f;
 
 
         float MaxVerticalXDeviation = 0.3f;
-        float MinYVerticalLength = 0.8f;
+        float MinYVerticalLength = 0.5f;
 
         int MinimumSwipeDuration = 350;
         int MaximumSwipeDuration = 500;
@@ -35,8 +35,11 @@ namespace XNAInputLibrary.KinectInput.Gestures
                 Entry entrytodelete = HandPoints[0];
                 HandPoints.Remove(entrytodelete);
             }
-
-            CheckSwipeGesture();
+            if (HandPoints.Count > 40)
+            {
+                CheckSwipeGesture();
+            }
+            
         }
 
         public void CheckSwipeGesture()
@@ -61,14 +64,14 @@ namespace XNAInputLibrary.KinectInput.Gestures
                     {
                         //Hebben we een Swipe
                         //Welke Direction ? 
-                        if (HandPoints[index + 1].Position.X - HandPoints[index].Position.X > -0.01f)
+                        if (HandPoints[index].Position.X - HandPoints[startCheckPoint].Position.X > -0.01f)
                         {
                             //SwipeRight
                             KinectManager.GetInstance().RaiseSwipeDetected(new KinectSwipeEventArgs(SwipeDirection.Right));
                             swipedetected = true;
                             Console.WriteLine("SwipeRight");
                         }
-                        else if(HandPoints[index + 1].Position.X - HandPoints[index].Position.X < 0.01f)
+                        else if (HandPoints[index].Position.X - HandPoints[startCheckPoint].Position.X < 0.01f)
                         {
                             //SwipeLeft
                             KinectManager.GetInstance().RaiseSwipeDetected(new KinectSwipeEventArgs(SwipeDirection.Left));
@@ -96,14 +99,14 @@ namespace XNAInputLibrary.KinectInput.Gestures
                     {
                         //Hebben we een Swipe
                         //Welke Direction ? 
-                        if (HandPoints[index + 1].Position.Y - HandPoints[index].Position.Y > -0.01f)
+                        if (HandPoints[index].Position.Y - HandPoints[startYCheckPoint].Position.Y > -0.01f)
                         {
                             //SwipeRight
                             KinectManager.GetInstance().RaiseSwipeDetected(new KinectSwipeEventArgs(SwipeDirection.Up));
                             Console.WriteLine("SwipeUp");
                             swipedetected = true;
                         }
-                        else if (HandPoints[index + 1].Position.Y - HandPoints[index].Position.Y < 0.01f)
+                        else if (HandPoints[index].Position.Y - HandPoints[startYCheckPoint].Position.Y < 0.01f)
                         {
                             //SwipeLeft
                             KinectManager.GetInstance().RaiseSwipeDetected(new KinectSwipeEventArgs(SwipeDirection.Down));

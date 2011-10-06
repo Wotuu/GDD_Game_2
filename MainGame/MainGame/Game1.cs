@@ -340,6 +340,11 @@ namespace MainGame
                     StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.BuzzBattleGame);
                     StateManager.GetInstance().SetState(StateManager.State.Running);
                     break;
+                case MiniGameOverview.Managers.StateManager.SelectedGame.DigGame:
+                    MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
+                    StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.DigGame);
+                    StateManager.GetInstance().SetState(StateManager.State.Running);
+                    break;
             }
         }
 

@@ -9,6 +9,8 @@ using XNAInterfaceComponents.Components;
 using XNAInterfaceComponents.AbstractComponents;
 using MainGame.Managers;
 using BalloonPaintBucketGame;
+using SquatBugsGame;
+using DiggingGame;
 
 namespace MainGame.Cards.UI
 {
@@ -68,10 +70,10 @@ namespace MainGame.Cards.UI
                     BalloonPaintBucketMainGame.GetInstance().RestartGame();
                     break;
                 case StateManager.RunningGame.SquatBugsGame:
-
+                    SquatBugsMainGame.GetInstance().RestartGame();
                     break;
                 case StateManager.RunningGame.DigGame:
-
+                    DiggingMainGame.GetInstance().RestartGame();
                     break;
             }
 

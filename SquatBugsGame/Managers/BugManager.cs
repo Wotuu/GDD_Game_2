@@ -35,6 +35,8 @@ namespace SquatBugsGame.Managers
         private int MaximumBugs = 30;
         private int MaximumEvilBugs = 8;
         private int MaximumFriendlyBugs = 22;
+
+
         private Random random = new Random();
         private Viewport viewport = SquatBugsMainGame.GetInstance().game.GraphicsDevice.Viewport;
         public void DrawBugs(SpriteBatch sb)

@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using DiggingGame.SandBoard.DigObjects;
+using DiggingGame.Managers;
 
 namespace DiggingGame.SandBoard
 {
@@ -33,6 +34,7 @@ namespace DiggingGame.SandBoard
         public Board(int width,int height)
         {
             viewport = DiggingMainGame.GetInstance().game.GraphicsDevice.Viewport;
+            Tiles = new List<SandTile>();
             FillDigObjectsTextureList();
             FillSandTiles();
             FillDigTiles();
@@ -136,7 +138,11 @@ namespace DiggingGame.SandBoard
             foreach (SandTile tile in Tiles)
             {
                 tile.Update();
-                CheckWin(tile);
+                if (StateManager.GetInstance().GetState() == StateManager.State.Running)
+                {
+                    CheckWin(tile);
+                }
+                
             }
         }
         #endregion
@@ -157,10 +163,14 @@ namespace DiggingGame.SandBoard
             if (nrGoodObjectsFound == 10)
             {
                 //WIN
+                StateManager.GetInstance().SetState(StateManager.State.Victory);
+                return;
             }
             else if(nrBadObjectsFound == 3)
             {
                 //LOSS
+                StateManager.GetInstance().SetState(StateManager.State.Loss);
+               
             }
             
         }

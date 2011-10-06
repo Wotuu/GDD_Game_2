@@ -73,6 +73,10 @@ namespace SquatBugsGame.Players
                 Rectangle drawRect = this.GetDrawRectangle();
                 this.location = new Vector3(HandPosition.X- (drawRect.Width - (100 * scale.X)),
                     HandPosition.Y - (drawRect.Height - (455 * scale.Y)), this.location.Z);
+                Console.WriteLine("X :" + HandPosition.X + " y: " + HandPosition.X);
+
+
+
             }
 
         }
