@@ -49,10 +49,19 @@ namespace BalloonPaintBucketGame
 
         public void Initialize(Game game)
         {
+            if (this.game != null)
+            {
+                BalloonManager.GetInstance().balloons.Clear();
+
+                this.paintBuckets = null;
+                this.player = null;
+
+                ParticleManager.GetInstance().RemoveAllEmitters(10);
+            }
+
             this.game = game;
 
             ParticleManager.DEFAULT_TEXTURE = this.game.Content.Load<Texture2D>("Particles/default");
-
             this.background = this.game.Content.Load<Texture2D>("Backgrounds/balloonpaintbucket");
 
             AudioManager = new AudioManager();
@@ -67,17 +76,17 @@ namespace BalloonPaintBucketGame
             Viewport viewPort = this.game.GraphicsDevice.Viewport;
             this.paintBuckets[0].location = new Vector2(
                 (viewPort.Width / 6) - this.paintBuckets[0].GetDrawRectangle().Width / 2,
-                viewPort.Height - this.paintBuckets[0].GetDrawRectangle().Height);
+                viewPort.Height - this.paintBuckets[0].GetDrawRectangle().Height - 10);
 
             this.paintBuckets[1] = new PaintBucket(PaintBucket.PaintBucketColor.Pink);
             this.paintBuckets[1].location = new Vector2(
                 (viewPort.Width / 6) * 3 - this.paintBuckets[1].GetDrawRectangle().Width / 2,
-                viewPort.Height - this.paintBuckets[1].GetDrawRectangle().Height);
+                viewPort.Height - this.paintBuckets[1].GetDrawRectangle().Height - 10);
 
             this.paintBuckets[2] = new PaintBucket(PaintBucket.PaintBucketColor.Yellow);
             this.paintBuckets[2].location = new Vector2(
                 (viewPort.Width / 6) * 5 - this.paintBuckets[2].GetDrawRectangle().Width / 2,
-                viewPort.Height - this.paintBuckets[2].GetDrawRectangle().Height);
+                viewPort.Height - this.paintBuckets[2].GetDrawRectangle().Height - 10);
 
             XNAMessageDialog.CLIENT_WINDOW_WIDTH = game.GraphicsDevice.Viewport.Width;
             XNAMessageDialog.CLIENT_WINDOW_HEIGHT = game.GraphicsDevice.Viewport.Height;

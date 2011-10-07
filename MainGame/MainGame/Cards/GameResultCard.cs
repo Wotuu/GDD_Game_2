@@ -76,6 +76,9 @@ namespace MainGame.Cards
                     case CardColor.LostCard:
                         this.texture = GameResultCard.LOST_CARD;
                         break;
+                    case CardColor.BuzzLostCard:
+                        this.texture = GameResultCard.BUZZ_LOST_CARD;
+                        break;
                 }
 
                 _color = value;
@@ -85,6 +88,7 @@ namespace MainGame.Cards
         public static Texture2D BACK_CARD { get; set; }
 
         public static Texture2D LOST_CARD { get; set; }
+        public static Texture2D BUZZ_LOST_CARD { get; set; }
 
         public static Texture2D BLUE_CARD { get; set; }
         public static Texture2D YELLOW_CARD { get; set; }
@@ -101,6 +105,7 @@ namespace MainGame.Cards
             GREEN_CARD = Game1.GetInstance().Content.Load<Texture2D>("Cards/winning_groen_text");
 
             LOST_CARD = Game1.GetInstance().Content.Load<Texture2D>("Cards/losing");
+            BUZZ_LOST_CARD = Game1.GetInstance().Content.Load<Texture2D>("Cards/buzz_losing");
         }
 
         public enum CardColor
@@ -109,7 +114,8 @@ namespace MainGame.Cards
             Yellow,
             Pink,
             Green,
-            LostCard
+            LostCard,
+            BuzzLostCard
         }
 
         public enum CardPosition

@@ -7,8 +7,9 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Graphics;
 using MainGame.Media;
 using MainGame.Managers;
+using MainGame.UI;
 
-public delegate void OnVideoStoppedPlaying(XNAVideoPlayer source);
+public delegate void OnVideoStoppedPlaying(XNAVideoPlayer source, MovieControlPanel panel);
 namespace MainGame.Media
 {
     public class XNAVideoPlayer
@@ -29,8 +30,11 @@ namespace MainGame.Media
 
         public double playerStartMS { get; set; }
 
-        public XNAVideoPlayer(Rectangle bounds, Video video, float z)
+        public MovieControlPanel panel { get; set; }
+
+        public XNAVideoPlayer(/*MovieControlPanel panel,*/ Rectangle bounds, Video video, float z)
         {
+            this.panel = panel;
             this.bounds = bounds;
             this.video = video;
 
@@ -47,6 +51,7 @@ namespace MainGame.Media
         /// <returns>Yes or no.</returns>
         public Boolean IsPlaying()
         {
+            if (this.player.IsDisposed) return false;
             return this.player.State == MediaState.Playing;
         }
 
@@ -82,30 +87,42 @@ namespace MainGame.Media
         public void Stop()
         {
             this.player.Stop();
+            onVideoStoppedPlayingListeners(this, this.panel);
+            this.player.Dispose();
         }
 
         public void Draw(SpriteBatch sb)
         {
-            
-                if (this.player.State == MediaState.Stopped && this.previousState == MediaState.Playing &&
-                    this.onVideoStoppedPlayingListeners != null)
-                    onVideoStoppedPlayingListeners(this);
 
-                if (this.player.State == MediaState.Playing)
+            if (this.player.State == MediaState.Stopped && this.previousState == MediaState.Playing &&
+                this.onVideoStoppedPlayingListeners != null)
+            {
+                onVideoStoppedPlayingListeners(this, this.panel);
+                this.player.Dispose();
+                return;
+            }
+
+            //if (this.player.State == MediaState.Playing)
+            //{
+            Color drawColor = Color.White;
+            double difference = GameTimeManager.GetInstance().currentUpdateStartMS - this.playerStartMS;
+            if (difference > this.fadeOutAfterMS)
+            {
+                int color = (int)(255 - (255 * (difference - fadeOutAfterMS) / this.fadeOutDurationMS));
+                drawColor = new Color(color, color, color, color);
+                this.fadingOut = true;
+
+                if (color <= 0)
                 {
-                    Color drawColor = Color.White;
-                    double difference = GameTimeManager.GetInstance().currentUpdateStartMS - this.playerStartMS;
-                    if (difference > this.fadeOutAfterMS)
-                    {
-                        int color = (int)(255 - (255 * (difference - fadeOutAfterMS) / this.fadeOutDurationMS));
-                        drawColor = new Color(color, color, color, color);
-                        this.fadingOut = true;
-                    }
-                    sb.Draw(this.player.GetTexture(), this.bounds, null,
-                        drawColor, 0f, Vector2.Zero, SpriteEffects.None, this.z);
+                    this.Stop();
+                    return;
                 }
-                
-           
+            }
+            sb.Draw(this.player.GetTexture(), this.bounds, null,
+                drawColor, 0f, Vector2.Zero, SpriteEffects.None, this.z);
+            //}
+
+
 
             this.previousState = this.player.State;
         }

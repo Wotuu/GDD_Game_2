@@ -21,13 +21,19 @@ namespace MainGame.Cards.UI
         public GameResultCard card { get; set; }
 
 
-        public static SpriteFont RESTART_GAME_FONT { get; set; }
+        public static Texture2D OVERVIEW_GAME_BACKGROUND { get; set; }
+        public static Texture2D OVERVIEW_GAME_BACKGROUND_HOVER { get; set; }
+
         public static Texture2D RESTART_GAME_BACKGROUND { get; set; }
         public static Texture2D RESTART_GAME_BACKGROUND_HOVER { get; set; }
 
         static RestartGamePanel()
         {
-            RESTART_GAME_FONT = Game1.GetInstance().Content.Load<SpriteFont>("Fonts/BigMenuTextField");
+            OVERVIEW_GAME_BACKGROUND = Game1.GetInstance().Content.Load<Texture2D>
+                ("UI/Interface/Cards/backtomap_btn");
+            OVERVIEW_GAME_BACKGROUND_HOVER = Game1.GetInstance().Content.Load<Texture2D>
+                ("UI/Interface/Cards/backtomap_btn_hover");
+
             RESTART_GAME_BACKGROUND = Game1.GetInstance().Content.Load<Texture2D>
                 ("UI/Interface/Cards/tryagain_btn");
             RESTART_GAME_BACKGROUND_HOVER = Game1.GetInstance().Content.Load<Texture2D>
@@ -54,9 +60,8 @@ namespace MainGame.Cards.UI
             this.toOverviewBtn.backgroundColor = Color.Transparent;
             // this.restartGameBtn.mouseOverColor = new Color(150, 0, 0, 150);
             this.toOverviewBtn.z = this.card.z - 0.01f;
-            this.toOverviewBtn.font = RESTART_GAME_FONT;
-            this.toOverviewBtn.backgroundTexture = RESTART_GAME_BACKGROUND;
-            this.toOverviewBtn.mouseoverBackgroundTexture = RESTART_GAME_BACKGROUND_HOVER;
+            this.toOverviewBtn.backgroundTexture = OVERVIEW_GAME_BACKGROUND;
+            this.toOverviewBtn.mouseoverBackgroundTexture = OVERVIEW_GAME_BACKGROUND_HOVER;
 
             this.restartGameBtn = new XNAButton(this,
                 new Rectangle((int)(61 * card.scale.X), (int)(744 * card.scale.Y),
@@ -66,7 +71,6 @@ namespace MainGame.Cards.UI
             this.restartGameBtn.backgroundColor = Color.Transparent;
             // this.restartGameBtn.mouseOverColor = new Color(150, 0, 0, 150);
             this.restartGameBtn.z = this.card.z - 0.01f;
-            this.restartGameBtn.font = RESTART_GAME_FONT;
             this.restartGameBtn.backgroundTexture = RESTART_GAME_BACKGROUND;
             this.restartGameBtn.mouseoverBackgroundTexture = RESTART_GAME_BACKGROUND_HOVER;
         }

@@ -160,7 +160,7 @@ namespace BalloonPaintBucketGame.PaintBuckets
                 Color balloonColor = ((PaintEmitter)particle.emitter).balloon.GetColor();
                 if (balloonColor == this.GetColor())
                 {
-                    this.currentValue += 100;
+                    this.currentValue += 1;
                 }
                 else if( balloonColor != Color.DarkGray ) this.currentValue--; 
                 else this.currentValue = 0;

@@ -139,7 +139,9 @@ namespace XNAInterfaceComponents.Managers
             {
                 Component mouseOver = pc.GetComponentAt(e.location);
 
-                if (previousMouseOver != null && previousMouseOver != mouseOver) previousMouseOver.OnMouseExit(e);//FireMouseExitEvents(e);
+                if (previousMouseOver != null && previousMouseOver != mouseOver) previousMouseOver.OnMouseExit(e);
+                
+                //FireMouseExitEvents(e);
                 if (mouseOver != null)
                 {
                     if (!mouseOver.isMouseOver)

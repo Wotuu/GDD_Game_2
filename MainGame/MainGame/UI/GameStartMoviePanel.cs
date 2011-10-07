@@ -14,7 +14,7 @@
 
 //namespace MainGame.UI
 //{
-//    public class IntroMoviePanel : XNAPanel
+//    public class GameStartMoviePanel : XNAPanel
 //    {
 //        public XNASlider volumeSlider { get; set; }
 //        public XNAButton skipBtn { get; set; }
@@ -24,14 +24,14 @@
 //        public static Texture2D SKIP_BTN_TEXTURE { get; set; }
 //        public static Texture2D SKIP_BTN_TEXTURE_HOVER { get; set; }
 
-//        static IntroMoviePanel()
+//        static GameStartMoviePanel()
 //        {
 //            SKIP_BTN_TEXTURE = Game1.GetInstance().Content.Load<Texture2D>("UI/Interface/Media/skip_btn");
 //            SKIP_BTN_TEXTURE_HOVER = Game1.GetInstance().Content.Load<Texture2D>("UI/Interface/Media/skip_btn_hover");
 //        }
 
 
-//        public IntroMoviePanel()
+//        public GameStartMoviePanel()
 //            : base(null,
 //                new Rectangle(0, 0, Game1.GetInstance().graphics.PreferredBackBufferWidth,
 //                    Game1.GetInstance().graphics.PreferredBackBufferHeight))
@@ -40,7 +40,7 @@
 //            this.backgroundColor = Color.Black;
 //            this.border = null;
 
-//            Video video = Game1.GetInstance().Content.Load<Video>("Media/Video/gameintro");
+//            Video video = Game1.GetInstance().Content.Load<Video>("Media/Video/gamestart");
 //            float xFactor = video.Height / (float)Game1.GetInstance().graphics.PreferredBackBufferWidth;
 
 //            int videoHeight = (int)(Game1.GetInstance().graphics.PreferredBackBufferHeight * xFactor);
@@ -54,8 +54,8 @@
 //            this.videoPlayer.StartPlaying();
 //            this.videoPlayer.onVideoStoppedPlayingListeners += this.OnVideoStoppedPlaying;
 //            this.videoPlayer.SetVolume(0.1f);
-//            this.videoPlayer.fadeOutAfterMS = 17000;
-//            this.videoPlayer.fadeOutDurationMS = 3000;
+//            this.videoPlayer.fadeOutAfterMS = 25000;
+//            this.videoPlayer.fadeOutDurationMS = 5000;
 
 
 //            this.skipBtn = new XNAButton(this, new Rectangle(
@@ -125,6 +125,8 @@
 //        public override void Draw(SpriteBatch sb)
 //        {
 
+//            base.Draw(sb);
+
 //            this.videoPlayer.Draw(sb);
 
 //            // Dirty hack :(
@@ -132,10 +134,8 @@
 //            {
 //                /// Setting this Z in the constructor gives a gray screen I can't explain :(
 //                this.z = 0.1001f;
-//                Game1.GetInstance().background.Draw(sb);
+//                // Game1.GetInstance().background.Draw(sb);
 //            }
-
-//            base.Draw(sb);
 //        }
 
 //        /// <summary>

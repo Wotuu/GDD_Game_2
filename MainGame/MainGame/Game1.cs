@@ -46,7 +46,15 @@ namespace MainGame
 
         public XNALabel displayLbl { get; set; }
         public MainGameBackground background { get; set; }
+
+        /*
         public IntroMoviePanel introMoviePanel { get; set; }
+        public GameStartMoviePanel gameStartMoviePanel { get; set; }
+         */
+
+        public SimpleMoviePlayer introMoviePlayer { get; set; }
+        public SimpleMoviePlayer gameStartMoviePlayer { get; set; }
+        public SimpleMoviePlayer finalMovieMoviePlayer { get; set; }
 
         private static Game1 instance { get; set; }
         public static Game1 GetInstance()
@@ -87,6 +95,8 @@ namespace MainGame
             XNAPanel parent = new XNAPanel(null, new Rectangle(0, 0, 1024, 768));
             parent.backgroundColor = Color.Transparent;
             parent.border = null;
+
+
             graphics.SynchronizeWithVerticalRetrace = false;
             graphics.ApplyChanges();
             //this.displayLbl = new XNALabel(parent, new Rectangle(5, 5, 200, 20), "");
@@ -114,7 +124,9 @@ namespace MainGame
             SpriteFont font = Content.Load<SpriteFont>("Fonts/Arial");
             ChildComponent.DEFAULT_FONT = font;
 
-            this.introMoviePanel = new IntroMoviePanel();
+            // this.introMoviePanel = new IntroMoviePanel();
+
+            this.introMoviePlayer = new SimpleMoviePlayer(Content.Load<Video>("Media/Video/gameintro"));
 
             // TODO: use this.Content to load your game content here
             DrawUtil.lineTexture = DrawUtil.GetClearTexture2D(sb);
@@ -148,8 +160,39 @@ namespace MainGame
 
             MouseManager.GetInstance().Update(this);
             KeyboardManager.GetInstance().Update(Keyboard.GetState());
+
+            if (this.introMoviePlayer != null &&
+                this.introMoviePlayer.videoPlayer.IsPlaying())
+            {
+                // That's it.
+                base.Update(gameTime);
+                return;
+            }
+            else if (this.gameStartMoviePlayer != null &&
+                this.gameStartMoviePlayer.videoPlayer.IsPlaying())
+            {
+                // That's it.
+                base.Update(gameTime);
+                return;
+            }
             // Updates all interface components
             ComponentManager.GetInstance().Update();
+
+            /*
+            if (this.introMoviePanel != null &&
+                this.introMoviePanel.videoPlayer.IsPlaying())
+            {
+                // That's it.
+                base.Update(gameTime);
+                return;
+            }
+            else if (this.gameStartMoviePanel != null &&
+                this.gameStartMoviePanel.videoPlayer.IsPlaying())
+            {
+                // That's it.
+                base.Update(gameTime);
+                return;
+            }*/
 
             CardManager.GetInstance().Update();
 
@@ -224,12 +267,63 @@ namespace MainGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+
+
+            if (this.introMoviePlayer != null &&
+                this.introMoviePlayer.videoPlayer.IsPlaying())
+            {
+                GraphicsDevice.Clear(Color.Black);
+                GameTimeManager.GetInstance().OnStartDraw();
+
+                sb.Begin(SpriteSortMode.BackToFront, null);
+
+                // That's it.
+                // ComponentManager.GetInstance().Draw(sb);
+                this.introMoviePlayer.Draw(sb);
+                sb.End();
+                base.Draw(gameTime);
+                return;
+            }
+            else if (this.gameStartMoviePlayer != null &&
+                    this.gameStartMoviePlayer.videoPlayer.IsPlaying())
+            {
+                GraphicsDevice.Clear(Color.Black);
+                GameTimeManager.GetInstance().OnStartDraw();
+
+                sb.Begin(SpriteSortMode.BackToFront, null);
+
+                // That's it.
+                // ComponentManager.GetInstance().Draw(sb);
+                this.gameStartMoviePlayer.Draw(sb);
+                sb.End();
+                base.Draw(gameTime);
+                return;
+            }
+            else if (this.finalMovieMoviePlayer != null &&
+              this.finalMovieMoviePlayer.videoPlayer.IsPlaying())
+            {
+                GraphicsDevice.Clear(Color.Black);
+                GameTimeManager.GetInstance().OnStartDraw();
+
+                sb.Begin(SpriteSortMode.BackToFront, null);
+
+                // That's it.
+                // ComponentManager.GetInstance().Draw(sb);
+                this.finalMovieMoviePlayer.Draw(sb);
+                sb.End();
+                base.Draw(gameTime);
+                return;
+            }
+
             GraphicsDevice.Clear(new Color(188, 215, 237));
             GameTimeManager.GetInstance().OnStartDraw();
 
             sb.Begin(SpriteSortMode.BackToFront, null);
 
-            if (this.introMoviePanel.introVideoPlayer.IsPlaying())
+
+            /*
+            if (this.introMoviePanel != null &&
+                this.introMoviePanel.videoPlayer.IsPlaying())
             {
                 // That's it.
                 ComponentManager.GetInstance().Draw(sb);
@@ -237,6 +331,15 @@ namespace MainGame
                 base.Draw(gameTime);
                 return;
             }
+            else if (this.gameStartMoviePanel != null &&
+                this.gameStartMoviePanel.videoPlayer.IsPlaying())
+            {
+                // That's it.
+                ComponentManager.GetInstance().Draw(sb);
+                sb.End();
+                base.Draw(gameTime);
+                return;
+            }*/
 
             // PolygonManager.GetInstance().DrawPolygons(spriteBatch);
             // TODO: Add your drawing code here
@@ -371,7 +474,15 @@ namespace MainGame
                     new GameResultCard(GameResultCard.CardColor.Green, GameResultCard.CardPosition.Right);
                     break;
                 case StateManager.RunningGame.BuzzBattleGame:
-                    // Nothing
+                    Game1.GetInstance().finalMovieMoviePlayer = new SimpleMoviePlayer(
+                        Game1.GetInstance().Content.Load<Video>("Media/Video/finalmovie"));
+                    Game1.GetInstance().finalMovieMoviePlayer.videoPlayer.fadeOutAfterMS = 54000;
+                    Game1.GetInstance().finalMovieMoviePlayer.videoPlayer.fadeOutDurationMS = 2000;
+                    Game1.GetInstance().finalMovieMoviePlayer.videoPlayer.onVideoStoppedPlayingListeners +=
+                        this.OnGameCompleted;
+
+
+                    // PLAY MOVIE
                     break;
             }
         }
@@ -381,7 +492,14 @@ namespace MainGame
         /// </summary>
         public void GameLost()
         {
-            new GameResultCard(GameResultCard.CardColor.LostCard);
+            if (StateManager.GetInstance().GetRunningGame() == StateManager.RunningGame.BuzzBattleGame)
+            {
+                new GameResultCard(GameResultCard.CardColor.BuzzLostCard);
+            }
+            else
+            {
+                new GameResultCard(GameResultCard.CardColor.LostCard);
+            }
         }
 
 
@@ -421,6 +539,19 @@ namespace MainGame
             MediaPlayer.Stop();
             StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.MiniGameOverview);
             MiniGameOverviewMainGame.GetInstance().OnShow();
+        }
+
+        /// <summary>
+        /// When the game is completed, bounce the player back to the mini game overview.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="panel"></param>
+        public void OnGameCompleted(XNAVideoPlayer source, MovieControlPanel panel)
+        {
+            StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.MiniGameOverview);
+            MiniGameOverviewMainGame.GetInstance().OnShow();
+
+            BuzzBattleMainGame.GetInstance().Unload();
         }
     }
 }

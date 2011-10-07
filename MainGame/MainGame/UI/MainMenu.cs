@@ -9,6 +9,7 @@ using XNAInterfaceComponents.Components;
 using XNAInterfaceComponents.AbstractComponents;
 using MainGame.Managers;
 using MainGame.UI.Credits;
+using Microsoft.Xna.Framework.Media;
 
 namespace MainGame.UI
 {
@@ -72,6 +73,18 @@ namespace MainGame.UI
             MenuManager.GetInstance().ShowMenu(MenuManager.Menu.NoMenu);
             StateManager.GetInstance().SetRunningGame(StateManager.RunningGame.MiniGameOverview);
             StateManager.GetInstance().SetState(StateManager.State.Running);
+
+            Game1.GetInstance().gameStartMoviePlayer = new SimpleMoviePlayer(
+                Game1.GetInstance().Content.Load<Video>("Media/Video/gamestart"));
+            Game1.GetInstance().gameStartMoviePlayer.videoPlayer.fadeOutAfterMS = 29000;
+            Game1.GetInstance().gameStartMoviePlayer.videoPlayer.fadeOutDurationMS = 2000;
+
+
+            /*
+            if (Game1.GetInstance().gameStartMoviePanel == null)
+            {
+                Game1.GetInstance().gameStartMoviePanel = new GameStartMoviePanel();
+            }*/
         }
 
         public override void Update()

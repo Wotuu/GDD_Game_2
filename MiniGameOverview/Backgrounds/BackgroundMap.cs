@@ -51,21 +51,23 @@ namespace MiniGameOverview.Backgrounds
             new Vector3( 1789, 820, 0.9f)
         };
         private Polygon[] pathDrawPolygons { get; set; }
+
+        /*
         private int[] pathDrawPolygonsMaxPixels = new int[5]{
             1,
             1,
             1,
             1,
             1
-        };
-        /*
+        };*/
+
         private int[] pathDrawPolygonsMaxPixels = new int[5]{
             350000,
             350000,
             470000,
             220000,
             320000
-        };*/
+        };
 
         public BackgroundMap()
         {
@@ -85,8 +87,8 @@ namespace MiniGameOverview.Backgrounds
             {
                 this.paths[i] = new PathItem(this.gameSequence[i], ((i == 0) ? null : this.paths[i - 1]));
                 this.paths[i].location = new Vector3(
-                    pathLocations[i].X * this.scale.X, 
-                    pathLocations[i].Y * this.scale.Y, 
+                    pathLocations[i].X * this.scale.X,
+                    pathLocations[i].Y * this.scale.Y,
                     pathLocations[i].Z);
                 this.paths[i].drawableMapSection = new DrawableMapSection(this.paths[i], this.pathDrawPolygons[i],
                     (int)(pathDrawPolygonsMaxPixels[i] * this.scale.X * this.scale.Y));
@@ -98,6 +100,8 @@ namespace MiniGameOverview.Backgrounds
             /// Balloon game
             this.paths[1].isUnlocked = true;
             this.paths[2].isUnlocked = true;
+            this.paths[3].isUnlocked = true;
+            this.paths[4].isUnlocked = true;
 
             MiniGameOverviewMainGame.GetInstance().player.TeleportTo(this.paths[0]);
 
